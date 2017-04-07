@@ -1,0 +1,45 @@
+<div class="modal-header">
+    <h5 class="modal-title"><b>检查结果录入</b></h5>
+</div>
+<div class="modal-body">
+    <div class="panel-body">
+        <form role="form" class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    检查时间:
+                </label>
+                <div class="col-sm-8">
+                    <input type="text" id="check_time" style="width: 130px;" ng-model="check_time"
+                           onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    检查名称:
+                </label>
+                <div class="col-sm-8">
+                    <div class="col-sm-8">
+                        <input type="text" id="name" class="form-control" ng-model="name" readonly>
+                    </div>
+                    <div class="col-sm-3">
+                        <button ng-click="selectSick()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+                            选择疾病<i class="fa fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">
+                    检查结果及备注:
+                </label>
+                <div class="col-sm-8">
+                    <input type="text" id="result" class="form-control" ng-model="result" >
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+    <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+</div>

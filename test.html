@@ -1,0 +1,23 @@
+<script   src="https://code.jquery.com/jquery-1.12.4.js"   integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="   crossorigin="anonymous"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        var data={
+            'sign': "xxxxx",
+            'doctorId': "43197e8c-5648-4090-ae76-91cbb3130dc5",
+            'userId': '2d6390e2-5854-4468-8b94-0852bcd1cae1',
+            'phone': '15017596471',
+            'idCard': '440583198906094530',
+            'name': '徐伟思'
+        };
+        $.ajax({
+            type:"POST",
+            url:"/rest/39/service/phone/success",
+            dataType:"json",
+            contentType:"application/json",
+            data:JSON.stringify(data),
+            success:function(data){
+                console.log(data);
+            }
+        });
+    });
+</script>

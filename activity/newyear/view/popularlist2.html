@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>人气医生榜</title>
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<script src="../static/js/app/rem.js"></script>
+	<link rel="stylesheet" href="../static/css/base.css">
+	<link rel="stylesheet" href="../static/css/style.css">
+	<script type="text/javascript" src="../static/js/libs/requirejs/require.js"></script>
+	<script type="text/javascript" src="../static/js/app.js"></script>
+	<script>
+		require(['popularlist'],function(s){
+			s.getPopularData();
+			s.getSchedule();
+		});
+	</script>
+</head>
+<body>
+
+	<div class="popular pr">
+		<div class="popular_title pa"></div>
+
+
+		<div id="iscroll_wrap" class="iscroll_wrap pr">
+
+			<ul class="popular_list pr" id="popular_list">
+
+
+			</ul>
+
+		</div>
+
+
+
+	</div>
+
+	<div class="popular_btn clearfix">
+		<a href="doctorRules.html" class="fl popular_left btn2">人气大奖</a>
+		<a href="javascript:void(0)" class="fl popular_right btn2 popular_return" onClick="javascript :history.back(-1);">返回</a>
+	</div>
+
+</body>
+</html>

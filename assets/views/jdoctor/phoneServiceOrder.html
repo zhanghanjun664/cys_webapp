@@ -1,0 +1,393 @@
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div ng-controller="PhoneServiceOrderCtrl" class="col-md-12">
+			<button ng-click="search()" type="button"
+				class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<p style="margin-top: 25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+			<div class="table-responsive">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+						<tr>
+							<th width="7%">订单号</th>
+							<th width="7%">医生</th>
+							<th width="10%">医院</th>
+							<th width="7%">通话时间</th>
+							<th width="7%">下单时间</th>
+							<th width="7%">用户名</th>
+							<th width="7%">用户电话</th>
+							<th width="7%">用户城市</th>
+							<th width="7%">用户来源</th>
+							<th width="7%">订单来源</th>
+							<th width="7%">患者姓名</th>
+							<th width="7%">患者电话</th>
+							<th width="5%">状态</th>
+							<th width="7%">操作</th>
+						</tr>
+					</thead>
+					<tr ng-repeat="order in $data" ng-class-odd="'odd'"
+						ng-class-even="'even'">
+						<td class="center">{{order.id}}</td>
+						<td class="center">{{order.doctorName}}</td>
+						<td class="center" title="{{order.hospital}}">{{order.hospital | limitTo:9}}</td>
+						<td class="center">{{order.fulfilmentTime}}</td>
+						<td class="center">{{order.auditable.dateCreated}}</td>
+						<td class="center">{{order.masterName}}</td>
+						<td class="center">{{order.masterPhoneNumber}}</td>
+						<td class="center">{{order.patientLocation}}</td>
+						<td class="center">
+							<span ng-if="order.sceneName != ''">{{order.sceneName}}</span>
+							<span ng-if="order.channel != '' && !order.sceneName">{{showUserChannel(order.channel)}}</span>
+						</td>
+						<td class="center">{{showOrderSource(order.source)}}</td>
+						<td class="center">{{order.patientName}}</td>
+						<td class="center">{{order.patientPhoneNumber}}</td>
+						<td class="center">{{showServiceOrderStatus(order.status)}}</td>
+						<td class="center">
+							<div class="visible-md visible-lg hidden-sm hidden-xs">
+								<a href="#" ng-click="more(order)"
+									class="btn btn-transparent btn-xs" tooltip-placement="top"
+									tooltip="更多"><i class="fa fa-search"></i></a> <a href="#"
+									button-code="editBtnCode" ng-click="edit(order)"
+									class="aidee-button btn btn-transparent btn-xs"
+									tooltip-placement="top" tooltip="编辑"><i class="fa fa-edit"></i></a>
+							</div>
+							<div class="visible-xs visible-sm hidden-md hidden-lg">
+								<div class="btn-group" dropdown is-open="status.isopen">
+									<button type="button"
+										class="btn btn-primary btn-o btn-sm dropdown-toggle"
+										dropdown-toggle>
+										<i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu pull-right dropdown-light" role="menu">
+										<li><a href="#" ng-click="more(order)">更多</a></li>
+										<li><a href="#" class="aidee-button"
+											button-code="editBtnCode" ng-click="edit(order)">编辑</a></li>
+									</ul>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<p style="margin-top: 25px;">
+				<strong>*备注:</strong>
+			</p>
+			<p style="margin-top: 25px;">
+				<strong>患者电话: 是用户在下电话咨询订单时患者输入的号码，用于与医生电话咨询的沟通。</strong>
+			</p>
+			<script type="text/ng-template" id="searchPhoneServiceOrder.html">
+				<div class="modal-header">
+					<h5 class="modal-title"><b>查询条件</b></h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="id">
+									订单号
+								</label>
+								<div class="col-sm-9">
+									<input type="text" id="orderNumber" class="form-control" ng-model="searchInfos.id" maxlength="15">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="orderStatus">
+									状态
+								</label>
+								<div class="col-sm-9">
+									<select id="order_status" class="form-control" ng-model="searchInfos.status"
+											ng-options="status.value as status.name for status in orderStatuses">
+										<option value="">全部</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="channel">
+									用户来源
+								</label>
+								<div class="col-sm-9">
+									<select id="order_status" class="form-control" ng-model="searchInfos.channel"
+											ng-options="channel.value as channel.name for channel in userChannels">
+										<option value="">全部</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="source">
+									订单来源
+								</label>
+								<div class="col-sm-9">
+									<select id="order_status" class="form-control" ng-model="searchInfos.source"
+											ng-options="source.value as source.name for source in orderSources">
+										<option value="">全部</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="fulfilmentTimeStart">
+									预约时间段
+								</label>
+								<div class="col-sm-9">
+									<input type="text" id="fulfilmentTimeStart" style="width: 130px;" ng-model="searchInfos.fulfilmentTimeStart"
+										   onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'fulfilmentTimeEnd\')}',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+									至
+									<input type="text" id="fulfilmentTimeEnd" style="width: 130px;" ng-model="searchInfos.fulfilmentTimeEnd"
+										   onFocus="WdatePicker({minDate:'#F{$dp.$D(\'fulfilmentTimeStart\')}',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="createTimeStart">
+									下单时间段
+								</label>
+								<div class="col-sm-9">
+									<input type="text" id="createTimeStart" style="width: 130px;" ng-model="searchInfos.createTimeStart"
+										   onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'%y-%M-%d %H:%m\'}',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+									至
+									<input type="text" id="createTimeEnd" style="width: 130px;" ng-model="searchInfos.createTimeEnd"
+										   onFocus="WdatePicker({minDate:'#F{$dp.$D(\'createTimeStart\')}',maxDate:'%y-%M-%d %H:%m',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="masterPhoneNumber">
+									下单用户电话
+								</label>
+								<div class="col-sm-9">
+									<input type="text" id="masterPhoneNumber" class="form-control" ng-model="searchInfos.masterPhoneNumber" maxlength="11">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="s_name">
+									患者姓名
+								</label>
+								<div class="col-sm-9">
+									<input type="text" id="s_name" class="form-control" ng-model="searchInfos.patientName" maxlength="21">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="s_phoneNumber">
+									患者电话
+								</label>
+								<div class="col-sm-9">
+									<input type="text" id="s_phoneNumber" class="form-control" ng-model="searchInfos.patientPhoneNumber" maxlength="11">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="districtId">
+									医院城市
+								</label>
+								<div class="col-sm-9">
+									<select id="districtId" class="form-control" ng-model="searchInfos.districtId"
+											ng-options="district.uuid as district.name for district in districts">
+										<option value="">全部</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="doctorName">
+									医生姓名
+								</label>
+								<div class="col-sm-9">
+									<input type="text" id="doctor" class="form-control" ng-model="searchInfos.doctorName" maxlength="11">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="bdName">
+									BD人员
+								</label>
+								<div class="col-sm-9">
+									<input type="text" id="bdName" class="form-control" ng-model="searchInfos.bdName" maxlength="11">
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+				</div>
+			</script>
+			<script type="text/ng-template" id="moreOrderInfo.html">
+				<div class="modal-header">
+					<h5 class="modal-title"><b>更多信息</b></h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-12">
+									订单号：{{orderInfo.id}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									医生诊金：{{orderInfo.totalAmount}} 元
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									BD人员：{{orderInfo.bdName}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									患者性别：{{orderInfo.patientGender}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									患者年龄：{{orderInfo.age}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									病情描述：{{orderInfo.sickDescription}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									备注：{{orderInfo.remark}}
+								</label>
+							</div>
+							<div class="form-group" ng-show="orderInfo.sickImages.length != undefined">
+									<label class="col-sm-2 control-label " for="seq">病历 </label>
+									<div class="thumbnail" style="height: 100%; border: 0px;">
+										<table>
+											<tr>
+												<td><img ng-click="open(orderInfo)" ng-src="{{orderInfo.sickImages.split(';')[0]}}"
+													class="me-au-img pointer"></td>
+												<td><img ng-click="open(orderInfo)" ng-src="{{orderInfo.sickImages.split(';')[1]}}"
+													class="me-au-img pointer"></td>
+												<td><img ng-click="open(orderInfo)" ng-src="{{orderInfo.sickImages.split(';')[2]}}"
+													class="me-au-img pointer"></td>
+											</tr>
+										</table>
+									</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="cancel($event)">关闭</button>
+				</div>
+			</script>
+			<script type="text/ng-template" id="editOrder.html">
+				<div class="modal-header">
+					<h5 class="modal-title"><b>订单信息</b></h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-6">
+									订单号：{{orderInfo.id}}
+								</label>
+								<label class="col-sm-6">
+									订单金额：{{orderInfo.totalAmount}} 元
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-6">
+									患者姓名：{{orderInfo.patientName}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-6">
+									患者电话：{{orderInfo.patientPhoneNumber}}
+								</label>
+								<label class="col-sm-6">
+									年龄：{{orderInfo.age}}
+								</label>
+							</div>
+							<div ng-show="originalStatus == SERVICE_ORDER_STATUS_PAID || originalStatus == SERVICE_ORDER_STATUS_AWAIT_SERVICE">
+								<div class="form-group" ng-show="originalStatus == SERVICE_ORDER_STATUS_PAID || originalStatus == SERVICE_ORDER_STATUS_AWAIT_SERVICE">
+									<label class="col-sm-3" for="editorder_status" >
+										状态：
+									</label>
+									<div class="col-sm-6">
+										<select id="editorder_status" class="col-sm-12"  ng-model="orderInfo.status"
+												ng-options="status.value as status.name for status in orderStatuses">
+											<option value="orderInfo.status">{{orderInfo.status}}</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group"  ng-show="orderInfo.status == SERVICE_ORDER_STATUS_AWAIT_SERVICE">
+									<label class="col-sm-3" for="editorder_fulfilmenttime">
+													通话时间*：
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="fulfilmentTime" style="width: 160px;" ng-model="orderInfo.fulfilmentTimeStr"
+											onFocus="WdatePicker({minDate:'%y-%M-%d %H:%m:%s', dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})" />
+									</div>	
+								</div>
+								<div class="form-group" ng-show="orderInfo.status == SERVICE_ORDER_STATUS_SERVICE_UNFULFILLED">
+									<label class="col-sm-3" for="failure_reason">
+										原因*：
+									</label>
+									<div class="col-sm-6">
+										<select id="failure_reason" class="col-sm-12"  ng-model="orderInfo.callFailureReason">
+											<option value="">-- 请选择 --</option>
+											<option value="患者原因">患者原因</option>
+											<option value="非患者原因">非患者原因</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group"  ng-show="orderInfo.status == SERVICE_ORDER_STATUS_CANCELED_BY_PATIENT  
+																|| (orderInfo.status == SERVICE_ORDER_STATUS_SERVICE_UNFULFILLED 
+																	&& orderInfo.callFailureReason === '患者原因')">
+									<label class="col-sm-5">
+									<input type="radio" ng-model="orderInfo.refundRequired" ng-value="true" >
+									退款给患者
+									</label>
+									<label>
+									<input type="radio" ng-model="orderInfo.refundRequired" ng-value="false">
+									不退款给患者
+									</label><br/>
+								</div>
+								<div class="form-group">
+									<div ng-show="(orderInfo.status == SERVICE_ORDER_STATUS_SERVICE_UNFULFILLED 
+													&& orderInfo.callFailureReason === '非患者原因') 
+													|| orderInfo.status == SERVICE_ORDER_STATUS_CANCELED_BY_DOCTOR">
+									<label class="col-sm-6">
+										注意：该选择将导致订单退款
+									</label>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3" for="remark">
+										备注：
+									</label>
+									<div class="col-sm-9">
+										<textarea class="form-control" ng-model="orderInfo.remark" id="remark" maxlength="250"></textarea>
+									</div>
+								</div>
+							</div>
+
+							<div ng-show="originalStatus != SERVICE_ORDER_STATUS_PAID && originalStatus != SERVICE_ORDER_STATUS_AWAIT_SERVICE">
+								<div class="form-group">
+								<label class="col-sm-6">
+									状态：{{showServiceOrderStatus(orderInfo.status)}}
+								</label>
+								</div>
+								<div class="form-group">
+								<label class="col-sm-12">
+									备注：{{orderInfo.remark}}
+								</label>
+								</div>
+						    </div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+				</div>
+			</script>
+		</div>
+	</div>
+</div>

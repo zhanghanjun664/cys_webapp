@@ -1,0 +1,48 @@
+<script>
+	var url = window.location.href;
+	//judge login error
+	if(url.indexOf("?error=true") > 0) {
+		$("#tip").show();
+	}
+</script>
+<!-- start: LOGIN -->
+<div class="row">
+	<div class="main-login col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-4 col-md-offset-4">
+		<!-- start: LOGIN BOX -->
+		<div class="box-login" style="border-radius: 30px;background-color:white">
+			<form class="form-login" style="margin:20px;" action="j_spring_security_check" method="post">
+				<div class="logo" style="padding: 0 0 20px 0;">
+					<img ng-src="{{app.layout.logo}}" alt="{{app.name}}"/>
+				</div>
+				<div class="form-group">
+					<span class="input-icon">
+						<input type="text" class="form-control" placeholder="{{ 'login.username.PLACEHOLDER' | translate }}" maxlength="32" name="j_username" required>
+						<i class="fa fa-user" style="font-size:18px;"></i> </span>
+				</div>
+				<div class="form-group form-actions">
+					<span class="input-icon">
+						<input type="password" class="form-control" placeholder="{{ 'login.password.PLACEHOLDER' | translate }}" maxlength="32" name="j_password" required>
+						<i class="fa fa-lock" style="font-size:18px;"></i> </span>
+				</div>
+				<div class="form-group">
+					<div class="checkbox clip-check check-primary">
+						<input type="checkbox" value="true" id="_spring_security_remember_me" name="_spring_security_remember_me">
+						<label for="_spring_security_remember_me">
+							{{ 'login.remember.LABEL' | translate }}
+						</label>
+				</div>
+					<button type="submit" class="btn btn-primary pull-right">
+						{{ 'login.login.LABEL' | translate }} <i class="fa fa-arrow-circle-right"></i>
+					</button>
+				</div>
+			</form>
+			<div id="tip" class="list-group" style="display:none;padding-top: 40px">
+				<a class="list-group-item list-group-item-danger" style="text-align:center">
+					{{ 'login.error.TIP' | translate }}
+				</a>
+			</div>
+		</div>
+		<!-- end: LOGIN BOX -->
+	</div>
+</div>
+<!-- end: LOGIN -->

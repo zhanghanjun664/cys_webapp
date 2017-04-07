@@ -1,0 +1,650 @@
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div ng-controller="JdCouponCtrl" class="col-md-12">
+            <button ng-click="edit()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+                新增 <i class="fa fa-plus"></i>
+            </button>
+            <button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
+                编辑 <i class="fa fa-edit"></i>
+            </button>
+            <button ng-click="deleteAll()" type="button" class="btn btn-wide btn-danger" style="min-width: 30px;">
+                删除 <i class="fa fa-trash"></i>
+            </button>
+            <button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+                查询 <i class="fa fa-search"></i>
+            </button>
+            <button ng-click="create()" type="button" class="btn btn-wide btn-green" style="min-width: 30px;">
+                生成现金券 <i class="fa fa-toggle-right"></i>
+            </button>
+            <p style="margin-top:25px;">
+                <strong>总记录数:</strong> {{tableParams.total()}}
+            </p>
+
+            <div class="table-responsive" style="margin-top:25px;">
+                <table ng-table="tableParams" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th style="text-align:left;width:6%;">
+                            <div class="checkbox clip-check check-primary checkbox-inline">
+                                <input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()"/>
+                                <label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+                            </div>
+                        </th>
+                        <th>现金券类型</th>
+                        <th>编码</th>
+                        <th>用户名</th>
+                        <th>金额</th>
+                        <!--<th>最低使用金额</th>-->
+                        <th>支付渠道</th>
+                        <th>过期时间</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="jdCoupon in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                        <td>
+                            <div class="checkbox clip-check check-primary checkbox-inline">
+                                <input id="checkbox{{jdCoupon.uuid}}" type="checkbox" ng-model="jdCoupon.selected"
+                                       ng-click="changeSelection($index)"/>
+                                <label for="checkbox{{jdCoupon.uuid}}" style="vertical-align: middle;"></label>
+                            </div>
+                        </td>
+                        <td class="center">{{displayCouponCategoryName(jdCoupon.jdCouponCategoryId)}}</td>
+                        <td class="center">{{jdCoupon.code}}</td>
+                        <td class="center">{{jdCoupon.patientName}}</td>
+                        <td class="center">{{jdCoupon.value}}</td>
+                        <!--<td class="center">{{jdCoupon.limitAmount}}</td>-->
+                        <td class="center">{{showPaymentChannel(jdCoupon.paymentChannel)}}</td>
+                        <td class="center">{{displayExpiredDate(jdCoupon.expiredDate)}}</td>
+                        <td class="center">{{showCouponStatus(jdCoupon.status)}}</td>
+                        <td class="center">
+                            <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                <a href="#" ng-click="edit(jdCoupon)" class="btn btn-transparent btn-xs"
+                                   tooltip-placement="top" tooltip="编辑"><i
+                                        class="fa fa-edit"></i></a>
+                                <a href="#" ng-click="deleteItem(jdCoupon.uuid)"
+                                   class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="删除"><i
+                                        class="fa fa-trash fa fa-white"></i></a>
+                            </div>
+                            <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                <div class="btn-group" dropdown is-open="status.isopen">
+                                    <button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle"
+                                            dropdown-toggle>
+                                        <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right dropdown-light" role="menu">
+                                        <li>
+                                            <a href="#" ng-click="edit(jdCoupon)">编辑</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" ng-click="deleteItem(jdCoupon.uuid)">删除</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <script type="text/ng-template" id="searchJdCoupon.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>查询条件</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_name">
+                                        用户
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="col-sm-12" ng-model="patient.name" id="s_name"
+                                               readonly>
+                                        </input>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button ng-click="selectPatient()" ng-disabled="flag" type="button"
+                                                class="btn btn-wide btn-primary"
+                                                style="min-width: 30px;">
+                                            选择用户 <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_code">
+                                        现金券编码
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="s_code" class="form-control" ng-model="searchInfos.code">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_jdCouponCategoryId">
+                                        现金券类型
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <select id="s_jdCouponCategoryId" class="col-sm-12"
+                                                ng-model="searchInfos.jdCouponCategoryId"
+                                                ng-options="jdCouponCategory.uuid as jdCouponCategory.name for jdCouponCategory in jdCouponCategorys">
+                                            <option value="">全部</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_paymentChannel">
+                                        支付渠道
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <select id="s_paymentChannel" class="col-sm-12"
+                                                ng-model="searchInfos.paymentChannel"
+                                                ng-options="paymentChannel.value as paymentChannel.name for paymentChannel in paymentChannelS">
+                                            <option value="">全部</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_status">
+                                        状态
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <select id="s_status" class="col-sm-12" ng-model="searchInfos.status"
+                                                ng-options="item.value as item.name for item in couponStatus">
+                                            <option value="">全部</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_effectiveDateStart">
+                                        开始时间段
+                                    </label>
+
+                                    <div class="col-sm-9">
+                                        <input type="text" id="s_effectiveDateStart" style="width: 130px;"
+                                               ng-model="searchInfos.effectiveDateStart"
+                                               onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'s_effectiveDateEnd\')}',dateFmt:'yyyy-MM-dd',readOnly:true})"/>
+                                        至
+                                        <input type="text" id="s_effectiveDateEnd" style="width: 130px;"
+                                               ng-model="searchInfos.effectiveDateEnd"
+                                               onFocus="WdatePicker({minDate:'#F{$dp.$D(\'s_effectiveDateStart\')}',dateFmt:'yyyy-MM-dd',readOnly:true})"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_expiredDateStart">
+                                        到期时间段
+                                    </label>
+
+                                    <div class="col-sm-9">
+                                        <input type="text" id="s_expiredDateStart" style="width: 130px;"
+                                               ng-model="searchInfos.expiredDateStart"
+                                               onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'s_expiredDateEnd\')}',dateFmt:'yyyy-MM-dd',readOnly:true})"/>
+                                        至
+                                        <input type="text" id="s_expiredDateEnd" style="width: 130px;"
+                                               ng-model="searchInfos.expiredDateEnd"
+                                               onFocus="WdatePicker({minDate:'#F{$dp.$D(\'s_expiredDateStart\')}',dateFmt:'yyyy-MM-dd',readOnly:true})"/>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="clear()">清空条件</button>
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+
+                <script type="text/ng-template" id="selectPatient.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>选择用户</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="row">
+                                    <div class="col-md-3" style="padding-right:0px;padding-left:0px;">
+                                        <label class="col-sm-3 control-label" for="districtId">
+                                            省份
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <select id="districtId" class="col-sm-12" ng-model="searchInfos.districtId"
+                                                    ng-change="changeDistrictAreas(searchInfos.districtId)"
+                                                    ng-options="jdDistrict.uuid as jdDistrict.name for jdDistrict in jdDistricts ">
+                                                <option value="">全部</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" style="padding-right:0px;padding-left:0px;">
+                                        <label class="col-sm-3 control-label" for="districtAreaId">
+                                            城市
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <select id="districtAreaId" class="col-sm-12" ng-model="searchInfos.districtAreaId"
+                                                    ng-options="jdDistrictArea.uuid as jdDistrictArea.name for jdDistrictArea in jdDistrictAreas">
+                                                <option value="">全部</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" style="padding-right:0px;padding-left:0px;">
+                                        <label class="col-sm-3 control-label" for="createTimeStart">
+                                            注册时间
+                                        </label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" id="createTimeStart" style="width: 130px;"
+                                                   ng-model="patientInfos.createTimeStart"
+                                                   onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'%y-%M-%d %H:%m\'}',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})"/>
+                                            至
+                                            <input type="text" id="createTimeEnd" style="width: 130px;"
+                                                   ng-model="patientInfos.createTimeEnd"
+                                                   onFocus="WdatePicker({minDate:'#F{$dp.$D(\'createTimeStart\')}',maxDate:'%y-%M-%d %H:%m',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="col-sm-4 control-label" for="sceneName">
+                                            渠道名称
+                                        </label>
+
+                                        <div class="col-sm-8">
+                                            <select id="sceneName" class="form-control" ng-model="patientInfos.qrcodeId"
+                                                    ng-options="qrcode.uuid as qrcode.name for qrcode in jdQrcodeList">
+                                                <option value="">全部</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="col-sm-4 control-label" for="p_name">
+                                            姓名
+                                        </label>
+
+                                        <div class="col-sm-8">
+                                            <input type="text" id="p_name" class="form-control"
+                                                   ng-model="patientInfos.name"
+                                                   maxlength="21">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="col-sm-4 control-label" for="s_phoneNumber">
+                                            手机号码
+                                        </label>
+
+                                        <div class="col-sm-8">
+                                            <input type="text" id="s_phoneNumber" class="form-control"
+                                                   ng-model="patientInfos.phoneNumber" maxlength="11">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <table ng-table="tableParams" class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th style="text-align:left;width:6%;">
+                                        <div class="checkbox clip-check check-primary checkbox-inline">
+                                            <input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()"/>
+                                            <label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+                                        </div>
+                                    </th>
+                                    <th>地区</th>
+                                    <th>姓名</th>
+                                    <th>手机号码</th>
+                                    <th>注册时间</th>
+                                    <th>来源渠道</th>
+                                </tr>
+                                </thead>
+                                <tr ng-repeat="jdPatient in $data" ng-class-odd="'odd'" ng-class-even="'even'"
+                                    class="tr_patient" id="tr{{jdPatient.uuid}}"
+                                    ng-click="loadOrderHistory(jdPatient.uuid)">
+                                    <td>
+                                        <div class="checkbox clip-check check-primary checkbox-inline">
+                                            <input id="checkbox{{jdPatient.uuid}}" type="checkbox"
+                                                   ng-model="jdPatient.selected" ng-click="changeSelection($index)"/>
+                                            <label for="checkbox{{jdPatient.uuid}}"
+                                                   style="vertical-align: middle;"></label>
+                                        </div>
+                                    </td>
+                                    <td class="center">{{jdPatient.location}}</td>
+                                    <td class="center">{{jdPatient.name}}</td>
+                                    <td class="center">{{jdPatient.phoneNumber}}</td>
+                                    <td class="center">{{jdPatient.createDate}}</td>
+                                    <td class="center">{{jdPatient.sceneName ? jdPatient.sceneName : '无'}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="clear()">清空条件</button>
+                        <button class="btn btn-primary" ng-click="query()">查询</button>
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+
+                <script type="text/ng-template" id="editJdCoupon.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>现金券信息</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="code">
+                                        编码
+                                    </label>
+
+                                    <div class="col-sm-7">
+                                        <input type="text" id="code" class="form-control" ng-model="jdCouponInfo.code">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="name">
+                                        用户
+                                    </label>
+
+                                    <div class="col-sm-5">
+                                        <input type="text" class="col-sm-12" ng-model="patient.name" id="name"
+                                               readonly>
+                                        </input>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button ng-click="selectPatient()" ng-disabled="flag" type="button"
+                                                class="btn btn-wide btn-primary"
+                                                style="min-width: 30px;">
+                                            选择用户 <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="jdCouponCategoryId">
+                                        现金券类型
+                                    </label>
+
+                                    <div class="col-sm-7">
+                                        <select id="jdCouponCategoryId" class="col-sm-12"
+                                                ng-model="jdCouponInfo.jdCouponCategoryId"
+                                                ng-options="jdCouponCategory.uuid as jdCouponCategory.name for jdCouponCategory in jdCouponCategorys">
+                                            <option value="">请选择</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="paymentChannel">
+                                        支付渠道
+                                    </label>
+
+                                    <div class="col-sm-7">
+                                        <select id="paymentChannel" class="col-sm-12"
+                                                ng-model="jdCouponInfo.paymentChannel"
+                                                ng-options="paymentChannel.value as paymentChannel.name for paymentChannel in paymentChannelS">
+                                            <option value="">请选择</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="status">
+                                        状态
+                                    </label>
+
+                                    <div class="col-sm-7">
+                                        <select type="text" id="status" class="form-control"
+                                                ng-model="jdCouponInfo.status"
+                                                ng-options="item.value as item.name for item in couponStatus">
+                                            <option value="">请选择</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="value">
+                                        金额
+                                    </label>
+
+                                    <div class="col-sm-7">
+                                        <input type="text" id="value" class="form-control"
+                                               ng-model="jdCouponInfo.value" maxlength="4">
+                                    </div>
+                                </div>
+                                <!--<div class="form-group">
+                                    <label class="col-sm-4 control-label" for="limitAmount">
+                                        最小使用金额
+                                    </label>
+
+                                    <div class="col-sm-7">
+                                        <input type="text" id="limitAmount" class="form-control"
+                                               ng-model="jdCouponInfo.limitAmount">
+                                    </div>
+                                </div>-->
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="expiredDateAsString">
+                                        到期时间
+                                    </label>
+
+                                    <div class="col-sm-7">
+                                        <input type="text" id="expiredDateAsString" class="form-control"
+                                               ng-model="jdCouponInfo.expiredDateAsString"
+                                               onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true})"/>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+
+                <script type="text/ng-template" id="createCoupon.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>生成现金券</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group center">
+                                    <div class="col-sm-11">
+                                        <div class="radio clip-radio radio-primary radio-inline">
+                                            <input type="radio" id="yes" ng-model="createCouponInfo.selectUserFlag" value="false">
+                                            <label for="yes">不指定用户</label>
+                                        </div>
+                                        <div class="radio clip-radio radio-primary radio-inline">
+                                            <input type="radio" id="no" ng-model="createCouponInfo.selectUserFlag" value="true">
+                                            <label for="no">指定用户</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-if="createCouponInfo.selectUserFlag=='false'">
+                                    <label class="col-sm-4 control-label" for="createNumber">
+                                        数量
+                                    </label>
+                                    <div class="col-sm-7">
+                                        <input type="text" id="createNumber" class="form-control" ng-model="createCouponInfo.createNumber" maxlength="4">
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-if="createCouponInfo.selectUserFlag=='true'">
+                                    <label class="col-sm-4 control-label" for="targetNumber">
+                                        目标用户
+                                    </label>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="col-sm-12" ng-model="targetNumber" id="targetNumber" readonly />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button ng-click="setScreenCondi()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+                                            设置条件
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="c_couponCategoryId">
+                                        现金券类型
+                                    </label>
+
+                                    <div class="col-sm-7">
+                                        <select id="c_couponCategoryId" class="col-sm-12"
+                                                ng-model="createCouponInfo.jdCouponCategoryId"
+                                                ng-options="jdCouponCategory.uuid as jdCouponCategory.name for jdCouponCategory in jdCouponCategorys">
+                                            <option value="">请选择</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="c_paymentChannel">
+                                        支付渠道
+                                    </label>
+
+                                    <div class="col-sm-7">
+                                        <select id="c_paymentChannel" class="col-sm-12"
+                                                ng-model="createCouponInfo.paymentChannel"
+                                                ng-options="paymentChannel.value as paymentChannel.name for paymentChannel in paymentChannelS">
+                                            <option value="">请选择</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="c_value">
+                                        金额
+                                    </label>
+
+                                    <div class="col-sm-7">
+                                        <input type="text" id="c_value" class="form-control"
+                                               ng-model="createCouponInfo.value" maxlength="4">
+                                    </div>
+                                </div>
+                                <!--<div class="form-group">
+                                    <label class="col-sm-4 control-label" for="c_limitAmount">
+                                        最小使用金额
+                                    </label>
+
+                                    <div class="col-sm-7">
+                                        <input type="text" id="c_limitAmount" class="form-control"
+                                               ng-model="createCouponInfo.limitAmount">
+                                    </div>
+                                </div>-->
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="c_expiredDateAsString">
+                                        到期时间
+                                    </label>
+
+                                    <div class="col-sm-7">
+                                        <input type="text" id="c_expiredDateAsString" class="form-control"
+                                               ng-model="createCouponInfo.expiredDateAsString"
+                                               onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true})"/>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="cancelBtn" class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button id="confirmBtn" class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+
+                <script type="text/ng-template" id="setScreenCondi.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>设置筛选用户条件</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="condi_district">
+                                        地区<br>(默认全部)
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <ui-select id="condi_district" multiple ng-model="screenCondi.districtList" theme="bootstrap">
+                                            <ui-select-match>
+                                                {{$item.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="jdDistrict in jdDistricts | propsFilter: {name: $select.search}">
+                                                <div ng-bind-html="jdDistrict.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="condi_createTimeStart">
+                                        注册时间
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="condi_createTimeStart" style="width: 130px;" ng-model="screenCondi.effectiveDateStart"
+                                               onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'condi_createTimeEnd\')||\'%y-%M-%d %H:%m\'}',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+                                        至
+                                        <input type="text" id="condi_createTimeEnd" style="width: 130px;" ng-model="screenCondi.effectiveDateEnd"
+                                               onFocus="WdatePicker({minDate:'#F{$dp.$D(\'condi_createTimeStart\')}',maxDate:'%y-%M-%d %H:%m',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="condi_sceneName">
+                                        渠道名称<br>(默认全部)
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <ui-select id="condi_sceneName" multiple ng-model="screenCondi.qrcodeList" theme="bootstrap">
+                                            <ui-select-match>
+                                                {{$item.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="jdQrcode in jdQrcodeList | propsFilter: {name: $select.search}">
+                                                <div ng-bind-html="jdQrcode.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="condi_name">
+                                        姓名
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="condi_name" class="form-control" ng-model="screenCondi.name" maxlength="21">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="condi_phoneNumber">
+                                        手机号码
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="condi_phoneNumber" class="form-control" ng-model="screenCondi.phoneNumber" maxlength="11">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="hasOrdered">
+                                        预约记录
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select id="hasOrdered" class="form-control" ng-model="screenCondi.hasOrdered">
+                                            <option value="">全部</option>
+                                            <option value="false">无</option>
+                                            <option value="true">有</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="padding-left: 30%;" ng-if="screenCondi.hasOrdered=='true'">
+                                    <div class="checkbox clip-check check-primary">
+                                        <input type="checkbox" id="hasPayOrder" value="1" ng-model="screenCondi.hasPayOrder">
+                                        <label for="hasPayOrder">
+                                            有自费预约记录
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="padding-left: 30%;" ng-if="screenCondi.hasOrdered=='true'">
+                                    <div class="checkbox clip-check check-primary">
+                                        <input type="checkbox" id="hasFreeOrder" value="1" ng-model="screenCondi.hasFreeOrder">
+                                        <label for="hasFreeOrder">
+                                            有免费体验过橙医生预约
+                                        </label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="cancel()">取消</button>
+                        <button class="btn btn-primary" ng-click="ok()">确定</button>
+                    </div>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

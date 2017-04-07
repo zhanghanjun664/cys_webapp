@@ -1,0 +1,209 @@
+<div class="container-fluid container-fullw">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row" ng-controller="MedicalRecordCtrl">
+                <button ng-click="search()" type="button" class="btn btn-wide btn-success"
+                        style="min-width: 30px;">
+                    查询 <i class="fa fa-search"></i>
+                </button>
+                &nbsp;&nbsp;
+                <strong>总记录数:</strong> <b ng-bind="page.totalCount"></b>
+
+                <div class="col-sm-12 col-md-12">
+                    <div ng-repeat="record in recordList">
+                        <div class="col-sm-6 col-md-4 me-au-item">
+                            <div class="thumbnail" style="height: 100%">
+                                <table>
+                                    <tr><td>病历</td><td>处方单</td><td>检查报告</td></tr>
+                                    <tr>
+                                        <td>
+                                            <img ng-if="record.medicalRecord.length>0" ng-click="open(record)" ng-src="{{record.medicalRecord}}" class="me-au-img pointer">
+                                            <img ng-if="record.medicalRecord==null||record.medicalRecord.length==0" ng-click="open(record)" ng-src="assets/images/noPicture.jpg" class="me-au-img pointer">
+                                        </td>
+                                        <td>
+                                            <img ng-if="record.prescription==null||record.prescription.length==0" ng-click="open(record)" ng-src="assets/images/noPicture.jpg" class="me-au-img pointer">
+                                            <img ng-if="record.prescription.length>0" ng-click="open(record)" ng-src="{{record.prescription}}" class="me-au-img pointer">
+                                        </td>
+                                        <td>
+                                            <img ng-if="record.medicalReport==null||record.medicalReport.split(';')[0].length==0" ng-click="open(record)" ng-src="assets/images/noPicture.jpg" class="me-au-img pointer">
+                                            <img ng-if="record.medicalReport.split(';')[0].length>0" ng-ng-click="open(record)" src="{{record.medicalReport.split(';')[0]}}" class="me-au-img pointer">
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div class="caption">
+                                    <p class="row">
+                                        <div class="col-sm-12">
+                                            <b>订单号：</b>{{record.orderNumber==null?"无对应订单，审核通过无奖励":record.orderNumber}}
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <b>患者姓名：</b>{{record.patientName}}
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <b>患者年龄：</b>{{record.age}}
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <b>病情描述：</b>{{record.doctorDiagnosis}}
+                                        </div>
+                                    </p>
+                                    <div class="center">
+                                        <button class="btn btn-o btn-primary" ng-click="passRecord(record)">
+                                            审核通过
+                                        </button>
+                                        <button class="btn btn-o btn-danger" ng-click="failRecord(record)">
+                                            审核不通过
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3" style="text-align: center;margin-top:30px;margin-left: 37%;">
+                    <button ng-click="prev()" class="btn btn-wide btn-primary" style="min-width: 30px;"
+                            ng-disabled="prevFlag">
+                        <i class="ti ti-angle-left"></i>上一页
+                    </button>
+                    <button ng-click="next()" class="btn btn-wide btn-primary" style="min-width: 30px;"
+                            ng-disabled="nextFlag">
+                        下一页<i class="ti ti-angle-right"></i>
+                    </button>
+                </div>
+
+                <script type="text/ng-template" id="searchRecord.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>查询条件</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="orderNumber">
+                                        订单号
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <input type="text" id="orderNumber" class="form-control"
+                                               ng-model="searchInfos.orderNumber" maxlength="20">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="patientName">
+                                        患者姓名
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <input type="text" id="patientName" class="form-control"
+                                               ng-model="searchInfos.patientName" maxlength="21">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="phoneNumber">
+                                        手机号码
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <input type="text" id="phoneNumber" class="form-control"
+                                               ng-model="searchInfos.phoneNumber" maxlength="11">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="clear()">清空条件</button>
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+
+                <script type="text/ng-template" id="recordPic.html">
+                    <div class="modal-body center">
+                        <table>
+                            <tr><td>病历</td><td>处方单</td><td>检查报告</td></tr>
+                            <tr>
+                                <td>
+                                    <img ng-if="record.medicalRecord.length>0" ng-src="{{record.medicalRecord}}" class="me-au-ximg" alt="没有上传">
+                                    <img ng-if="record.medicalRecord==null||record.medicalRecord.length==0" ng-src="assets/images/noPicture.jpg" class="me-au-ximg">
+                                </td>
+                                <td>
+                                    <img ng-if="record.prescription==null||record.prescription.length==0" ng-src="assets/images/noPicture.jpg" class="me-au-ximg">
+                                    <img ng-if="record.prescription.length>0" ng-src="{{record.prescription}}" class="me-au-ximg" alt="没有上传">
+                                </td>
+                                <td>
+                                    <img ng-if="record.medicalReport==null||record.medicalReport.split(';')[0].length==0" ng-src="assets/images/noPicture.jpg" class="me-au-ximg">
+                                    <img ng-if="record.medicalReport.split(';')[0].length>0" ng-src="{{record.medicalReport.split(';')[0]}}" class="me-au-ximg">
+                                </td>
+                                <td ng-if="record.medicalReport.split(';')[1].length>0">
+                                    <img ng-src="{{record.medicalReport.split(';')[1]}}" class="me-au-ximg">
+                                </td>
+                                <td ng-if="record.medicalReport.split(';')[2].length>0">
+                                    <img ng-src="{{record.medicalReport.split(';')[2]}}" class="me-au-ximg">
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="center">
+                            <button class="btn btn-primary" ng-click="cancel()">关闭</button>
+                        </div>
+                    </div>
+                </script>
+
+                <script type="text/ng-template" id="passRecord.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>审核通过</b></h5>
+                    </div>
+                    <div class="modal-body center">
+                        <table>
+                            <tr><td>病历</td><td>处方单</td><td>检查报告</td></tr>
+                            <tr>
+                                <td>
+                                    <img ng-if="record.medicalRecord.length>0" ng-src="{{record.medicalRecord}}" class="me-au-pimg">
+                                    <img ng-if="record.medicalRecord==null||record.medicalRecord.length==0" ng-src="assets/images/noPicture.jpg" class="me-au-pimg">
+                                </td>
+                                <td>
+                                    <img ng-if="record.prescription==null||record.prescription.length==0" ng-src="assets/images/noPicture.jpg" class="me-au-pimg">
+                                    <img ng-if="record.prescription.length>0" ng-src="{{record.prescription}}" class="me-au-pimg">
+                                </td>
+                                <td>
+                                    <img ng-if="record.medicalReport==null||record.medicalReport.split(';')[0].length==0" ng-src="assets/images/noPicture.jpg" class="me-au-pimg">
+                                    <img ng-if="record.medicalReport.split(';')[0].length>0" ng-src="{{record.medicalReport.split(';')[0]}}" class="me-au-pimg">
+                                </td>
+                                <td ng-if="record.medicalReport.split(';')[1].length>0">
+                                    <img ng-src="{{record.medicalReport.split(';')[1]}}" class="me-au-pimg">
+                                </td>
+                                <td ng-if="record.medicalReport.split(';')[2].length>0">
+                                    <img ng-src="{{record.medicalReport.split(';')[2]}}" class="me-au-pimg">
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="padding-top-30 center">
+                            通过项目:
+                            <div class="checkbox clip-check check-primary checkbox-inline me-au-chk">
+                                <input type="checkbox" id="medical_record" value="1" ng-model="record.medicalRecordChk" ng-disabled="record.recordStatus=='AUDITPASS'">
+                                <label for="medical_record">
+                                    病历
+                                </label>
+                            </div>
+                            <div class="checkbox clip-check check-primary checkbox-inline me-au-chk">
+                                <input type="checkbox" id="prescription" value="1" ng-model="record.prescriptionChk" ng-disabled="record.prescriptionStatus=='AUDITPASS'">
+                                <label for="prescription">
+                                    处方单
+                                </label>
+                            </div>
+                            <div class="checkbox clip-check check-primary checkbox-inline me-au-chk">
+                                <input type="checkbox" id="medical_report" value="1" ng-model="record.medicalReportChk" ng-disabled="record.reportStatus=='AUDITPASS'">
+                                <label for="medical_report">
+                                    检查报告
+                                </label>
+                            </div>
+                        </div>
+                        <div class="padding-top-30 center">
+                            <button class="btn btn-primary" ng-click="ok()">确定</button>
+                            <button class="btn btn-primary" ng-click="cancel()">取消</button>
+                        </div>
+                    </div>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

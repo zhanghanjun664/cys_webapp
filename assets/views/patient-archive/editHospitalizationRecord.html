@@ -1,0 +1,56 @@
+
+    <div class="modal-header">
+        <h5 class="modal-title"><b>住院/手术情况</b></h5>
+    </div>
+    <div class="modal-body">
+        <div class="panel-body">
+            <form role="form" class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        住院时间
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" id="start_date" style="width: 130px;" ng-model="record.startDateInString"
+                               onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'end_date\')||\'%y-%M-%d\'}',dateFmt:'yyyy-MM-dd',readOnly:true})" />
+                        至
+                        <input type="text" id="end_date" style="width: 130px;" ng-model="record.endDateInString"
+                               onFocus="WdatePicker({minDate:'#F{$dp.$D(\'start_date\')}',maxDate:'%y-%M-%d',dateFmt:'yyyy-MM-dd',readOnly:true})" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        住院原因
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" id="reason" class="form-control" ng-model="record.reason" >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        手术名称
+                    </label>
+                    <div class="col-sm-6">
+                        <input type="text" id="surgery" class="form-control" ng-model="record.surgery" >
+                    </div>
+                    <div class="col-sm-3">
+                         <button ng-click="selectSick()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+                                                                             选择手术<i class="fa fa-plus"></i>
+                         </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        备注
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" id="remark" class="form-control" ng-model="record.remark" >
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+    </div>

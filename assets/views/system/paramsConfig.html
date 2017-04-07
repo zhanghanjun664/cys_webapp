@@ -1,0 +1,154 @@
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div ng-controller="ParamsConfigCtrl" class="col-md-12">
+        	<button ng-click="edit()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+				新增 <i class="fa fa-plus"></i>
+			</button>
+			<button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
+				编辑 <i class="fa fa-edit"></i>
+			</button>
+			<button ng-click="deleteAll()" type="button" class="btn btn-wide btn-danger" style="min-width: 30px;">
+				删除 <i class="fa fa-trash"></i>
+			</button>
+			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<p style="margin-top:25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+            <div class="table-responsive" style="margin-top:25px;">
+                <table ng-table="tableParams" class="table table-hover">
+                	<thead>
+						<tr>
+							<th style="text-align:left;width:6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()"/>
+									<label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th width="15%">参数名称</th>
+							<th width="50%">参数值</th>
+							<th width="20%">参数描述</th>
+							<th width="10%">操作</th>
+						</tr>
+					</thead>
+                    <tr ng-repeat="paramsConfig in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                    	<td>
+                    		<div class="checkbox clip-check check-primary checkbox-inline">
+	                    		<input id="checkbox{{paramsConfig.uuid}}" type="checkbox" ng-model="paramsConfig.selected" ng-click="changeSelection($index)"/>
+	                    		<label for="checkbox{{paramsConfig.uuid}}" style="vertical-align: middle;"></label>
+                    		</div>
+                    	</td>
+						<td class="center">{{paramsConfig.key}}</td>
+						<td class="center">{{paramsConfig.value}}</td>
+						<td class="center">{{paramsConfig.name}}</td>
+                        <td class="center">
+                            <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                <a href="#" ng-click="edit(paramsConfig)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="编辑"><i
+                                        class="fa fa-edit"></i></a>
+                                <a href="#" ng-click="deleteItem(paramsConfig.uuid)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="删除"><i
+                                        class="fa fa-trash fa fa-white"></i></a>
+                            </div>
+                            <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                <div class="btn-group" dropdown is-open="status.isopen">
+                                    <button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle" dropdown-toggle>
+                                        <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right dropdown-light" role="menu">
+                                        <li>
+                                            <a href="#" ng-click="edit(paramsConfig)">编辑</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" ng-click="deleteItem(paramsConfig.uuid)">删除</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+				<script type="text/ng-template" id="searchParamsConfig.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>查询条件</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-4 control-label" for="s_key">
+										参数名称
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="s_key" class="form-control" ng-model="searchInfos.key" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label" for="s_value">
+										参数值
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="s_value" class="form-control" ng-model="searchInfos.value" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label" for="s_name">
+										参数描述
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="s_name" class="form-control" ng-model="searchInfos.name" >
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+
+                <script type="text/ng-template" id="editParamsConfig.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>系统参数</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="key">
+										参数名称
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="key" class="form-control" ng-model="paramsConfigInfo.key">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="value">
+										参数值
+									</label>
+									<div class="col-sm-8">
+										<textarea id="value" rows="5" ng-model="paramsConfigInfo.value" class="form-control"></textarea>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="name">
+										参数描述
+									</label>
+									<div class="col-sm-8">
+										<textarea id="name" rows="5" ng-model="paramsConfigInfo.name" class="form-control"></textarea>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+            </div>
+        </div>
+    </div>
+</div>

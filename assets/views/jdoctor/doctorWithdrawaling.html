@@ -1,0 +1,160 @@
+<div class="container-fluid container-fullw bg-white">
+<div class="row">
+        <div ng-controller="DoctorWithdrawalingCtrl" class="col-md-12">
+            <button ng-click="edit()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+                新增 <i class="fa fa-plus"></i>
+            </button>
+            <p style="margin-top:25px;">
+                <strong>总记录数:</strong> {{tableParams.total()}}
+            </p>
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>医生</th>
+                        <th>提款金额</th>
+                        <th>状态</th>
+                        <th>时间</th>
+                        <th>银行</th>
+                        <th>支行</th>
+                        <th>卡号</th>
+                        <th>持卡人</th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="jdTitle in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                        <td class="center">{{jdTitle.name}}</td>
+                        <td class="center">{{jdTitle.amount}}</td>
+                        <td class="center">{{getStatusString(jdTitle.status)}}</td>
+                        <td class="center">{{jdTitle.createDate}}</td>
+                        <td class="center">{{jdTitle.bankName}}</td>
+                        <td class="center">{{jdTitle.subBranch}}</td>
+                        <td class="center">{{jdTitle.receiptAccount}}</td>
+                        <td class="center">{{jdTitle.receiptName}}</td>
+                    </tr>
+                </table>
+
+                <script type="text/ng-template" id="selectDoctor.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>医生选择</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                <div class="col-md-3">
+                                    <label class="col-sm-5">地区</label>
+                                    <select class="col-sm-6" ng-model="searchInfo.districtId"
+                                            ng-options="jdDistrict.uuid as jdDistrict.name for jdDistrict in jdDistricts" ng-change="onDistrictChange(searchInfo.districtId)">
+                                        <option value="">全部</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="col-sm-5"> 医院</label>
+                                    <select class="col-sm-6" ng-model="searchInfo.hospitalId"
+                                            ng-options="jdHospital.hospitalId as jdHospital.name for jdHospital in jdHospitals">
+                                        <option value="">全部</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="col-sm-5">科室</label>
+                                    <select class="col-sm-6" ng-model="searchInfo.departmentId"
+                                            ng-options="jdDepartment.uuid as jdDepartment.name for jdDepartment in jdDepartments">
+                                        <option value="">全部</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="col-sm-5">职称</label>
+                                    <select class="col-sm-6" ng-model="searchInfo.titleId"
+                                            ng-options="jdTitle.uuid as jdTitle.name for jdTitle in jdTitles">
+                                        <option value="">全部</option>
+                                    </select>
+                                </div>
+                                <br/>
+                                <br/>
+                                <div class="col-md-3">
+                                    <label class="col-sm-5">姓名</label>
+                                    <input class="col-sm-6" type="text" ng-model="searchInfo.name">
+                                    </input>
+                                </div>
+                                <div style="clear: both"/>
+                                <div class="table-responsive" style="margin-top:25px;">
+                                    <table ng-table="tableParams" class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>姓名</th>
+                                            <th>地区</th>
+                                            <th>医院</th>
+                                            <th>科室</th>
+                                            <th>职称</th>
+                                        </tr>
+                                        </thead>
+                                        <tr ng-repeat="jdoctor in data" ng-class-odd="'odd'" ng-class-even="'even'">
+                                            <td>
+                                                <div class="checkbox clip-check check-primary checkbox-inline">
+                                                    <input id="checkbox{{jdoctor.uuid}}" type="checkbox" ng-model="jdoctor.selected" ng-click="changeSelection($index)"/>
+                                                    <label for="checkbox{{jdoctor.uuid}}" style="vertical-align: middle;"></label>
+                                                </div>
+                                            </td>
+                                            <td class="center">{{jdoctor.name}}</td>
+                                            <td class="center">{{jdoctor.district}}</td>
+                                            <td class="center">{{jdoctor.hospital}}</td>
+                                            <td class="center">{{jdoctor.department}}</td>
+                                            <td class="center">{{jdoctor.title}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div style="clear: both"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="query()">查询</button>
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+
+
+                <script type="text/ng-template" id="editWithdrawaling.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>新建</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="name">
+                                        医生
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="col-sm-12" ng-model="rowObject.name" id="name"  readonly>
+                                        </input>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button ng-click="selectDoctor()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+                                            选择医生 <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="amount">
+                                        金额
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="col-sm-12" ng-model="rowObject.amount" id="amount">
+                                        </input>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+
+            </div>
+        </div>
+    </div>
+</div>

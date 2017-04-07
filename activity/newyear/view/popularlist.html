@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>人气榜</title>
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<script src="../static/js/app/rem.js"></script>
+	<link rel="stylesheet" href="../static/css/base.css">
+	<link rel="stylesheet" href="../static/css/style.css">
+	<script type="text/javascript" src="../static/js/libs/requirejs/require.js"></script>
+	<script type="text/javascript" src="../static/js/app.js"></script>
+	<script>
+		require(['popularlist'],function(s){
+			s.getPopularData();
+			s.getSchedule();
+		});
+	</script>
+</head>
+<body>
+
+	<div class="popular pr">
+		<div class="popular_title pa"></div>
+
+
+		<div id="iscroll_wrap" class="iscroll_wrap pr">
+
+			<ul class="popular_list pr" id="popular_list">
+				<!--<li>-->
+				<!--<div class="polularnumber">01</div>-->
+				<!--<div class="popularpic pr">-->
+				<!--<div class="popular_pic_wrap pa"></div>-->
+				<!--</div>-->
+				<!--<div class="popularshow">-->
+				<!--<p class="clearfix popularname"><span class="fl">哈哈哈</span><span class="fr doctorNumber">100</span></p>-->
+				<!--<p class="popular_hp pr">-->
+					<!--<span class="pa"></span>-->
+					<!--</p>-->
+				<!--</div>-->
+				<!--</li>-->
+
+			</ul>
+
+		</div>
+
+
+
+	</div>
+
+	<div class="popular_btn clearfix">
+		<a href="javascript:void(0)" class="popular_right btn2" onClick="javascript :history.back(-1);" style="margin: 0px auto;">返回</a>
+	</div>
+
+</body>
+</html>

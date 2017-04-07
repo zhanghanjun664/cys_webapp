@@ -1,0 +1,131 @@
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div ng-controller="sickCategorySetCtrl" class="col-md-12">
+			<button ng-click="edit()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+				新增 <i class="fa fa-plus"></i>
+			</button>
+			<button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
+				编辑 <i class="fa fa-edit"></i>
+			</button>
+			<button ng-click="deleteAll()" type="button" class="btn btn-wide btn-danger" style="min-width: 30px;">
+				删除 <i class="fa fa-trash"></i>
+			</button>
+			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<p style="margin-top: 25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+			<div class="table-responsive">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+						<tr>
+							<th style="text-align: left; width: 6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()" /> <label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th>疾病名称</th>
+							<th>是否显示</th>
+							<th>排序</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+
+					<tr ng-repeat="obj in $data" ng-class-odd="'odd'" ng-class-even="'even'" id="tr{{obj.id}}">
+						<td>
+							<div class="checkbox clip-check check-primary checkbox-inline">
+								<input id="checkbox{{obj.id}}" type="checkbox" ng-model="obj.selected" ng-click="changeSelection($index)" /> <label for="checkbox{{obj.id}}"
+									style="vertical-align: middle;"></label>
+							</div>
+						</td>
+						<td class="center">{{obj.name}}</td>
+						<td class="center">{{getItemName(obj.isShowOnPatient,isShowOnPatientList)}}</td>
+						<td class="center">{{obj.seq}}</td>
+						<td class="center">
+							<div class="visible-md visible-lg hidden-sm hidden-xs">
+								<a href="#" ng-click="edit(obj)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="编辑"><i class="fa fa-edit"></i></a> <a
+									href="#" ng-click="deleteItem(obj.id)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="删除"><i
+									class="fa fa-trash fa fa-white"></i></a>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<script type="text/ng-template" id="searchSickCategorySet.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>查询条件</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										疾病名称
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="s_name" class="form-control" ng-model="searchInfos.name" >
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+				<script type="text/ng-template" id="editSickCategorySet.html">
+					<div class="modal-header" >
+						<h5 class="modal-title"><b>文章疾病</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										疾病名称
+									</label>
+									<div class="col-sm-8">
+										<input type="text" class="form-control" ng-model="obj.name" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" style="padding-top:13px;">
+										是否展示
+									</label>
+									<div class="col-sm-8">
+										<div class="radio clip-radio radio-primary radio-inline">
+											<input type="radio" id="isShowOnPatient_y" ng-model="obj.isShowOnPatient" value="true">
+											<label for="isShowOnPatient_y">是</label>
+										</div>
+										<div class="radio clip-radio radio-primary radio-inline">
+											<input type="radio" id="isShowOnPatient_n" ng-model="obj.isShowOnPatient" value="false">
+											<label for="isShowOnPatient_n">否</label>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										排序
+									</label>
+									<div class="col-sm-8">
+										<input type="text" class="form-control" ng-model="obj.seq" >
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+

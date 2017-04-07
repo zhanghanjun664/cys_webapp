@@ -1,0 +1,161 @@
+
+    <div class="modal-header">
+        <h5 class="modal-title"><b>身体基本状况</b></h5>
+    </div>
+    <div class="modal-body">
+        <div class="panel-body">
+            <form role="form" class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">
+                        指标:<span class="js_index">身高</span>
+                    </label>
+                    <div class="col-sm-3">
+                        <div style="display: flex;line-height: 34px;">
+                            <input type="number" step="0.01" style="width: 130px;" class="form-control js_value" ng-model="height">
+                            <span col-sm-2>&nbsp;cm</span>
+                        </div>
+                    </div>
+                    <label class="col-sm-2 control-label">
+                        检查时间:
+                    </label>
+                    <div class="col-sm-3">
+                        <input type="text" class="js_time" style="width: 130px;" ng-model="height_time" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">
+                        指标:<span class="js_index">体重</span>
+                    </label>
+                    <div class="col-sm-3">
+                        <div style="display: flex;line-height: 34px;">
+                            <input type="number" step="0.01" style="width: 130px;"  class="form-control js_value" ng-model="weight">
+                            <span col-sm-2>&nbsp;kg</span>
+                        </div>
+                    </div>
+                    <label class="col-sm-2 control-label">
+                        检查时间:
+                    </label>
+                    <div class="col-sm-3">
+                        <input type="text" class="js_time" ng-model="weight_time" style="width: 130px;" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">
+                        指标:<span class="js_index">脉搏</span>
+                    </label>
+                    <div class="col-sm-3">
+                        <div style="display: flex;line-height: 34px;">
+                            <input type="number" step="0.01" style="width: 130px;" class="form-control js_value" ng-model="pulse">
+                            <span col-sm-2 style="padding-left: 8px;">次/分</span>
+                        </div>
+                    </div>
+                    <label class="col-sm-2 control-label">
+                        检查时间:
+                    </label>
+                    <div class="col-sm-3">
+                        <input type="text" class="js_time" style="width: 130px;" ng-model="pulse_time" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">
+                        指标:<span class="js_index">空腹血糖</span>
+                    </label>
+                    <div class="col-sm-3">
+                        <div style="display: flex;line-height: 34px;">
+                            <input type="number" step="0.01" style="width: 130px;" class="form-control js_value" ng-model="fasting_blood_glucose">
+                            <span col-sm-2>&nbsp;mmol/L</span>
+                        </div>
+                    </div>
+                    <label class="col-sm-2 control-label">
+                        检查时间:
+                    </label>
+                    <div class="col-sm-3">
+                        <input type="text" class="js_time" style="width: 130px;" ng-model="fasting_blood_glucose_time" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">
+                        指标:<span class="js_index">甘油三脂</span>
+                    </label>
+                    <div class="col-sm-3">
+                        <div style="display: flex;line-height: 34px;">
+                            <input type="number" step="0.01" style="width: 130px;" class="form-control js_value" ng-model="glycerin_three_fat">
+                            <span col-sm-2>&nbsp;mmol/L</span>
+                        </div>
+                    </div>
+                    <label class="col-sm-2 control-label">
+                        检查时间:
+                    </label>
+                    <div class="col-sm-3">
+                        <input type="text" class="js_time" style="width: 130px;" ng-model="glycerin_three_fat_time" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">
+                        指标:<span class="js_index">胆固醇</span>
+                    </label>
+                    <div class="col-sm-3">
+                        <div style="display: flex;line-height: 34px;">
+                            <input type="number" step="0.01" style="width: 130px;" class="form-control js_value" ng-model="cholesterol" >
+                            <span col-sm-2>&nbsp;mmol/L</span>
+                        </div>
+                    </div>
+                    <label class="col-sm-2 control-label">
+                        检查时间:
+                    </label>
+                    <div class="col-sm-3">
+                        <input type="text" class="js_time" style="width: 130px;"  ng-model="cholesterol_time"  onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">
+                        指标:<span class="js_index">视网膜病变</span>
+                    </label>
+                    <div class="col-sm-3">
+                        <div style="display: flex;">
+                            <!--<input type="text" style="width: 130px;" class="form-control js_value" ng-model="retinopathy" >-->
+                            <select id="retinopathy" ng-model="retinopathy" style="width: 130px;" class="col-sm-4 js_value">
+                                <option value="有">有</option>
+                                <option value="无">无</option>
+                            </select>
+                            <span col-sm-2>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        </div>
+                    </div>
+                    <label class="col-sm-2 control-label">
+                        检查时间:
+                    </label>
+                    <div class="col-sm-3">
+                        <input type="text" class="js_time" style="width: 130px;" ng-model="retinopathy_time"  onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">
+                        指标:<span class="js_index">尿微量蛋白</span>
+                    </label>
+                    <div class="col-sm-3">
+                        <div style="display: flex;line-height: 34px;">
+                            <input type="number" step="0.01" style="width: 130px;" class="form-control js_value" ng-model="urinary_microalbumin" >
+                            <span col-sm-2>&nbsp;mg/L</span>
+                        </div>
+                    </div>
+                    <label class="col-sm-2 control-label">
+                        检查时间:
+                    </label>
+                    <div class="col-sm-3">
+                        <input type="text" class="js_time" style="width: 130px;" ng-model="urinary_microalbumin_time" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+    </div>

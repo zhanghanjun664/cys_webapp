@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<script type="text/javascript" src="dialogs/internal.js"></script>
+<style type="text/css">
+.warp {
+	width: 392px;
+	height: 153px;
+	margin-left: 5px;
+	padding: 20px 0 0 15px;
+	position: relative;
+}
+/*  #url {width: 290px; margin-bottom: 2px; margin-left: -6px; margin-left: -2px\9;*margin-left:0;_margin-left:0; } */
+.format span {
+	display: inline-block;
+	width: 58px;
+	text-align: center;
+	zoom: 1;
+}
+
+table {
+	width: 392px;
+}
+
+table tr {
+	width: 392px;
+}
+
+table td {
+	padding: 5px 0;
+	width: 392px;
+}
+label{align:left;width:60px;}
+/* #align{width: 65px;height: 23px;line-height: 22px;} */
+</style>
+</head>
+<body>
+	<div class="warp">
+		<table width="300" cellpadding="0" cellspacing="0">
+			<tr>
+				<td colspan="2" class="format"><label>音频url: </label> <input
+					style="width: 250px" id="url" type="text" value="https://staging.chengyisheng.com.cn/app_web/shortest.mp3"/></td>
+			</tr>
+			<tr>
+				<td colspan="2" class="format"><label>名称: </label><input style="width: 250px"
+					type="text" id="title" value="音频名称"/></td>
+
+			</tr>
+			<tr>
+				<td colspan="2" class="format"><label>显示图片: </label><input
+					style="width: 250px" type="text" id="img" value="http://k.sinaimg.cn/n/ent/transform/20160624/49TB-fxtmwep2715814.jpg/w120h90z1l50t1a1a.jpg"/></td>
+			</tr>
+		</table>
+	</div>
+	<!--页面中一定要引入internal.js为了能直接使用当前打开dialog的实例变量-->
+	<!--internal.js默认是放到dialogs目录下的-->
+
+	<script>
+    //可以直接使用以下全局变量
+    //当前打开dialog的实例变量
+    //alert('editor: '+editor);
+	console.log('editor: ',editor);
+    //一些常用工具
+    //alert('domUtils: '+domUtils);
+   // alert('utils: '+utils);
+    //alert('browser: '+browser);
+    dialog.onok = function(){
+        // 插入内容到编辑器
+       // editor.execCommand('inserthtml',document.getElementById('test').value);
+        var audio="<audio src='${url}' img='${img}' title='${title}' controls='controls'></audio>";
+        console.log("audio=",audio);
+        var url=document.getElementById('url').value;
+        var title=document.getElementById('title').value;
+        var img=document.getElementById('img').value;
+        console.log("url=",url);
+        console.log("title=",title);
+        console.log("img=",img);
+        audio=audio.replace('${url}',url).replace('${img}',img).replace('${title}',title);
+        console.log("audio=",audio);
+        // '<span> <audio src="https://staging.chengyisheng.com.cn/app_web/shortest.mp3" controls="controls"></audio></span>'
+        editor.execCommand('inserthtml',audio);
+    }
+   
+</script>
+</body>
+</html>

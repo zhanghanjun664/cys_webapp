@@ -1,0 +1,156 @@
+<style>
+.app-modal-window .modal-dialog {
+	width: 1000px;
+}
+
+.ui-select-container {
+	z-index: 10001;
+}
+
+.none-padding {
+	padding: 0 !important;
+}
+
+.padding-left-15 {
+	padding-left: 15px;
+}
+
+.margin-top-20 {
+	margin-top: 20px;
+}
+
+.margin-bottom-25 {
+	margin-bottom: 25px;
+}
+
+.tabs-left>.nav-tabs {
+	margin-right: 0px !important;
+	background-color: #E6E8E8 !important;
+	border: none !important;
+}
+
+.panel-tabs, .tabbable {
+	background: #E6E8E8 !important;
+}
+
+.tabs-left .tab-content {
+	border-bottom: none;
+	background-color: #fff ! important;
+}
+
+.display-none {
+	display: none;
+}
+
+.display-none:hover {
+	display: none;
+}
+
+.user-image img {
+	max-width: 100%;
+}
+
+.show-no-image {
+	display: none;
+}
+</style>
+<div class="container-fluid container-fullw bg-white"
+	ng-controller="bannerCtrl" style="height: 100%;">
+
+
+	<tabset class="tabbable tabs-left margin-top-20"> <tab
+		ng-repeat="typeDesc in typeDescs" heading="{{typeDesc}}">
+	<div class="row-fluid" ng-repeat="banner in data" style="height: 100%"
+		ng-if="banner.typeDesc==typeDesc">
+		<form class="form-group" id="form_{{banner.id}}" role="form" data-type="{{banner.type}}" data-typeDesc="{{banner.typeDesc}}" >
+			<div class="col-md-1 text-right">
+				<label class="">排序 {{banner.seq}}:</label>
+			</div>
+			<div class="col-md-11">
+				<div class="row">
+					<label class="col-sm-2 control-label">广告图:</label>
+					<div class="col-sm-10"
+						flow-init="{singleFile:true,target:uploadUrl,testChunks:false}"
+						flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]"
+						flow-files-submitted="upload($files, $event, $flow,banner.type,banner.typeDesc)"
+						flow-file-success="uploadSuccess($file, $message,banner.id,$flow)">
+						<div class="user-image doctor-image" style="float: left">
+							<div class="thumbnail">
+								<img src="../../assets/images/no-image.png" alt=""
+									ng-show="showNoImage($flow,banner.imageUrl,banner.id)"> <img
+									id="hasimage_{{banner.id}}" ng-src="{{banner.imageUrl}}" alt="宽高"
+									ng-show="showHasImage($flow,banner.id)"> <img
+									flow-img="$flow.files[0]" ng-if="$flow.files.length"> <input
+									type="hidden" id="imageUrl_{{banner.id}}"
+									name="imageUrl_{{banner.id}}" value="{{banner.imageUrl}}">
+							</div>
+							<div class="user-image-buttons display-none" ng-if="$flow.files.length">
+								<span class="btn btn-primary" flow-btn><i
+									class="fa fa-pencil"></i></span> <span class="btn btn-danger"
+									ng-click="removeImage($flow,banner.id)"> <i
+									class="fa fa-times"></i>
+								</span>
+							</div>
+							<div class="user-image-buttons display-none" ng-if="!$flow.files.length">
+								<span class="btn btn-primary" flow-btn><i
+									class="fa fa-pencil"></i></span> <span class="btn btn-danger"
+									ng-show="showRemoveBtn(banner.imageUrl,banner.id)"
+									ng-click="removeImage($flow,banner.id)"><i
+									class="fa fa-times"></i></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<label class="col-sm-2 control-label">跳转链接:</label>
+					<div class="col-sm-10 text-right">
+						<input type="text" name="link" value="{{banner.link}}"
+							class="form-group col-sm-12" disabled="disabled">
+					</div>
+				</div>
+				<div class="row"
+					ng-repeat="(key,value) in banner.properties.propertiesHolder">
+					<label class="col-sm-2 control-label">{{key}}:</label>
+					<div class="col-sm-10 text-right">
+						<input type="text" name="{{key}}" data-key="{{key}}"
+							value="{{value}}" class="form-group col-sm-12 properties" disabled="disabled">
+					</div>
+				</div>
+				<div class="row">
+					<div
+						class="radio clip-radio radio-primary radio-inline padding-left-15">
+						<input  id="isShow_yes_{{banner.id}}" type="radio" name="isShow"
+							ng-checked="{{banner.isShow==true}}" value="true" disabled="disabled"> <label
+							for="isShow_yes_{{banner.id}}">展示</label>
+					</div>
+					<div class="radio clip-radio radio-primary radio-inline">
+						<input id="isShow_no_{{banner.id}}" type="radio" name="isShow"
+							ng-checked="{{banner.isShow==false}}" value="false" disabled="disabled"> <label
+							for="isShow_no_{{banner.id}}">不展示</label>
+					</div>
+				</div>
+				<div class="row padding-left-15 margin-bottom-25">
+					<input type="button" name="update" value="修改"
+						class="btn btn-default btn-info banner-btn"
+						data-id="{{banner.id}}">
+				</div>
+				<div class="row padding-left-15 margin-bottom-25 display-none">
+					<input type="button" name="save" value="保存"
+						class="btn btn-default btn-primary banner-btn-submit"
+						data-id="{{banner.id}}">
+				</div>
+				<div id="result"></div>
+			</div>
+		</form>
+	</div>
+	</tab>
+</tabset>
+
+
+
+
+</div>
+
+
+
+

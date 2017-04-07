@@ -1,0 +1,120 @@
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div ng-controller="PatientPaymentHistoryCtrl" class="col-md-12">
+            <button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+                查询 <i class="fa fa-search"></i>
+            </button>
+            <button ng-click="exportPaymentHistory()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+                导出Excel <i class="fa fa-download"></i>
+            </button>
+            <p style="margin-top:25px;">
+                <strong>总记录数:</strong> {{tableParams.total()}}
+            </p>
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>患者名称</th>
+                        <th>手机号</th>
+                        <th>金额</th>
+                        <th>申请时间</th>
+                        <th>状态</th>
+                        <th>付款商户单号</th>
+                        <th>描述</th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="payment in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                        <td class="center">{{payment.name}}</td>
+                        <td class="center">{{payment.phoneNumber}}</td>
+                        <td class="center">{{payment.amount}}</td>
+                        <td class="center">{{payment.createDate}}</td>
+                        <td class="center">{{showPaymentStatus(payment.status)}}</td>
+                        <td class="center">{{payment.wxPayBillno}}</td>
+                        <td class="center" ng-if="payment.description.length>10" title="{{payment.description}}">
+                            {{payment.description | limitTo:10}}...
+                        </td>
+                        <td class="center" ng-if="payment.description==null || payment.description.length<=10">
+                            {{payment.description}}
+                        </td>
+                        <td class="center" ng-if="payment.status=='VOID'">
+                            <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                <a href="#" ng-click="audit(payment)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="审核通过"><i
+                                        class="fa fa-eye"></i></a>
+                            </div>
+                            <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                <div class="btn-group" dropdown is-open="status.isopen">
+                                    <button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle" dropdown-toggle>
+                                        <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right dropdown-light" role="menu">
+                                        <li>
+                                            <a href="#" ng-click="audit(payment)">审核通过</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <script type="text/ng-template" id="searchPatientPayment.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>查询条件</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="order_status">
+                                        状态：
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select id="order_status" class="form-control" ng-model="searchInfos.status"
+                                                ng-options="status.value as status.name for status in paymentStatus">
+                                            <option value="">全部</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_phoneNumber">
+                                        手机号码
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="s_phoneNumber" class="form-control" ng-model="searchInfos.phoneNumber" maxlength="11">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="clear()">清空条件</button>
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+                <script type="text/ng-template" id="editPayment.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>付款信息</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="name">
+                                        名称
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="name" class="form-control" ng-model="jdTitleInfo.name">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

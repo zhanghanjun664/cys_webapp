@@ -1,0 +1,164 @@
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div ng-controller="examinationSharingCtrl" class="col-md-12">
+			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<p style="margin-top: 25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+			<div class="table-responsive">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+						<tr>
+							<th style="text-align: left; width: 6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()" /> <label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th>被邀手机号</th>
+							<th>被邀地区</th>
+							<th>被邀家庭联系人姓名</th>
+							<th>被邀家庭联系人关系</th>
+							<th>关注时间</th>
+							<th>状态</th>
+							<th>是否设置接收</th>
+							<th>邀请手机号</th>
+							<th>邀请地区</th>
+							<th>邀请家庭联系人姓名</th>
+							<th>邀请家庭联系人关系</th>
+						</tr>
+					</thead>
+
+					<tr ng-repeat="obj in $data" ng-class-odd="'odd'" ng-class-even="'even'" id="tr{{obj.id}}">
+						<td>
+							<div class="checkbox clip-check check-primary checkbox-inline">
+								<input id="checkbox{{obj.id}}" type="checkbox" ng-model="obj.selected" ng-click="changeSelection($index)" /> <label
+									for="checkbox{{obj.id}}" style="vertical-align: middle;"></label>
+							</div>
+						</td>
+						<td class="center">{{obj.shareePhone}}</td>
+						<td class="center">{{obj.shareeDistrictName}}</td>
+						<td class="center">{{obj.shareeName}}</td>
+						<td class="center">{{obj.shareeRelation}}</td>
+						<td class="center">{{obj.auditable.dateCreated}}</td>
+						<td class="center">{{getItemName(obj.status,statusList)}}</td>
+						<td class="center">{{getItemName(obj.notifEnabled,notifEnabledList)}}</td>
+						<td class="center">{{obj.sharerPhone}}</td>
+						<td class="center">{{obj.sharerDistrictName}}</td>
+						<td class="center">{{obj.sharerName}}</td>
+						<td class="center">{{obj.sharerRelation}}</td>
+					</tr>
+				</table>
+				<script type="text/ng-template" id="searchExaminationSharing.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>查询条件</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										被邀用户手机号
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="s_shareePhone" class="form-control" ng-model="searchInfos.shareePhone" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										被邀者地区
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="s_shareeDistrictName" class="form-control" ng-model="searchInfos.shareeDistrictName" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										被邀家庭联系人关系
+									</label>
+									<div class="col-sm-9">
+										<select class="col-sm-12" ng-model="searchInfos.shareeRelation"
+												ng-options="relation.value as relation.name for relation in relationList">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										邀请用户手机号
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="s_sharerPhone" class="form-control" ng-model="searchInfos.sharerPhone" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										邀请者地区
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="s_sharerDistrictName" class="form-control" ng-model="searchInfos.sharerDistrictName" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										邀请家庭联系人关系
+									</label>
+									<div class="col-sm-9">
+										<select class="col-sm-12" ng-model="searchInfos.sharerRelation"
+												ng-options="relation.value as relation.name for relation in relationList">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										关注时间
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="createTimeStart" style="width: 130px;" ng-model="searchInfos.createTimeStart"
+											   onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'%y-%M-%d\'}',dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})" />
+										至
+										<input type="text" id="createTimeEnd" style="width: 130px;" ng-model="searchInfos.createTimeEnd"
+											   onFocus="WdatePicker({minDate:'#F{$dp.$D(\'createTimeStart\')}',maxDate:'%y-%M-%d',dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="statusId">
+										状态
+									</label>
+									<div class="col-sm-9">
+										<select class="col-sm-12" ng-model="searchInfos.status"
+												ng-options="status.value as status.name for status in statusList">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="statusId">
+										是否设置接收
+									</label>
+									<div class="col-sm-9">
+										<select class="col-sm-12" ng-model="searchInfos.notifEnabled"
+												ng-options="notifEnabled.value as notifEnabled.name for notifEnabled in notifEnabledList">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+

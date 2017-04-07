@@ -1,0 +1,439 @@
+<style>
+.modal-dialog {
+	width: 1300px;
+	z-index: -100;
+}
+.sweet-alert{
+z-index: 110000 !important;
+}
+.modal-content {
+	width: 1300px;
+}
+.ui-select-container {
+	z-index: 10001;
+}
+.subcover-image img {
+  /*   width: 160px;
+    height:140px; */
+	max-width: 160px;
+	max-height:140px;
+}
+.cover-image img {
+	/* width: 720px;
+    height:320px; */
+	max-width: 720px;
+	max-height:320px;
+}
+.underline {
+text-decoration:underline !important;
+}
+.portrait-image img {
+width:50px;
+height:50px;
+border-radius:50%;
+}
+.line-height-30 {
+line-height: 30px;
+}
+.line-height-35 {
+line-height: 35px;
+}
+.sweet-alert {
+    background-color: #acd6ad !important;
+}
+/*
+    解决新建文章对话框因为translate漂移过多导致对话框顶部显示不全(文章信息lable不可见)的问题
+    */
+.modal-dialog {
+	transform: translate(0, -15%) !important;
+}
+</style>
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div ng-controller="liveEventCtrl" class="col-md-12">
+			<button ng-click="edit()" type="button"
+				class="btn btn-wide btn-primary" style="min-width: 30px;">
+				新增 <i class="fa fa-plus"></i>
+			</button>
+			<p style="margin-top: 25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+
+			<div class="table-responsive" style="margin-top: 25px;">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+						<tr>
+							<th style="text-align: left; width: 6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()" /> <label for="selectAllCheckbox"
+										style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th>主题名称</th>
+							<th>开播时间</th>
+							<th>创建人</th>
+							<th>热度</th>
+							<th>点击量</th>
+							<th>展示区</th>
+							<th>运营活动</th>
+							<th>提问</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tr ng-repeat="obj in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+						<td>
+							<div class="checkbox clip-check check-primary checkbox-inline">
+								<input id="checkbox{{obj.uuid}}" type="checkbox" ng-model="obj.selected" ng-click="changeSelection($index)" />
+								<label for="checkbox{{obj.uuid}}" style="vertical-align: middle;"></label>
+							</div>
+						</td>
+						<td class="center">{{obj.title}}</td>
+						<td class="center">{{obj.startTime}}</td>
+						<td class="center">{{obj.createdBy}}</td>
+						<td class="center">{{obj.baseHeat}}</td>
+						<td class="center">{{obj.clickHeat}}</td>
+						<td class="center">
+						   <span ng-if="obj.displayArea==1" style="color:#3384FF">下期预告</span>
+						   <span ng-if="obj.displayArea==2" >往期直播</span>
+						   <span ng-if="obj.displayArea==0">不展示</span></td>
+						<td class="center">{{obj.activity.activityTopic}}</td>
+						<td class="center">
+						       <a href="#" ng-click="selectQuestions(obj)" class="btn btn-transparent btn-xs underline" tooltip-placement="top" tooltip="{{obj.questionCount}}条" style="">{{obj.questionCount}}条</a>
+						</td>
+						<td class="center">
+							<div class="visible-md visible-lg hidden-sm hidden-xs">
+								<a href="#" ng-click="edit(obj)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="编辑"><i
+									class="fa fa-edit"></i></a>
+							</div>
+						</td>
+					</tr>
+				</table>
+
+                <script type="text/ng-template" id="editLiveCtrl.html">
+					<div class="modal-header" style="width:1300px">
+						<h5 class="modal-title"><b>直播信息管理</b></h5>
+					</div>
+					<div class="modal-body" style="width:1300px" >
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for="title">
+										直播主题名称
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="title" placeholder="最长15字符" maxlength="15" class="form-control" ng-model="obj.title" >
+									</div>
+								</div>
+                                <div class="form-group" style="height: 350px;">
+									<label class="col-sm-2 control-label" for="tags">
+										小图
+									</label>
+									<div class="col-sm-2" flow-init="{singleFile:true,target:uploadUrl,testChunks:false}"
+										 flow-name="subcoverObj.flow" flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]"
+                                         flow-files-submitted="upload($files, $event, $flow,'subcover')"
+										 flow-file-success="uploadSuccess($file, $message,$flow,'subcover')" style="height:120px">
+										<div class="user-image subcover-image" style="float:left">
+											<div class="thumbnail">
+												<img src="http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/logo_new.jpg" alt="" ng-if="!subcoverObj.flow.files.length && noSubcoverImage">
+												<img ng-src="{{obj.subcover}}" alt="" ng-if="!subcoverObj.flow.files.length && !noSubcoverImage">
+												<img flow-img="subcoverObj.flow.files[0]" ng-if="subcoverObj.flow.files.length">
+                                                <input type="hidden" id="imageUrl_subcover" name="imageUrl_sucover" value="{{obj.subcover}}">
+											</div>
+											<div class="user-image-buttons" ng-if="subcoverObj.flow.files.length">
+												<span class="btn btn-primary" flow-btn><i class="fa fa-pencil"></i></span>
+												<span class="btn btn-danger" ng-click="subcoverObj.flow.cancel()"> <i class="fa fa-times"></i> </span>
+											</div>
+											<div class="user-image-buttons" ng-if="!subcoverObj.flow.files.length">
+												<span class="btn btn-primary" flow-btn><i class="fa fa-pencil"></i></span>
+												<span class="btn btn-danger" ng-if="!noSubcoverImage" ng-click="removeSubcoverImage()"><i class="fa fa-times"></i></span>
+											</div>
+                                            <span style="margin-left:5px;">尺寸:160*140</span>
+										</div>
+                                        <div style="padding-top:65px;margin-left:5px;">
+                                            
+                                        </div>
+									</div>
+                                   <label class="col-sm-2 control-label" for="tags">
+										大图
+									</label>
+									<div class="col-sm-4" flow-init="{singleFile:true,target:uploadUrl,testChunks:false}"
+										 flow-name="coverObj.flow" flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]"
+                                         flow-files-submitted="upload($files, $event, $flow,'cover')"
+										 flow-file-success="uploadSuccess($file, $message,$flow,'cover')" style="height:120px">
+										<div class="user-image cover-image" style="float:left">
+											<div class="thumbnail">
+												<img src="http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/logo_new.jpg" alt="" ng-if="!coverObj.flow.files.length && noCoverImage">
+												<img ng-src="{{obj.cover}}" alt="" ng-if="!coverObj.flow.files.length && !noCoverImage">
+												<img flow-img="coverObj.flow.files[0]" ng-if="coverObj.flow.files.length">
+                                                <input type="hidden" id="imageUrl_cover" name="imageUrl_cover" value="{{obj.cover}}">
+											</div>
+											<div class="user-image-buttons" ng-if="coverObj.flow.files.length">
+												<span class="btn btn-primary" flow-btn><i class="fa fa-pencil"></i></span>
+												<span class="btn btn-danger" ng-click="coverObj.flow.cancel()"> <i class="fa fa-times"></i> </span>
+											</div>
+											<div class="user-image-buttons" ng-if="!coverObj.flow.files.length">
+												<span class="btn btn-primary" flow-btn><i class="fa fa-pencil"></i></span>
+												<span class="btn btn-danger" ng-if="!noConverImage" ng-click="removeCoverImage()"><i class="fa fa-times"></i></span>
+											</div>
+                                            <span style="margin-left:5px;">尺寸:720*320</span>
+										</div>
+                                        <div style="padding-top:65px;margin-left:5px;">
+
+                                        </div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" for="dateBeginShowStr">
+										开播时间
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="startTime" style="width: 190px;" ng-model="obj.startTime"
+											   onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" onchange="" />
+									</div>
+								</div>
+                               <div class="form-group">
+									<label class="col-sm-2 control-label" for="dateBeginShowStr">
+										结束时间
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="endTime" style="width: 190px;" ng-model="obj.endTime"
+											   onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" onchange="" />
+									</div>
+								</div>
+								<div class="form-group" >
+									<label class="col-sm-2 control-label" for="displayArea">
+										展示区
+									</label>
+									<div class="col-sm-9">
+                                        <select ng-options="x for (x,y) in data.displayAreas" ng-model="obj.displayArea" class="col-sm-3" >
+                                        </select>
+									</div>
+								</div>
+                               <div class="form-group">
+									<label class="col-sm-2 control-label" for="brief">
+										主题短介绍
+									</label>
+									<div class="col-sm-9">
+										<input type="text" placeholder="最长15字符" maxlength="15" id="brief" class="form-control" ng-model="obj.brief" >
+									</div>
+								</div>
+                                <div class="form-group">
+									<label class="col-sm-2 control-label" for="baseHeat">
+										主题热度
+									</label>
+									<div class="col-sm-3">
+										<input type="text" id="baseHeat" class="form-control" ng-model="obj.baseHeat" >
+									</div>
+                                    <label class="col-sm-1 control-label" for="clickHeat">
+										点击量
+									</label>
+									<div class="col-sm-3">
+                                        <input type="text" id="clickHeat" class="form-control" ng-model="obj.clickHeat" disabled>
+									</div>
+								</div>
+                                <div class="form-group">
+									<label class="col-sm-2 control-label" for="liveDescPage">
+										千聊介绍页
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="liveDescPage" placeholder="http://" class="form-control" ng-model="obj.liveInfo.liveDescPage" >
+									</div>
+								</div>
+                                <div class="form-group">
+									<label class="col-sm-2 control-label" for="liveLink">
+										千聊直播室
+									</label>
+									<div class="col-sm-9">
+										<input type="text" placeholder="http://" id="liveLink" class="form-control" ng-model="obj.liveInfo.liveLink" >
+									</div>
+								</div>
+                                <div class="form-group">
+									<label class="col-sm-2 control-label" for="liveLink">
+										主讲医生
+									</label>
+									<div class="col-sm-2">
+										<input type="text" placeholder="右侧选择医生" id="doctorId" class="form-control" ng-model="data.doctorName" >
+									</div>
+                                    <div class="col-sm-3">
+                                        <button ng-click="selectDoctor()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+                                                                                                                       选择医生 <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+								</div>
+                                <div class="form-group">
+									<label class="col-sm-2 control-label padding-top-10" for="featureInfo">
+										预告-活动
+									</label>
+									<div class="col-sm-2 radio clip-radio radio-primary padding-left-15">
+						               <input  id="yes_isFeature_{{obj.featureInfo.isFeature}}" type="radio" name="isFeature"
+							            ng-checked="{{obj.featureInfo.isFeature==false}}" value="false"  ng-model="obj.featureInfo.isFeature" > <label
+							           for="yes_isFeature_{{obj.featureInfo.isFeature}}">无</label>
+                                       <input id="no_isFeature_{{obj.featureInfo.isFeature}}" type="radio" name="isFeature"
+							            ng-checked="{{obj.featureInfo.isFeature==true}}" value="true" ng-model="obj.featureInfo.isFeature"> <label
+							             for="no_isFeature_{{obj.featureInfo.isFeature}}">开启</label>
+					               </div>
+									<div class="col-sm-3 padding-top-5 padding-left-0" style="margin-left: -41px;">
+                                        <select ng-options="x for (x,y) in data.featureTypes" ng-model="obj.featureInfo.featureType" class="col-sm-6" >
+                                        </select>
+									</div>
+								</div>
+                                <div class="form-group">
+									<label class="col-sm-2 control-label padding-top-10" for="activity">
+										往期-活动
+									</label>
+									<div class="col-sm-2 radio clip-radio radio-primary padding-left-15">
+						               <input  id="yes_activity_{{obj.activity.isActivity}}" type="radio" name="isActivity"
+							            ng-checked="{{obj.activity.isActivity==false}}" value="false"  ng-model="obj.activity.isActivity" > <label
+							           for="yes_activity_{{obj.activity.isActivity}}">无</label>
+                                       <input id="no_activity_{{obj.activity.isActivity}}" type="radio" name="isActivity"
+							            ng-checked="{{obj.activity.isActivity==true}}" value="true" ng-model="obj.activity.isActivity"> <label
+							             for="no_activity_{{obj.activity.isActivity}}">开启</label>
+					               </div>
+									<div class="col-sm-8 padding-top-5 padding-left-0" style="margin-left: -41px;">
+                                        <input type="text" placeholder="活动标签,长度6" maxlength="6" id="activityTag" class="col-sm-2" ng-model="obj.activity.activityTag" >&nbsp;
+                                        <input type="text" placeholder="活动主题" maxlength="12" id="activityTopic" class="col-sm-3  margin-left-5" ng-model="obj.activity.activityTopic" >&nbsp;
+                                        <input type="text" placeholder="http://" id="activityLink" class="col-sm-6 margin-left-5" ng-model="obj.activity.activityLink" >
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+				
+                <script type="text/ng-template" id="selectDoctor.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>医生选择</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                <div class="col-md-3">
+                                    <label class="col-sm-5">地区</label>
+                                    <select class="col-sm-6" ng-model="searchInfo.districtId"
+                                            ng-options="jdDistrict.uuid as jdDistrict.name for jdDistrict in jdDistricts" ng-change="onDistrictChange(searchInfo.districtId)">
+                                        <option value="">全部</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="col-sm-5"> 医院</label>
+                                    <select class="col-sm-6" ng-model="searchInfo.hospitalId"
+                                            ng-options="jdHospital.hospitalId as jdHospital.name for jdHospital in jdHospitals">
+                                        <option value="">全部</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="col-sm-5">科室</label>
+                                    <select class="col-sm-6" ng-model="searchInfo.departmentId"
+                                            ng-options="jdDepartment.uuid as jdDepartment.name for jdDepartment in jdDepartments">
+                                        <option value="">全部</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="col-sm-5">职称</label>
+                                    <select class="col-sm-6" ng-model="searchInfo.titleId"
+                                            ng-options="jdTitle.uuid as jdTitle.name for jdTitle in jdTitles">
+                                        <option value="">全部</option>
+                                    </select>
+                                </div>
+                                <br/>
+                                <br/>
+                                <div class="col-md-3">
+                                    <label class="col-sm-5">姓名</label>
+                                    <input class="col-sm-6" type="text" ng-model="searchInfo.name">
+                                    </input>
+                                </div>
+                                <div style="clear: both"/>
+                                <div class="table-responsive" style="margin-top:25px;">
+                                    <table ng-table="tableParams" class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>姓名</th>
+                                            <th>地区</th>
+                                            <th>医院</th>
+                                            <th>科室</th>
+                                            <th>职称</th>
+                                        </tr>
+                                        </thead>
+                                        <tr ng-repeat="jdoctor in data" ng-class-odd="'odd'" ng-class-even="'even'">
+                                            <td>
+                                                <div class="checkbox clip-check check-primary checkbox-inline">
+                                                    <input id="checkbox{{jdoctor.uuid}}" type="checkbox" ng-model="jdoctor.selected" ng-click="changeSelection($index)"/>
+                                                    <label for="checkbox{{jdoctor.uuid}}" style="vertical-align: middle;"></label>
+                                                </div>
+                                            </td>
+                                            <td class="center">{{jdoctor.name}}</td>
+                                            <td class="center">{{jdoctor.district}}</td>
+                                            <td class="center">{{jdoctor.hospital}}</td>
+                                            <td class="center">{{jdoctor.department}}</td>
+                                            <td class="center">{{jdoctor.title}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div style="clear: both"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="clear($event)">清除</button>
+                        <button class="btn btn-primary" ng-click="query()">查询</button>
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+                
+               <script type="text/ng-template" id="selectQuestionCtrl.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>提问消息管理</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                  <div class="table-responsive">
+                                			<table ng-table="tableParams" class="table table-hover">
+					                              <thead>
+                                                     <div ng-if="tableParams.total()==0">暂无提问记录</div>
+					                              </thead>
+					                              <tr ng-repeat="obj in $data" >
+						                               <td>
+                                                          <div class="col-md-1 portrait-image margin-top-10">
+                                                              <img src="http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/load_head.png" alt="" ng-if="!obj.portrait">
+									                          <img ng-src="{{obj.portrait}}" ng-if="obj.portrait" alt="" style="">
+                                                            </div>
+                                                          <div class="col-md-11" style="margin-left: -45px">
+                                                            <div class="col-md-12 line-height-30">
+                                                                   <span ng-if="!obj.nickname">匿名</span><span>{{obj.nickname}}</span> &nbsp;&nbsp; | &nbsp;&nbsp; <span>{{obj.dateCreated}}</span>
+                                                            </div>
+                                                            <div class="col-md-12 line-height-30">
+                                                                    {{obj.content}}
+                                                            </div>
+                                                            <div class="col-md-12 line-height-35">
+                                                              <div class="checkbox clip-check check-primary checkbox-inline">    
+                                                                 <input id="checkbox{{obj.id}}" type="checkbox" data-qid="{{obj.id}}" class="question-status"  ng-model="obj.selected" value="1" ng-checked="{{obj.status==1}}" ng-click="changeSelection($index)" />
+								                                 <label for="checkbox{{obj.id}}" style="vertical-align: middle;">采纳</label>
+                                                              </div> 
+                                                              <span  style="margin-left: -19px;">|</span> <label>&nbsp;&nbsp;
+                                                              <a href="#" ng-click="deleteItem(obj.id)">删除</a></label>
+                                                            </div>
+                                                          </div>
+                                                         </td>
+					                            </tr>
+				                          </table>  
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+				
+			</div>
+		</div>
+	</div>
+</div>

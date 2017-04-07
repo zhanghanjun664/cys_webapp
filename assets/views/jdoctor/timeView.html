@@ -1,0 +1,352 @@
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div ng-controller="TimeViewCtrl" class="col-md-12">
+            <button ng-click="edit()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+                新增 <i class="fa fa-plus"></i>
+            </button>
+            <button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
+                编辑 <i class="fa fa-edit"></i>
+            </button>
+            <button ng-click="set()" type="button" class="btn btn-wide btn-info" style="min-width: 30px;">
+                预约时间 <i class="fa fa-table"></i>
+            </button>
+            <button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+                查询 <i class="fa fa-search"></i>
+            </button>
+            <p style="margin-top:25px;">
+                <strong>总记录数:</strong> {{tableParams.total()}}
+            </p>
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th style="text-align:left;width:6%;">
+                            <div class="checkbox clip-check check-primary checkbox-inline">
+                                <input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()"/>
+                                <label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+                            </div>
+                        </th>
+                        <th>医生</th>
+                        <th>日期</th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="time in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                        <td>
+                            <div class="checkbox clip-check check-primary checkbox-inline">
+                                <input id="checkbox{{time.uuid}}" type="checkbox" ng-model="time.selected" ng-click="changeSelection($index)"/>
+                                <label for="checkbox{{time.uuid}}" style="vertical-align: middle;"></label>
+                            </div>
+                        </td>
+                        <td class="center">{{time.name}}</td>
+                        <td class="center">{{displayDay(time.dateTime)}}</td>
+                        <td class="center">
+                            <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                <a href="#" ng-click="edit(time)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="编辑"><i
+                                        class="fa fa-edit"></i></a>
+                                <!--<a href="#" ng-click="set(time)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="预约时间设置"><i-->
+                                        <!--class="fa fa-table"></i></a>-->
+                            </div>
+                            <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                <div class="btn-group" dropdown is-open="status.isopen">
+                                    <button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle" dropdown-toggle>
+                                        <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right dropdown-light" role="menu">
+                                        <li>
+                                            <a href="#" ng-click="edit(time)">编辑</a>
+                                        </li>
+                                        <!--<li>-->
+                                            <!--<a href="#" ng-click="set(time)">预约时间设置</a>-->
+                                        <!--</li>-->
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <script type="text/ng-template" id="timeViewEditCtrl.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>出诊安排</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="name">
+                                        医生
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="col-sm-12" ng-model="rowObject.name" id="name" readonly>
+                                        </input>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button ng-click="selectDoctor()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+                                            选择医生 <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">
+                                        日期
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <p class="input-group">
+                                        <input type="text" class="form-control" ng-change="change()" datepicker-popup="{{'yyyy-MM-dd'}}" min-date="minDate" show-weeks="false" ng-model="rowObject.dateTime" is-open="opened"   ng-required="true" close-text="关闭" />
+                                        <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="open($event)">
+                                            <i class="glyphicon glyphicon-calendar"></i>
+                                        </button> </span>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="row" ng-repeat="time in timeModel">
+
+                                    <div class="col-md-6">
+                                        <div class="checkbox clip-check check-primary checkbox-inline" >
+                                            <input type="checkbox" id="checkbox{{time.label0}}" ng-model="time.selected0" ng-disabled="time.disabled0" ng-click="checkChange($event)">
+                                            <label for="checkbox{{time.label0}}">{{time.label0}}</label>
+                                        </div>
+                                        <div>
+                                            <select ng-model="time.address0" class="col-sm-4" ng-disabled="time.disabledAddress0"
+                                                    ng-options="jdAddress.uuid as jdAddress.address for jdAddress in jdAddressList">
+                                                <option value="">请选择地址</option>
+                                            </select>
+                                            <select ng-model="time.fee0" class="col-sm-4" ng-disabled="time.disabledfee0"
+                                                    ng-options="jdFee.fee as jdFee.fee for jdFee in jdFeeList">
+                                                <option value="">请选择诊金</option>
+                                            </select>
+                                            <select ng-model="time.discount0" class="col-sm-4" ng-disabled="time.disabledDiscount0"
+                                                    ng-options="jdDiscount.id as jdDiscount.display for jdDiscount in jdDiscountModel">
+                                                <option value="">不打折(老患者)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="checkbox clip-check check-primary checkbox-inline" >
+                                            <input type="checkbox" id="checkbox{{time.label1}}" ng-model="time.selected1" ng-disabled="time.disabled1" ng-click="checkChange($event)">
+                                            <label for="checkbox{{time.label1}}">{{time.label1}}</label>
+                                        </div>
+                                        <div>
+                                            <select ng-model="time.address1" class="col-sm-4" ng-disabled="time.disabledAddress1"
+                                                    ng-options="jdAddress.uuid as jdAddress.address for jdAddress in jdAddressList">
+                                                <option value="">请选择地址</option>
+                                            </select>
+                                            <select ng-model="time.fee1" class="col-sm-4" ng-disabled="time.disabledfee1"
+                                                    ng-options="jdFee.fee as jdFee.fee for jdFee in jdFeeList">
+                                                <option value="">请选择诊金</option>
+                                            </select>
+                                            <select ng-model="time.discount1" class="col-sm-4" ng-disabled="time.disabledDiscount1"
+                                                    ng-options="jdDiscount.id as jdDiscount.display for jdDiscount in jdDiscountModel">
+                                                <option value="">不打折(老患者)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6" ng-show="time.label2!=null">
+                                        <div class="checkbox clip-check check-primary checkbox-inline" >
+                                            <input type="checkbox" id="checkbox{{time.label2}}" ng-model="time.selected2" ng-disabled="time.disabled2" ng-click="checkChange($event)">
+                                            <label for="checkbox{{time.label2}}">{{time.label2}}</label>
+                                        </div>
+                                        <div>
+                                            <select ng-model="time.address2" class="col-sm-4" ng-disabled="time.disabledAddress2"
+                                                    ng-options="jdAddress.uuid as jdAddress.address for jdAddress in jdAddressList">
+                                                <option value="">请选择地址</option>
+                                            </select>
+                                            <select ng-model="time.fee2" class="col-sm-4" ng-disabled="time.disabledfee2"
+                                                    ng-options="jdFee.fee as jdFee.fee for jdFee in jdFeeList">
+                                                <option value="">请选择诊金</option>
+                                            </select>
+                                            <select ng-model="time.discount2" class="col-sm-4" ng-disabled="time.disabledDiscount2"
+                                                    ng-options="jdDiscount.id as jdDiscount.display for jdDiscount in jdDiscountModel">
+                                                <option value="">不打折(老患者)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" ng-show="time.label3!=null">
+                                        <div class="checkbox clip-check check-primary checkbox-inline" >
+                                            <input type="checkbox" id="checkbox{{time.label3}}" ng-model="time.selected3" ng-disabled="time.disabled3" ng-click="checkChange($event)">
+                                            <label for="checkbox{{time.label3}}">{{time.label3}}</label>
+                                        </div>
+                                        <div>
+                                            <select ng-model="time.address3" class="col-sm-4" ng-disabled="time.disabledAddress3"
+                                                    ng-options="jdAddress.uuid as jdAddress.address for jdAddress in jdAddressList">
+                                                <option value="">请选择地址</option>
+                                            </select>
+                                            <select ng-model="time.fee3" class="col-sm-4" ng-disabled="time.disabledfee3"
+                                                    ng-options="jdFee.fee as jdFee.fee for jdFee in jdFeeList">
+                                                <option value="">请选择诊金</option>
+                                            </select>
+                                            <select ng-model="time.discount3" class="col-sm-4" ng-disabled="time.disabledDiscount3"
+                                                    ng-options="jdDiscount.id as jdDiscount.display for jdDiscount in jdDiscountModel">
+                                                <option value="">不打折(老患者)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+
+                <script type="text/ng-template" id="timeViewSettingCtrl.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>出诊设置</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="name">
+                                        医生
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="col-sm-12" ng-model="rowObject.name"  readonly>
+                                        </input>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button ng-click="selectDoctor()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+                                            选择医生 <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">
+                                        日期
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <p class="input-group">
+                                            <input type="text" class="form-control" ng-change="change()" datepicker-popup="{{'yyyy-MM-dd'}}" min-date="minDate" show-weeks="false" ng-model="rowObject.dateTime" is-open="opened"   ng-required="true" close-text="关闭" />
+                                        <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="open($event)">
+                                            <i class="glyphicon glyphicon-calendar"></i>
+                                        </button> </span>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="row" ng-repeat="time in timeModel">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-2">
+                                        <div class="checkbox clip-check check-primary checkbox-inline">
+                                            <input type="checkbox" id="settingcheckbox{{time.label0}}" ng-model="time.selected0" ng-disabled="time.disabled0" ng-change="checkChange()">
+                                            <label for="settingcheckbox{{time.label0}}">{{time.label0}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="checkbox clip-check check-primary checkbox-inline">
+                                            <input type="checkbox" id="settingcheckbox{{time.label1}}" ng-model="time.selected1" ng-disabled="time.disabled1" ng-change="checkChange()">
+                                            <label for="settingcheckbox{{time.label1}}">{{time.label1}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2" ng-show="time.label2!=null">
+                                        <div class="checkbox clip-check check-primary checkbox-inline">
+                                            <input type="checkbox" id="settingcheckbox{{time.label2}}" ng-model="time.selected2" ng-disabled="time.disabled2" ng-change="checkChange()">
+                                            <label for="settingcheckbox{{time.label2}}">{{time.label2}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2" ng-show="time.label3!=null">
+                                        <div class="checkbox clip-check check-primary checkbox-inline">
+                                            <input type="checkbox" id="settingcheckbox{{time.label3}}" ng-model="time.selected3" ng-disabled="time.disabled3" ng-change="checkChange()">
+                                            <label for="settingcheckbox{{time.label3}}">{{time.label3}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+
+                <script type="text/ng-template" id="selectDoctor.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>医生选择</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                <div class="col-md-3">
+                                    <label class="col-sm-5">地区</label>
+                                    <select class="col-sm-6" ng-model="searchInfo.districtId"
+                                            ng-options="jdDistrict.uuid as jdDistrict.name for jdDistrict in jdDistricts" ng-change="onDistrictChange(searchInfo.districtId)">
+                                        <option value="">全部</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="col-sm-5"> 医院</label>
+                                    <select class="col-sm-6" ng-model="searchInfo.hospitalId"
+                                            ng-options="jdHospital.hospitalId as jdHospital.name for jdHospital in jdHospitals">
+                                        <option value="">全部</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="col-sm-5">科室</label>
+                                    <select class="col-sm-6" ng-model="searchInfo.departmentId"
+                                            ng-options="jdDepartment.uuid as jdDepartment.name for jdDepartment in jdDepartments">
+                                        <option value="">全部</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="col-sm-5">职称</label>
+                                    <select class="col-sm-6" ng-model="searchInfo.titleId"
+                                            ng-options="jdTitle.uuid as jdTitle.name for jdTitle in jdTitles">
+                                        <option value="">全部</option>
+                                    </select>
+                                </div>
+                                <br/>
+                                <br/>
+                                <div class="col-md-3">
+                                    <label class="col-sm-5">姓名</label>
+                                    <input class="col-sm-6" type="text" ng-model="searchInfo.name">
+                                    </input>
+                                </div>
+                                <div style="clear: both"/>
+                                <div class="table-responsive" style="margin-top:25px;">
+                                    <table ng-table="tableParams" class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>姓名</th>
+                                            <th>地区</th>
+                                            <th>医院</th>
+                                            <th>科室</th>
+                                            <th>职称</th>
+                                        </tr>
+                                        </thead>
+                                        <tr ng-repeat="jdoctor in data" ng-class-odd="'odd'" ng-class-even="'even'">
+                                            <td>
+                                                <div class="checkbox clip-check check-primary checkbox-inline">
+                                                    <input id="checkbox{{jdoctor.uuid}}" type="checkbox" ng-model="jdoctor.selected" ng-click="changeSelection($index)"/>
+                                                    <label for="checkbox{{jdoctor.uuid}}" style="vertical-align: middle;"></label>
+                                                </div>
+                                            </td>
+                                            <td class="center">{{jdoctor.name}}</td>
+                                            <td class="center">{{jdoctor.district}}</td>
+                                            <td class="center">{{jdoctor.hospital}}</td>
+                                            <td class="center">{{jdoctor.department}}</td>
+                                            <td class="center">{{jdoctor.title}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div style="clear: both"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="clear($event)">清除</button>
+                        <button class="btn btn-primary" ng-click="query()">查询</button>
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

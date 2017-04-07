@@ -1,0 +1,451 @@
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <h4 class="modal-title"><b>&nbsp;&nbsp;&nbsp;血压测量数据</b></h4>
+        <div ng-controller="JdHealthExaminationCtrl" class="col-md-12">
+            <!--<button ng-click="edit()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+                新增 <i class="fa fa-plus"></i>
+            </button>
+            <button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
+                编辑 <i class="fa fa-edit"></i>
+            </button>
+            <button ng-click="deleteAll()" type="button" class="btn btn-wide btn-danger" style="min-width: 30px;">
+                删除 <i class="fa fa-trash"></i>
+            </button>-->
+            <button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+                查询 <i class="fa fa-search"></i>
+            </button>
+            <p style="margin-top:25px;">
+                <strong>总记录数:</strong> <b ng-bind="tableParams.total()"></b>
+            </p>
+
+            <div class="table-responsive" style="margin-top:25px;">
+                <table ng-table="tableParams" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <!--<th style="text-align:left;width:6%;">
+                            <div class="checkbox clip-check check-primary checkbox-inline">
+                                <input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()"/>
+                                <label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+                            </div>
+                        </th>-->
+                        <th>openid</th>
+                        <th>姓名</th>
+                        <th>用户手机号</th>
+                        <th>家庭联系人姓名</th>
+                        <th>家庭联系人手机号</th>
+                        <th>家庭联系人关系</th>
+                        <th>测量时间</th>
+                        <th>录入方式</th>
+                        <th>舒张压</th>
+                        <th>收缩压</th>
+                        <th>心率</th>
+
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="jdHealthExamination in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                        <td class="center">{{jdHealthExamination.openid}}</td>
+                        <td class="center">{{jdHealthExamination.patientName}}</td>
+                        <td class="center">{{jdHealthExamination.phoneNumber}}</td>
+                        <td class="center">{{jdHealthExamination.familyName}}</td>
+                        <td class="center">{{jdHealthExamination.familyPhoneNumber}}</td>
+                        <td class="center">{{jdHealthExamination.relationToMe}}</td>
+                        <td class="center">{{jdHealthExamination.examDate}}</td>
+                        <td class="center">{{getSourceName(jdHealthExamination.source)}}</td>
+                        <td class="center">{{jdHealthExamination.diastolicPressure}}mmHg</td>
+                        <td class="center">{{jdHealthExamination.systolicPressure}}mmHg</td>
+                        <td class="center">{{jdHealthExamination.heartRate}}mmHG</td>
+                    </tr>
+                </table>
+
+                <script type="text/ng-template" id="searchJdHealthExamination.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>&nbsp;&nbsp;&nbsp;查询条件</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="phoneNumber_ex">
+                                        用户手机号码
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <input type="text" id="phoneNumber_ex" class="form-control"
+                                               ng-model="searchInfos.phoneNumber" maxlength="11" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="familyPhoneNumber_ex">
+                                        家庭联系人手机号
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <input type="text" id="familyPhoneNumber_ex" class="form-control"
+                                               ng-model="searchInfos.familyPhoneNumber" maxlength="20" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="familyName_ex">
+                                        家庭联系人姓名
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <input type="text" id="familyName_ex" class="form-control"
+                                               ng-model="searchInfos.familyName" maxlength="20" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="examDateStart_ex">
+                                        测量时间段开始
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <input type="text" id="examDateStart_ex" ng-model="searchInfos.examDateStart" style="width: 248px;"
+                                               onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'examDateEnd_ex\')||\'%y-%M-%d %H:%m\'}',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="examDateEnd_ex">
+                                        测量时间段结束
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <input type="text" id="examDateEnd_ex" ng-model="searchInfos.examDateEnd" style="width: 248px;"
+                                               onfocus="WdatePicker({minDate:'#F{$dp.$D(\'examDateStart_ex\')||\'%y-%M-%d %H:%m\'}',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="examDateEnd">
+                                    	录入方式
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select ng-options="source.value as source.name for source in sourceList" ng-model="searchInfos.source" class="col-sm-12" >
+											<option value="">全部</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="clear()">清空条件</button>
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+
+                <script type="text/ng-template" id="selectPatient.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>选择用户</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label" for="districtId">
+                                            省份
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <select id="districtId" class="col-sm-12" ng-model="searchInfos.districtId"
+                                                    ng-change="changeDistrictAreas(searchInfos.districtId)"
+                                                    ng-options="jdDistrict.uuid as jdDistrict.name for jdDistrict in jdDistricts ">
+                                                <option value="">全部</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label" for="districtAreaId">
+                                            城市
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <select id="districtAreaId" class="col-sm-12" ng-model="searchInfos.districtAreaId"
+                                                    ng-options="jdDistrictArea.uuid as jdDistrictArea.name for jdDistrictArea in jdDistrictAreas">
+                                                <option value="">全部</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <label class="col-sm-3 control-label" for="createTimeStart">
+                                            注册时间
+                                        </label>
+
+                                        <div class="col-sm-9">
+                                            <input type="text" id="createTimeStart" style="width: 130px;"
+                                                   ng-model="patientInfos.createTimeStart"
+                                                   onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'%y-%M-%d %H:%m\'}',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})"/>
+                                            至
+                                            <input type="text" id="createTimeEnd" style="width: 130px;"
+                                                   ng-model="patientInfos.createTimeEnd"
+                                                   onFocus="WdatePicker({minDate:'#F{$dp.$D(\'createTimeStart\')}',maxDate:'%y-%M-%d %H:%m',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="col-sm-4 control-label" for="sceneName">
+                                            渠道名称
+                                        </label>
+
+                                        <div class="col-sm-8">
+                                            <select id="sceneName" class="form-control" ng-model="patientInfos.qrcodeId"
+                                                    ng-options="qrcode.uuid as qrcode.name for qrcode in jdQrcodeList">
+                                                <option value="">全部</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="col-sm-4 control-label" for="p_name">
+                                            姓名
+                                        </label>
+
+                                        <div class="col-sm-8">
+                                            <input type="text" id="p_name" class="form-control"
+                                                   ng-model="patientInfos.name"
+                                                   maxlength="21">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="col-sm-4 control-label" for="s_phoneNumber">
+                                            手机号码
+                                        </label>
+
+                                        <div class="col-sm-8">
+                                            <input type="text" id="s_phoneNumber" class="form-control"
+                                                   ng-model="patientInfos.phoneNumber" maxlength="11">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <table ng-table="tableParams" class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th style="text-align:left;width:6%;">
+                                        <div class="checkbox clip-check check-primary checkbox-inline">
+                                            <input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()"/>
+                                            <label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+                                        </div>
+                                    </th>
+                                    <th>地区</th>
+                                    <th>姓名</th>
+                                    <th>手机号码</th>
+                                    <th>注册时间</th>
+                                    <th>来源渠道</th>
+                                </tr>
+                                </thead>
+                                <tr ng-repeat="jdPatient in $data" ng-class-odd="'odd'" ng-class-even="'even'"
+                                    class="tr_patient" id="tr{{jdPatient.uuid}}"
+                                    ng-click="loadOrderHistory(jdPatient.uuid)">
+                                    <td>
+                                        <div class="checkbox clip-check check-primary checkbox-inline">
+                                            <input id="checkbox{{jdPatient.uuid}}" type="checkbox"
+                                                   ng-model="jdPatient.selected" ng-click="changeSelection($index)"/>
+                                            <label for="checkbox{{jdPatient.uuid}}"
+                                                   style="vertical-align: middle;"></label>
+                                        </div>
+                                    </td>
+                                    <td class="center">{{jdPatient.location}}</td>
+                                    <td class="center">{{jdPatient.name}}</td>
+                                    <td class="center">{{jdPatient.phoneNumber}}</td>
+                                    <td class="center">{{jdPatient.createDate}}</td>
+                                    <td class="center">{{jdPatient.sceneName ? jdPatient.sceneName : '无'}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="clear()">清空条件</button>
+                        <button class="btn btn-primary" ng-click="query()">查询</button>
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+
+                <script type="text/ng-template" id="editJdHealthExamination.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>健康测量信息</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="name">
+                                        用户
+                                    </label>
+
+                                    <div class="col-sm-5">
+                                        <input type="text" class="col-sm-12" ng-model="patient.name" id="name"
+                                               readonly>
+                                        </input>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button ng-click="selectPatient()" ng-disabled="flag" type="button"
+                                                class="btn btn-wide btn-primary"
+                                                style="min-width: 30px;">
+                                            选择用户 <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="examDateAsString">
+                                        测量时间
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <input type="text" id="examDateAsString" style="width:214px" ng-model="jdHealthExaminationInfo.examDateAsString"
+                                               onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="diastolicPressure">
+                                        舒张压
+                                    </label>
+
+                                    <div class="col-sm-7">
+                                        <input type="text" id="diastolicPressure" class="form-control"
+                                               ng-model="jdHealthExaminationInfo.diastolicPressure" />
+                                    </div>
+                                    <div class="col-sm-2 control-label">
+                                        <b class="text-left">mmHg</b>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="systolicPressure">
+                                        收缩压
+                                    </label>
+
+                                    <div class="col-sm-7">
+                                        <input type="text" id="systolicPressure" class="form-control"
+                                               ng-model="jdHealthExaminationInfo.systolicPressure" />
+                                    </div>
+                                    <div class="col-sm-2 control-label">
+                                        <b>mmHg</b>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="heartRate">
+                                        心率
+                                    </label>
+
+                                    <div class="col-sm-7">
+                                        <input type="text" id="heartRate" class="form-control"
+                                               ng-model="jdHealthExaminationInfo.heartRate" />
+                                    </div>
+                                    <div class="col-sm-2 control-label">
+                                        <b>mmHG</b>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+            </div>
+        </div>
+
+        <h4 class="modal-title"><b>血糖测量数据</b></h4>
+        <div ng-controller="JdBloodGlucoseCtrl" class="col-md-12">
+            <button ng-click="search()" type="button" class="btn btn-wide btn-success"style="min-width: 30px;">
+                查询 <i class="fa fa-search"></i>
+            </button>
+            <p style="margin-top: 25px;">
+                <strong>总记录数：</strong><b ng-bind="tableParams.total()"></b>
+            </p>
+
+            <div class="table-responsive"style="margin-top: 25px;">
+                <table ng-table="tableParams" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>用户手机号</th>
+                        <th>家庭联系人姓名</th>
+                        <th>家庭联系人手机号</th>
+                        <th>家庭联系人关系</th>
+                        <th>测量时间</th>
+                        <th>血糖</th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="jdBloodGlucose in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                        <td class="center">{{jdBloodGlucose.phoneNumber}}</td>
+                        <td class="center">{{jdBloodGlucose.familyName}}</td>
+                        <td class="center">{{jdBloodGlucose.familyPhoneNumber}}</td>
+                        <td class="center">{{jdBloodGlucose.relationToMe}}</td>
+                        <td class="center">{{jdBloodGlucose.examDate}}</td>
+                        <td class="center">{{jdBloodGlucose.bloodGlucose}}mmHg</td>
+                    </tr>
+                </table>
+
+                <script type="text/ng-template" id="searchJdBloodGlucose.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>查询条件</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="phoneNumber">
+                                        用户手机号码
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <input type="text" id="phoneNumber" class="form-control"
+                                               ng-model="searchInfos.phoneNumber" maxlength="11" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="familyPhoneNumber">
+                                        家庭联系人手机号
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <input type="text" id="familyPhoneNumber" class="form-control"
+                                               ng-model="searchInfos.familyPhoneNumber" maxlength="20" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="familyName">
+                                        家庭联系人姓名
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <input type="text" id="familyName" class="form-control"
+                                               ng-model="searchInfos.familyName" maxlength="20" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="examDateStart">
+                                        测量时间段开始
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <input type="text" id="examDateStart" ng-model="searchInfos.examDateStart" style="width: 248px;"
+                                               onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'examDateEnd\')||\'%y-%M-%d %H:%m\'}',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="examDateEnd">
+                                        测量时间段结束
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <input type="text" id="examDateEnd" ng-model="searchInfos.examDateEnd" style="width: 248px;"
+                                               onfocus="WdatePicker({minDate:'#F{$dp.$D(\'examDateStart\')||\'%y-%M-%d %H:%m\'}',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="clear()">清空条件</button>
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

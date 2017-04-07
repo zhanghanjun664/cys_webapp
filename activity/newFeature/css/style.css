@@ -1,0 +1,113 @@
+body,
+html,
+div,
+input,
+h1,
+img,
+ul,
+li {
+  margin: 0;
+  padding: 0;
+}
+ul li {
+  list-style: none;
+}
+img {
+  vertical-align: top;
+}
+input {
+  border: none;
+  background: none;
+  outline: none;
+}
+.wrap,
+.header {
+  overflow: hidden;
+}
+.margin_auto {
+  margin: 0 auto;
+}
+.max_width {
+  max-width: 100%;
+}
+.wrap {
+  max-width: 640px;
+  min-width: 320px;
+  height: 28.45rem;
+  background: url("../images/bg.png") center center no-repeat;
+  background-size: 100% 100%;
+}
+.header {
+  height: 17.4rem;
+  background: url("../images/bg2.png") center center no-repeat;
+  background-size: 100% 100%;
+}
+.header h1 {
+  width: 8.875rem;
+  height: 1.625rem;
+  margin-top: 1.2rem;
+}
+.title1 {
+  width: 14.5rem;
+  height: 9.625rem;
+  margin-top: 0.5rem;
+}
+.title2 {
+  width: 8.85rem;
+  height: 2.95rem;
+}
+.content {
+  margin-top: 0.5rem;
+}
+.w490 {
+  width: 12.25rem;
+}
+.tip1 {
+  color: #ffffff;
+  font-size: 0.5rem;
+  line-height: 0.75rem;
+}
+.prize_content {
+  overflow: hidden;
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+.prize_content li {
+  display: -webkit-box;
+  border-radius: 1.25rem;
+  height: 1.55rem;
+  border: 0.05rem solid #ff8200;
+  overflow: hidden;
+  position: relative;
+}
+.code {
+  position: absolute;
+  font-size: 0.65rem;
+  height: 1.4rem;
+  line-height: 1.4rem;
+  text-align: center;
+  color: #ffffff;
+  top: 50%;
+  right: 0.1rem;
+  margin-top: -0.7rem;
+  background: #ff8200;
+  width: 4.2rem;
+  border-radius: 1rem;
+}
+.prize_content li:first-child {
+  margin-bottom: 0.325rem;
+}
+.prize_content li input {
+  display: block;
+  -webkit-box-flex: 1;
+  height: 1.25rem;
+  line-height: 1.25rem;
+  padding: 0.15rem 0.625rem 0.15rem 0.625rem;
+  background: #ffffff;
+  font-size: 0.6rem;
+}
+.btn {
+  width: 6.775rem;
+  height: 1.45rem;
+  margin-top: 0.8rem;
+}

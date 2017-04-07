@@ -1,0 +1,47 @@
+
+    <div class="modal-header">
+        <h5 class="modal-title"><b>血压数据录入</b></h5>
+    </div>
+    <div class="modal-body">
+        <div class="panel-body">
+            <form role="form" class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        测量时间:
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" id="examDate" style="width: 130px;" ng-model="examDate"
+                               onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        舒张压:
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" ng-model="diastolicPressure" id="diastolicPressure"/>mmHg<span class="s">*</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        收缩压:
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" ng-model="systolicPressure" id="systolicPressure" />mmHg<span class="s">*</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        心率:
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" ng-model="heartRate" id="heartRate" />bpm<span class="s">*</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+    </div>

@@ -1,0 +1,16 @@
+<link href="vendor/jstree/themes/default/style.min.css" rel="stylesheet" media="screen">
+<link href="vendor/sweet-alert/sweet-alert.css" rel="stylesheet" media="screen">
+<script src="vendor/jstree/jstree.min.js"></script>
+<script src="vendor/sweet-alert/sweet-alert.min.js"></script>
+<script src="assets/js/authority-tree.js"></script>
+
+<div class="panel panel-white" style="padding:4% 10%;">
+	<div class="panel-heading">
+		<span style="font-weight: bold;font-size: 16px;padding-right: 10px;">角色</span> 
+		<select id="roleList" style="width:25%;margin-right: 3%;padding-left: 3%;" onchange="roleChange();"></select>
+		<button type="button" class="btn btn-wide btn-light-azure" style="min-width: 40px;" onclick="submitAuthority();">授权</button>
+	</div>
+	<div class="panel-body">
+		<div id="authorityTree" class="tree-demo"></div>
+	</div>
+</div>

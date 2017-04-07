@@ -1,0 +1,502 @@
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div ng-controller="insuranceOrderCtrl" class="col-md-12">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-2 col-xs-2 col-sm-2-margin-2">
+                        <label class="col-sm-3 control-label" for="search_orderId">
+                            订单号
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" id="search_orderId" class="form-control" ng-model="searchInfos.orderId"
+                                   maxlength="15">
+                        </div>
+                    </div>
+                    <div class="col-sm-2 col-xs-2 col-sm-2-margin-2">
+                        <label class="col-sm-3 control-label" for="search_order_status">
+                            状态
+                        </label>
+                        <div class="col-sm-9">
+                            <select id="search_order_status" class="form-control" ng-model="searchInfos.status"
+                                    ng-options="status.name for status in orderStatus">
+                                <option value="">全部</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 col-xs-2 col-sm-2-margin-2">
+                        <label class="col-sm-3 control-label" for="search_vendor">
+                            保险公司
+                        </label>
+                        <div class="col-sm-9">
+                            <select id="search_vendor" class="form-control" ng-model="searchInfos.vendors"
+                                    ng-options="status.name for status in vendors">
+                                <option value="">全部</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-xs-4">
+                        <label class="col-sm-3 control-label">
+                            下单时间段
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" id="search_dateCreatedStart" style="width: 150px;"
+                                   ng-model="searchInfos.dateCreatedStart"
+                                   onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'search_dateCreatedEnd\')||\'%y-%M-%d %H:%m:%s\'}',dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})"/>
+                            至
+                            <input type="text" id="search_dateCreatedEnd" style="width: 150px;"
+                                   ng-model="searchInfos.dateCreatedEnd"
+                                   onFocus="WdatePicker({minDate:'#F{$dp.$D(\'search_dateCreatedStart\')}',maxDate:'%y-%M-%d %H:%m:%s',dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2 col-xs-2 col-sm-2-margin-2">
+                        <label class="col-sm-3 control-label" for="search_contactName">
+                            投保人
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" id="search_contactName" class="form-control" ng-model="searchInfos.contactName"
+                                   maxlength="15">
+                        </div>
+                    </div>
+                    <div class="col-sm-2 col-xs-2 col-sm-2-margin-2">
+                        <label class="col-sm-3 control-label" for="search_insuredName">
+                            被保人
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" id="search_insuredName" class="form-control" ng-model="searchInfos.insuredName"
+                                   maxlength="15">
+                        </div>
+                    </div>
+                    <div class="col-sm-2 col-xs-2 col-sm-2-margin-2">
+                        <label class="col-sm-3 control-label" for="search_doctorName">
+                            医生
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" id="search_doctorName" class="form-control" ng-model="searchInfos.doctorName"
+                                   maxlength="15">
+                        </div>
+                    </div>
+                </div>
+                <button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+                    搜索 <i class="fa fa-search"></i>
+                </button>
+                <button ng-click="clear()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+                    清空条件 <i class="fa fa-search"></i>
+                </button>
+                <button ng-click="export()" type="button"
+                        class="btn btn-wide btn-primary" style="min-width: 30px;">
+                    导出Excel <i class="fa fa-download"></i>
+                </button>
+            </div>
+            <p style="margin-top:25px;">
+                <strong>总记录数:</strong> {{tableParams.total()}}
+            </p>
+
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th width="10%">订单号</th>
+                        <th width="10%">险种</th>
+                        <th width="10%">投保人</th>
+                        <th width="10%">被保人</th>
+                        <th width="10%">投保时间</th>
+                        <th width="10%">主持医生</th>
+                        <th width="10%">保险公司</th>
+                        <th width="10%">订单状态</th>
+                        <th width="10%">操作</th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="order in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                        <td class="center">{{order.id}}</td>
+                        <td class="center">{{order.productName}}</td>
+                        <td class="center">{{order.contactName}}</td>
+                        <td class="center">{{order.insuredName}}</td>
+                        <td class="center">{{order.dateCreate}}</td>
+                        <td class="center">{{order.doctorName}}</td>
+                        <td class="center">{{order.vendor}}</td>
+                        <td class="center">{{order.statusName}}</td>
+                        <td class="center">
+                            <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                <a href="#" ng-click="more(order)"
+                                   class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="编辑"><i
+                                        class="fa fa-edit"></i></a>
+                            </div>
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <script type="text/ng-template" id="moreOrderInfo.html">
+                <div class="modal-header">
+                    <h5 class="modal-title"><b>保险订单管理</b></h5>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <form role="form" class="form-horizontal">
+                            <div class="modal-header">
+                                <h5 class="modal-title"><b>保险订单需求</b></h5>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">
+                                    订单号：{{orderInfo.id}}
+                                </label>
+                                <label class="col-sm-3">
+                                    投保时间：{{orderInfo.dateCreate}}
+                                </label>
+                                <label class="col-sm-3">
+                                    保险种类：{{orderInfo.productName}}
+                                </label>
+                                <label class="col-sm-3">
+                                    保险状态：{{orderInfo.statusName}}
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">
+                                    保证额度：{{orderInfo.statusName}}
+                                </label>
+                                <label class="col-sm-3">
+                                    保障时间到：{{orderInfo.guaranteeTime}}
+                                </label>
+                                <label class="col-sm-3">
+                                    保险公司：{{orderInfo.vendor}}
+                                </label>
+                                <label class="col-sm-3">
+                                    核保单号：{{orderInfo.orderNum}}
+                                </label>
+                            </div>
+                            <div class="modal-header">
+                                <h5 class="modal-title"><b>投保人信息</b></h5>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">
+                                    姓名：{{orderInfo.contactName}}
+                                </label>
+                                <label class="col-sm-3">
+                                    手机：{{orderInfo.contactPhone}}
+                                </label>
+                                <label class="col-sm-3">
+                                    邮箱：{{orderInfo.contactMail}}
+                                </label>
+                                <label class="col-sm-3">
+                                    与被保人关系：{{orderInfo.relation}}
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6">
+                                    投保人身份证：{{orderInfo.contactIdcard}}
+                                </label>
+                            </div>
+                            <div class="modal-header">
+                                <h5 class="modal-title"><b>被保人信息</b></h5>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">
+                                    姓名：{{orderInfo.insuredName}}
+                                </label>
+                                <label class="col-sm-3">
+                                    手机：{{orderInfo.insuredPhone}}
+                                </label>
+                                <label class="col-sm-3">
+                                    身份证：{{orderInfo.insuredIdcard}}
+                                </label>
+                                <label class="col-sm-3">
+                                    年龄：{{orderInfo.insuredAge}}
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">
+                                    医院：{{orderInfo.hospitalName}}
+                                </label>
+                                <label class="col-sm-3">
+                                    主刀医生：{{orderInfo.doctorName}}
+                                </label>
+                                <label class="col-sm-3">
+                                    医生职称：{{orderInfo.doctorTitle}}
+                                </label>
+                                <label class="col-sm-3">
+                                    手术方案：{{orderInfo.operation}}
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">
+                                    手术时间：{{orderInfo.operationTime}}
+                                </label>
+                                <label class="col-sm-3">
+                                    <button class="btn btn-primary" ng-click="selectIdcardImage(orderInfo)">查看身份证照片</button>
+                                </label>
+                            </div>
+                            <div class="modal-header">
+                                <h5 class="modal-title"><b>操作日志</b></h5>
+                            </div>
+
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th width="10%">时间</th>
+                                        <th width="10%">原状态</th>
+                                        <th width="10%">状态变更为</th>
+                                        <th width="10%">备注</th>
+                                        <th width="10%">操作人</th>
+                                        <th width="10%">查看之前订单信息</th>
+                                    </tr>
+                                    </thead>
+                                    <tr ng-repeat="orderOperation in orderlogPage.result">
+                                        <td class="center">{{orderOperation.dateCreated}}</td>
+                                        <td class="center">{{orderOperation.oldStatus}}</td>
+                                        <td class="center">{{orderOperation.newStatus}}</td>
+                                        <td class="center">{{orderOperation.remark}}</td>
+                                        <td class="center">{{orderOperation.updatedBy}}</td>
+                                        <td class="center">
+                                            <button class="btn btn-primary" ng-click="selectOldOrder(orderOperation)">查看</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-if="orderInfo.status == 1 || orderInfo.status == 2 || orderInfo.status == 6 || orderInfo.status == 3" ng-click="changeStatus($event)">修改状态</button>
+                    <button class="btn btn-primary" ng-click="cancel($event)">关闭</button>
+                </div>
+            </script>
+            <script type="text/ng-template" id="changeStatusOrder.html">
+                <div class="modal-header" style="background:#ECFFFF;">
+                    <h5 class="modal-title"><b>修改订单状态</b></h5>
+                </div>
+
+                <div class="modal-body" style="background:#ECFFFF;">
+                    <div class="panel-body">
+                        <form role="form" class="form-horizontal">
+                            <label class="col-sm-3" for="editorder_status">
+                                状态：
+                            </label>
+                            <div class="col-sm-9">
+                                <select id="editorder_status" class="col-sm-12" ng-model="editorder_status" ng-change="changeStatus($event)">
+                                    <option ng-repeat="status in nextStatus" value="{{status.value}}">{{status.name}}</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-3" for="remark">
+                                备注：
+                            </label>
+                            <div class="col-sm-9 col-sm-2-margin-2">
+                                <textarea class="form-control" id="remark"
+                                          maxlength="250"></textarea>
+                            </div>
+                            <label class="col-sm-12" ng-show="isShowEditOrderNum">
+                                保险公司核保单号：<input type="text" id="orderNum" class="form-control" ng-model="orderInfo.orderNum" maxlength="40">
+                            </label>
+
+                            <div ng-show="isShowEdit">
+                                <div class="modal-header">
+                                    <h5 class="modal-title"><b>投保人信息</b></h5>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4">
+                                        姓名：
+                                        <input type="text" id="contactName" class="form-control" ng-model="orderInfo.contactName" maxlength="40">
+                                    </label>
+                                    <label class="col-sm-4">
+                                        手机：
+                                        <input type="text" id="contactPhone" class="form-control" ng-model="orderInfo.contactPhone" maxlength="40">
+                                    </label>
+                                    <label class="col-sm-4">
+                                        邮箱：
+                                        <input type="text" id="contactMail" class="form-control" ng-model="orderInfo.contactMail" maxlength="40">
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-6">
+                                        投保人身份证：
+                                        <input type="text" id="contactIdcard" class="form-control" ng-model="orderInfo.contactIdcard" maxlength="40">
+                                    </label>
+                                </div>
+                                <div class="modal-header">
+                                    <h5 class="modal-title"><b>被保人信息</b></h5>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3">
+                                        姓名：
+                                        <input type="text" id="insuredName" class="form-control" ng-model="orderInfo.insuredName" maxlength="40">
+                                    </label>
+                                    <label class="col-sm-3">
+                                        手机：
+                                        <input type="text" id="insuredPhone" class="form-control" ng-model="orderInfo.insuredPhone" maxlength="40">
+                                    </label>
+                                    <label class="col-sm-3">
+                                        身份证：
+                                        <input type="text" id="insuredIdcard" class="form-control" ng-model="orderInfo.insuredIdcard" maxlength="40">
+                                    </label>
+                                    <label class="col-sm-3">
+                                        年龄：
+                                        <input type="text" id="insuredAge" class="form-control" ng-model="orderInfo.insuredAge" maxlength="40">
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3">
+                                        医院：
+                                        <input type="text" id="hospitalName" class="form-control" ng-model="orderInfo.hospitalName" maxlength="40">
+                                    </label>
+                                    <label class="col-sm-3">
+                                        主刀医生：
+                                        <input type="text" id="doctorName" class="form-control" ng-model="orderInfo.doctorName" maxlength="40">
+                                    </label>
+                                    <label class="col-sm-3">
+                                        医生职称：
+                                        <input type="text" id="doctorTitle" class="form-control" ng-model="orderInfo.doctorTitle" maxlength="40">
+                                    </label>
+                                    <label class="col-sm-3">
+                                        手术方案：
+                                        <input type="text" id="operation" class="form-control" ng-model="orderInfo.operation" maxlength="40">
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-6">
+                                        手术时间：
+                                        <input type="text" id="operationTime" style="width: 150px;"
+                                               ng-model="orderInfo.operationTime"
+                                               onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})"/>
+                                    </label>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-3 control-label">
+                                        身份证图片
+                                    </label>
+                                    <div class="col-sm-8" flow-init="{singleFile:true,target:uploadUrl,testChunks:false}"
+                                         flow-name="obj.flow" flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]"
+                                         flow-file-success="uploadSuccess($file, $message)">
+                                        <div class="user-image doctor-image" style="float:left;height:120px;width: 120px;">
+                                            <div class="thumbnail" style="height:120px;width: 120px;overflow: hidden;">
+                                                <img src="http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/logo_new.jpg" alt="" ng-if="!obj.flow.files.length && noImage">
+                                                <img ng-src="{{orderInfo.insuredIdcardImageUrl}}" alt="" ng-if="!obj.flow.files.length && !noImage">
+                                                <img flow-img="obj.flow.files[0]" ng-if="obj.flow.files.length">
+                                            </div>
+                                            <div class="user-image-buttons" ng-if="obj.flow.files.length">
+                                                <span class="btn btn-primary" flow-btn><i class="fa fa-pencil"></i></span>
+                                                <!--<span class="btn btn-danger" ng-click="obj.flow.cancel()"> <i class="fa fa-times"></i> </span>-->
+                                            </div>
+                                            <div class="user-image-buttons" ng-if="!obj.flow.files.length">
+                                                <span class="btn btn-primary" flow-btn><i class="fa fa-pencil"></i></span>
+                                                <!--<span class="btn btn-danger" ng-if="!noImage" ng-click="removeImage()"><i class="fa fa-times"></i></span>-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background:#ECFFFF;">
+                    <button class="btn btn-primary" ng-click="cancelStatus($event)">取消</button>
+                    <button class="btn btn-primary" ng-click="okStatus($event)">确定</button>
+                </div>
+            </script>
+            <script type="text/ng-template" id="oldOrder.html">
+                <div class="modal-header">
+                    <h5 class="modal-title"><b>变更之前信息</b></h5>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <form role="form" class="form-horizontal">
+                            <div class="modal-header">
+                                <h5 class="modal-title"><b>保险订单需求</b></h5>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">
+                                    订单号：{{orderInfo.id}}
+                                </label>
+                                <label class="col-sm-3">
+                                    投保时间：{{orderInfo.dateCreate}}
+                                </label>
+                                <label class="col-sm-3">
+                                    保险种类：{{orderInfo.productName}}
+                                </label>
+                                <label class="col-sm-3">
+                                    保险状态：{{orderInfo.statusName}}
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">
+                                    保证额度：{{orderInfo.benefits}}
+                                </label>
+                                <label class="col-sm-3">
+                                    保障时间到：{{orderInfo.guaranteeTime}}
+                                </label>
+                                <label class="col-sm-3">
+                                    保险公司：{{orderInfo.vendor}}
+                                </label>
+                                <label class="col-sm-3">
+                                    核保单号：{{orderInfo.orderNum}}
+                                </label>
+                            </div>
+                            <div class="modal-header">
+                                <h5 class="modal-title"><b>投保人信息</b></h5>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">
+                                    姓名：{{orderInfo.contactName}}
+                                </label>
+                                <label class="col-sm-3">
+                                    手机：{{orderInfo.contactPhone}}
+                                </label>
+                                <label class="col-sm-3">
+                                    邮箱：{{orderInfo.contactMail}}
+                                </label>
+                                <label class="col-sm-3">
+                                    与被保人关系：{{orderInfo.relation}}
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6">
+                                    投保人身份证：{{orderInfo.contactIdcard}}
+                                </label>
+                            </div>
+                            <div class="modal-header">
+                                <h5 class="modal-title"><b>被保人信息</b></h5>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3">
+                                    姓名：{{orderInfo.insuredName}}
+                                </label>
+                                <label class="col-sm-3">
+                                    手机：{{orderInfo.insuredPhone}}
+                                </label>
+                                <label class="col-sm-3">
+                                    身份证：{{orderInfo.insuredIdcard}}
+                                </label>
+                                <label class="col-sm-3">
+                                    年龄：{{orderInfo.insuredAge}}
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4">
+                                    医院：{{orderInfo.hospitalName}}
+                                </label>
+                                <label class="col-sm-4">
+                                    主刀医生：{{orderInfo.doctorName}}
+                                </label>
+                                <label class="col-sm-4">
+                                    医生职称：{{orderInfo.doctorTitle}}
+                                </label>
+                                <label class="col-sm-4">
+                                    手术方案：{{orderInfo.operation}}
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6">
+                                    手术时间：{{orderInfo.operationTime}}
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                    </div>
+                </div>
+
+            </script>
+        </div>
+    </div>
+</div>

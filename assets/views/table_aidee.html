@@ -1,0 +1,52 @@
+<!-- start: SIMPLE TABLE WITH PAGINATION -->
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- /// controller:  'ngTableCtrl' -  localtion: assets/js/controllers/ngTableCtrl.js /// -->
+            <div ng-controller="ngTableCtrl" class="table-responsive">
+                <p>
+                    <strong>Page:</strong> {{tableParams.page()}}
+                </p>
+                <p>
+                    <strong>Count per page:</strong> {{tableParams.count()}}
+                </p>
+                <table ng-table="tableParams" class="table table-hover" id="sample-table-1">
+                    <tr ng-repeat="user in $data">
+                        <td data-title="'Name'">{{user.name}}</td>
+                        <td data-title="'Alias'">{{user.alias}}</td>
+                        <td data-title="'Publisher'">{{user.publisher}}</td>
+                        <td data-title="'Gender'">{{user.gender}}</td>
+                        <td data-title="'Operate'">
+                            <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                <a href="#" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i
+                                        class="fa fa-pencil"></i></a>
+                                <a href="#" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="Remove"><i
+                                        class="fa fa-trash fa fa-white"></i></a>
+                            </div>
+                            <div class="visible-xs visaoible-sm hidden-md hidden-lg">
+                                <div class="btn-group" dropdown is-open="status.isopen">
+                                    <button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle" dropdown-toggle>
+                                        <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right dropdown-light" role="menu">
+                                        <li>
+                                            <a href="#">
+                                                Edit
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                Remove
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end: SIMPLE TABLE WITH PAGINATION -->

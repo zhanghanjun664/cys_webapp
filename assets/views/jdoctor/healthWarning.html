@@ -1,0 +1,432 @@
+<style>
+.viewBloodGlucose .modal-dialog {
+	width: 95%;
+}
+
+.viewBloodPressure .modal-dialog {
+	width: 95%;
+}
+
+.processWarningRecord .modal-dialog {
+	width: 40%;
+}
+
+.editWaringConfig .modal-dialog {
+	width: 30%;
+}
+
+.editWaringConfig .form-control {
+	display: inline-block;
+	margin: 0 5px;
+	width: 40%;
+}
+</style>
+
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<h4>
+			<b>血压测量概况</b>
+		</h4>
+		<div ng-controller="bloodPressureCtrl" class="col-md-12">
+			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<p style="margin-top: 25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+			<div class="table-responsive">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+						<tr>
+							<th>用户手机号</th>
+							<th>家庭联系人姓名</th>
+							<th>家庭联系人手机号</th>
+							<th>最新测量时间</th>
+							<th>近期测量情况</th>
+							<th>一周异常次数</th>
+							<th>回访状态</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+
+					<tr ng-repeat="obj in $data" ng-class-odd="'odd'" ng-class-even="'even'" id="tr{{obj.id}}">
+						<td class="center">{{obj.phoneNumber}}</td>
+						<td class="center">{{obj.familyName}}</td>
+						<td class="center">{{obj.familyPhoneNumber}}</td>
+						<td class="center">{{obj.examDate}}</td>
+						<td class="center" ng-bind-html="levelViewColor(obj.level)"></td>
+						<td class="center">{{obj.abnormalCount}}</td>
+						<td class="center" ng-bind-html="followupStatusViewColor(getItemName(obj.followupStatus,followupStatusList))"></td>
+						<td class="center">
+							<div class="visible-md visible-lg hidden-sm hidden-xs">
+								<a href="#" ng-click="edit(obj)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top"
+									tooltip="查看"><i class="fa fa-edit"></i></a>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<script type="text/ng-template" id="searchBloodPressure.html">
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<b>血压数据查询</b>
+					</h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 回访状态</label> <select class="col-sm-9"
+									ng-model="searchInfos.followupStatus"
+									ng-options="followupStatus.value as followupStatus.name for followupStatus in followupStatusList">
+									<option value="">全部</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 用户手机号</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" ng-model="searchInfos.phoneNumber">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 家庭联系人姓名</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" ng-model="searchInfos.familyName">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 家庭联系人手机号</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" ng-model="searchInfos.familyPhoneNumber">
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+				</div>
+								</script>
+				<script type="text/ng-template" id="viewBloodPressure.html">
+				<div class="modal-header">
+					<h3 class="modal-title">
+						<b>历史血压数据</b>
+					</h3>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<div class="row">
+							<p style="">
+								<strong>基本信息</strong>
+							</p>
+							<label class="col-sm-1 control-label"> 用户手机号: </label>
+							<div class="col-sm-2">{{obj.phoneNumber}}</div>
+							<label class="col-sm-1 control-label"> 家庭联系人姓名: </label>
+							<div class="col-sm-1">{{obj.familyName}}</div>
+							<label class="col-sm-1 control-label"> 家庭联系人手机号: </label>
+							<div class="col-sm-1">{{obj.familyPhoneNumber}}</div>
+							<label class="col-sm-1 control-label"> 家庭联系人关系:</label>
+							<div class="col-sm-2">{{obj.familyRelation}}</div>
+							<div class="col-sm-1">
+								<button ng-click="goPatientMessageSendPage()" type="button" class="btn btn-sm btn-success"
+									style="min-width: 120px;">
+									给用户发消息 <i class="fa fa-paper-plane"></i>
+								</button>
+							</div>
+						</div>
+						<div class="row">
+
+							<label class="col-sm-1 control-label"> openId:</label>
+							<div class="col-sm-2">{{obj.openId}}</div>
+						</div>
+
+						<div class="row">
+							<p style="margin-top: 10px;">
+								<strong>异常告警信息</strong>
+							</p>
+							<label class="col-sm-1 control-label"> 高压警示值: </label>
+							<div class="col-sm-2">
+								>{{obj.warningConfig.systolicPressureMax}}或<{{obj.warningConfig.systolicPressureMin}}</div>
+							<label class="col-sm-1 control-label"> 低压警示值: </label>
+							<div class="col-sm-1">
+								>{{obj.warningConfig.diastolicPressureMax}}或<{{obj.warningConfig.diastolicPressureMin}}</div>
+							<label class="col-sm-1 control-label"> 一周异常次数: </label>
+							<div class="col-sm-1">>={{obj.warningConfig.abnormalCount}}次告警</div>
+							<label class="col-sm-1 control-label"> 操作异常:</label>
+							<div class="col-sm-2">>={{obj.warningConfig.measureInterval}}天没测告警</div>
+							<div class="col-sm-1">
+								<button ng-click="warningConfigEdit(obj.warningConfig)" type="button" class="btn btn-sm btn-primary"
+									style="min-width: 120px;">
+									告警设置<i class="fa fa-search"></i>
+								</button>
+							</div>
+						</div>
+						<div ng-controller="bloodPressureHistoryCtrl" class="row" style="margin-top: 10px;">
+							<span> <strong>数据列表</strong>
+							</span> <span style="float: right"> <strong>总记录数:</strong> {{tableParams.total()}}
+							</span>
+							<div class="table-responsive">
+								<table ng-table="tableParams" class="table table-hover">
+									<thead>
+										<tr>
+											<th>测量时间</th>
+											<th>舒张压(低压)</th>
+											<th>收缩压(高压)</th>
+											<th>心率</th>
+											<th>录入方式</th>
+											<th>系统标记</th>
+										</tr>
+									</thead>
+									<tr ng-repeat="obj in $data" ng-class-odd="'odd'" ng-class-even="'even'" id="tr{{obj.id}}">
+										<td class="center">{{obj.examDate}}</td>
+										<td class="center">{{obj.diastolicPressure}}mmHg</td>
+										<td class="center">{{obj.systolicPressure}}mmHg</td>
+										<td class="center">{{obj.heartRate}}bpm</td>
+										<td class="center">{{getSourceName(obj.source)}}</td>
+										<td class="center" ng-bind-html="abnormalViewColor(obj.abnormal)"></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div ng-controller="warningRecordHistoryCtrl" class="row" style="margin-top: 10px;">
+							<span> <strong>告警提醒</strong>
+							</span> <span style="float: right"> <strong>总记录数:</strong> {{tableParams.total()}}
+							</span>
+							<div class="table-responsive">
+								<table ng-table="tableParams" class="table table-hover">
+									<thead>
+										<tr>
+											<th>告警时间</th>
+											<th>状态</th>
+											<th>告警类型</th>
+											<th>跟进人</th>
+											<th>跟进时间</th>
+											<th>跟进结果</th>
+										</tr>
+									</thead>
+									<tr ng-repeat="obj in $data" ng-class-odd="'odd'" ng-class-even="'even'" id="tr{{obj.id}}">
+										<td class="center">{{obj.auditable.dateCreated}}</td>
+										<td class="center" ng-bind-html="followupStatusViewColor(getItemName(obj.status,followupStatusList))"></td>
+										<td class="center">{{getItemName(obj.warningType,warningTypeList)}}</td>
+										<td class="center">{{obj.followUpPerseon}}</td>
+										<td class="center">{{obj.followUpTime}}</td>
+										<td class="center"><a href="#" ng-if="obj.status==1" ng-click="processWarningRecord(obj)"
+											class="btn btn-transparent btn-md tooltips" tooltip-placement="top" tooltip="标记为已跟进"><i
+												class="fa fa-gavel"></i></a> <a ng-if="obj.status==2" href="#" class="btn btn-transparent btn-md tooltips"
+											tooltip-placement="top" tooltip="{{obj.followUpConclusion}}"><i class="fa fa-exclamation-circle"></i></a></td>
+									</tr>
+								</table>
+							</div>
+							<div></div>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-primary" ng-click="cancel($event)">关闭</button>
+						</div>
+												</script>
+
+				<script type="text/ng-template" id="editWaringConfig.html">
+						<div class="modal-header">
+							<h5 class="modal-title">
+								<b>告警设置</b>
+							</h5>
+						</div>
+						<div class="modal-body">
+							<div class="panel-body">
+								<form role="form" class="form-horizontal">
+									<div class="form-group">
+										<label class="col-sm-3 control-label"> 高压警示值 </label>
+										<div class="col-sm-4">
+											<span>></span><input type="text" class="form-control" ng-model="obj.systolicPressureMax"><span>mmHg</span>
+										</div>
+										<label class="col-sm-1 control-label"> 或 </label>
+										<div class="col-sm-4">
+											<<input type="text" class="form-control" ng-model="obj.systolicPressureMin">mmHg
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label"> 低压警示值 </label>
+										<div class="col-sm-4">
+											><input type="text" class="form-control" ng-model="obj.diastolicPressureMax">mmHg
+										</div>
+										<label class="col-sm-1 control-label"> 或 </label>
+										<div class="col-sm-4">
+											<<input type="text" class="form-control" ng-model="obj.diastolicPressureMin">mmHg
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label"> 异常次数 </label>
+										<div class="col-sm-4">
+											>=<input type="text" class="form-control" ng-model="obj.abnormalCount">次告警
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label"> 测量间隙 </label>
+										<div class="col-sm-4">
+											>=<input type="text" class="form-control" ng-model="obj.measureInterval">天告警
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label" style="padding-top: 13px;"> 开启告警 </label>
+										<div class="col-sm-4">
+											<div class="radio clip-radio radio-primary radio-inline">
+												<input type="radio" id="warningSwitch_yes" ng-model="obj.warningSwitch" value="true"> <label
+													for="warningSwitch_yes">是</label>
+											</div>
+											<div class="radio clip-radio radio-primary radio-inline">
+												<input type="radio" id="warningSwitch_no" ng-model="obj.warningSwitch" value="false"> <label
+													for="warningSwitch_no">否</label>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+							<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+						</div>
+										 		</script>
+
+				<script type="text/ng-template" id="processWarningRecord.html">
+						<div class="modal-header">
+							<h5 class="modal-title">
+								<b>填写跟进结果</b>
+							</h5>
+						</div>
+						<div class="modal-body">
+							<div class="panel-body">
+								<form role="form" class="form-horizontal">
+									<div class="form-group">
+										<textarea class="form-control" rows="12" ng-model="obj.followUpConclusion"></textarea>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+							<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+						</div>
+										 		</script>
+			</div>
+		</div>
+		<h4>
+			<b>血糖测量概况</b>
+		</h4>
+		<div ng-controller="bloodGlucoseCtrl" class="col-md-12">
+			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<p style="margin-top: 25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+			<div class="table-responsive">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+						<tr>
+							<th>用户手机号</th>
+							<th>家庭联系人姓名</th>
+							<th>家庭联系人手机号</th>
+							<th>最新测量时间</th>
+							<th>最新测量值</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+
+					<tr ng-repeat="obj in $data" ng-class-odd="'odd'" ng-class-even="'even'" id="tr{{obj.id}}">
+						<td class="center">{{obj.phoneNumber}}</td>
+						<td class="center">{{obj.familyName}}</td>
+						<td class="center">{{obj.familyPhoneNumber}}</td>
+						<td class="center">{{obj.examDate}}</td>
+						<td class="center">{{obj.bloodGlucose}}</td>
+						<td class="center">
+							<div class="visible-md visible-lg hidden-sm hidden-xs">
+								<a href="#" ng-click="edit(obj)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top"
+									tooltip="查看"><i class="fa fa-edit"></i></a>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<script type="text/ng-template" id="searchBloodGlucose.html">
+						<div class="modal-header">
+							<h5 class="modal-title">
+								<b>血糖数据查询</b>
+							</h5>
+						</div>
+						<div class="modal-body">
+							<div class="panel-body">
+								<form role="form" class="form-horizontal">
+									<div class="form-group">
+										<label class="col-sm-3 control-label"> 用户手机号</label>
+										<div class="col-sm-9">
+											<input type="text" class="form-control" ng-model="searchInfos.phoneNumber">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label"> 家庭联系人姓名</label>
+										<div class="col-sm-9">
+											<input type="text" class="form-control" ng-model="searchInfos.familyName">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label"> 家庭联系人手机号</label>
+										<div class="col-sm-9">
+											<input type="text" class="form-control" ng-model="searchInfos.familyPhoneNumber">
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+							<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+							<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+						</div>
+										</script>
+				<script type="text/ng-template" id="viewBloodGlucose.html">
+						<div class="modal-header">
+							<h3 class="modal-title">
+								<b>历史血压数据</b>
+							</h3>
+						</div>
+						<div class="modal-body">
+							<div class="panel-body">
+
+								<div class="row">
+									<label class="col-sm-1 control-label"> 用户手机号: </label>
+									<div class="col-sm-2">{{obj.phoneNumber}}</div>
+									<label class="col-sm-1 control-label"> 家庭联系人姓名: </label>
+									<div class="col-sm-2">{{obj.familyName}}</div>
+									<label class="col-sm-1 control-label"> 家庭联系人手机号: </label>
+									<div class="col-sm-2">{{obj.familyPhoneNumber}}</div>
+									<label class="col-sm-1 control-label"> 家庭联系人关系:</label>
+									<div class="col-sm-2">{{obj.relationToMe}}</div>
+								</div>
+
+								<div ng-controller="bloodGlucoseHistoryCtrl" class="row" style="margin-top: 10px;">
+									<span> <strong>数据列表</strong>
+									</span> <span style="float: right"> <strong>总记录数:</strong> {{tableParams.total()}}
+									</span>
+									<div class="table-responsive">
+										<table ng-table="tableParams" class="table table-hover">
+											<thead>
+												<tr>
+													<th>测量时间</th>
+													<th>血糖</th>
+												</tr>
+											</thead>
+											<tr ng-repeat="obj in $data" ng-class-odd="'odd'" ng-class-even="'even'" id="tr{{obj.id}}">
+												<td class="center">{{obj.examDate}}</td>
+												<td class="center">{{obj.bloodGlucose}}mmol/L</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button class="btn btn-primary" ng-click="cancel($event)">关闭</button>
+								</div>
+														</script>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>感恩橙医生 橙意贺新春</title>
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<script src="../static/js/app/rem.js"></script>
+	<link rel="stylesheet" href="../static/css/base.css">
+	<link rel="stylesheet" href="../static/css/style.css">
+	<script type="text/javascript" src="../static/js/libs/requirejs/require.js"></script>
+	<script type="text/javascript" src="../static/js/app.js"></script>
+	<script>
+		require(['selectDoctor'],function(s){
+			s.getSlectBg();
+			s.importDoctor();
+		});
+	</script>
+</head>
+<body>
+	<div class="select_doctor_title pa"></div>
+
+	<div class="pr">
+
+		<div class="showcard" attr="0" >
+			<img src="" alt="" class="show_backgroundimage pr">
+		</div>
+
+		<div class="show_wish pa">
+			<img src="" alt="" class="show_wish_images">
+		</div>
+
+	</div>
+
+	<div class="search_doctor clearfix">
+		<input type="text" placeholder="点击输入或者选择医生" class="fl" readonly  id="selectDoctor">
+		<div  class="fr send" id="confirm_send"></div>
+	</div>
+
+
+	<div class="search_wrap" id="search_wrap">
+
+
+		<div class="search_banner">
+			<div class="clearfix search_input_wrap" >
+				<input type="text" placeholder="输入医生姓氏便可以搜索出医生" class="search_input fl" id="select_doctor_search">
+				<div class="ok_select fr" state="cancel" id="confirm_search">取消</div>
+			</div>
+		</div>
+
+		<div class="show_search pa">
+
+			<div class="recommend" style="display: block" id="recommend">
+				<section>人气医生</section>
+				<ul class="clearfix" id="recomend_doctor">
+					<!--<li class="fl"><span id='123'>呵呵呵</span></li>-->
+				</ul>
+			</div>
+
+
+
+			<div class="recommend result" id="result">
+				<ul class="clearfix" id="select_result">
+					<!--<li class="fl"><span>哈哈哈(上海)</span></li>-->
+					<!--<li class="fl"><span>呵呵(北京)</span></li>-->
+					<!--<li class="fl"><span>哈哈(上海)</span></li>-->
+					<!--<li class="fl"><span>张小岛(广州)</span></li>-->
+					<!--<li class="fl"><span>张小娴哈(日本)</span></li>-->
+					<!--<li class="fl"><span>胡大一(北京)</span></li>-->
+				</ul>
+			</div>
+
+		</div>
+
+
+	</div>
+
+
+</body>
+</html>

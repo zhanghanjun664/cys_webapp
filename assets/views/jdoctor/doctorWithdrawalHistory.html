@@ -1,0 +1,50 @@
+<div class="container-fluid container-fullw bg-white">
+<div class="row">
+        <div ng-controller="DoctorWithdrawalHistoryCtrl" class="col-md-12">
+            <p style="margin-top:25px;">
+                <strong>总记录数:</strong> {{tableParams.total()}}
+            </p>
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>医生</th>
+                        <th>提款金额</th>
+                        <th>状态</th>
+                        <th>时间</th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="jdTitle in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                        <td class="center">{{jdTitle.name}}</td>
+                        <td class="center">{{jdTitle.amount}}</td>
+                        <td class="center">{{getStatusString(jdTitle.status)}}</td>
+                        <td class="center">{{jdTitle.createDate}}</td>
+                    </tr>
+                </table>
+                <script type="text/ng-template" id="editDoctorWithdrawalHistory.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>信息</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="name">
+                                        名称
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="name" class="form-control" ng-model="jdTitleInfo.name">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

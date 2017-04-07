@@ -1,0 +1,156 @@
+<div class="container-fluid container-fullw bg-white">
+<div class="row">
+        <div ng-controller="PaymentCtrl" class="col-md-12">
+            <button ng-click="edit()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+                新增 <i class="fa fa-plus"></i>
+            </button>
+
+            <button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
+                编辑 <i class="fa fa-edit"></i>
+            </button>
+            <p style="margin-top:25px;">
+                <strong>总记录数:</strong> {{tableParams.total()}}
+            </p>
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th style="text-align:left;width:6%;">
+                            <div class="checkbox clip-check check-primary checkbox-inline">
+                                <input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()"/>
+                                <label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+                            </div>
+                        </th>
+                        <th>编号</th>
+                        <th>名字</th>
+                        <th>支付方式</th>
+                        <th>状态</th>
+                        <th>笔数</th>
+                        <th>总额</th>
+                        <th>开始时间</th>
+                        <th>结束时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="payment in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                        <td>
+                            <div class="checkbox clip-check check-primary checkbox-inline">
+                                <input id="checkbox{{payment.uuid}}" type="checkbox" ng-model="payment.selected" ng-click="changeSelection($index)"/>
+                                <label for="checkbox{{payment.uuid}}" style="vertical-align: middle;"></label>
+                            </div>
+                        </td>
+                        <td class="center">{{payment.documentNo}}</td>
+                        <td class="center">{{payment.name}}</td>
+                        <td class="center">{{getPaymentMethodLabel(payment.paymentMethod)}}</td>
+                        <td class="center">{{getStatusLabel(payment.status)}}</td>
+                        <td class="center">{{payment.count}}</td>
+                        <td class="center">{{payment.amount}}</td>
+                        <td class="center">{{payment.startDate}}</td>
+                        <td class="center">{{payment.endDate}}</td>
+                        <td class="center">
+                            <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                <a href="#" ng-click="edit(payment)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="编辑"><i
+                                        class="fa fa-edit"></i></a>
+                                <a href="#" ng-click="download(payment.uuid)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="下载"><i
+                                        class="fa ti-download fa fa-white"></i></a>
+                            </div>
+                            <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                <div class="btn-group" dropdown is-open="status.isopen">
+                                    <button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle" dropdown-toggle>
+                                        <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right dropdown-light" role="menu">
+                                        <li>
+                                            <a href="#" ng-click="edit(payment)">编辑</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" ng-click="download(payment.uuid)">下载</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <script type="text/ng-template" id="editPayment.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>付款</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="documentNo">
+                                        编号
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="documentNo" class="form-control" ng-model="payment.documentNo" readonly>
+                                    </div>
+
+                                    <label class="col-sm-3 control-label" for="name">
+                                        名称
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="name" class="form-control" ng-model="payment.name">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="paymentMethod">
+                                        支付方式
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <select id="paymentMethod" class="form-control" ng-options="paymethod.value as paymethod.label for paymethod in paymethodArray" ng-model="payment.paymentMethod"/>
+                                    </div>
+
+                                    <label class="col-sm-3 control-label" for="status">
+                                        状态
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <select id="status" class="form-control" ng-options="status.value as status.label for status in statusArray" ng-model="payment.status"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="paymentMethod">
+                                        笔数
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="count" class="form-control" ng-model="payment.count" readonly>
+                                    </div>
+
+                                    <label class="col-sm-3 control-label" for="amount">
+                                        总额
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="amount" class="form-control" ng-model="payment.amount" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="startDate">
+                                        开始日期
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="startDate" class="form-control" ng-model="payment.startDate">
+                                    </div>
+
+                                    <label class="col-sm-3 control-label" for="amount">
+                                        结束日期
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="endDate" class="form-control" ng-model="payment.endDate">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,257 @@
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div ng-controller="JdPushArticleCtrl" class="col-md-12">
+        	<button ng-click="edit()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+				新增 <i class="fa fa-plus"></i>
+			</button>
+			<button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
+				编辑 <i class="fa fa-edit"></i>
+			</button>
+			<button ng-click="deleteAll()" type="button" class="btn btn-wide btn-danger" style="min-width: 30px;">
+				删除 <i class="fa fa-trash"></i>
+			</button>
+			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<p style="margin-top:25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                	<thead>
+						<tr>
+							<th style="text-align:left;width:6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()"/>
+									<label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th width="8%">医生姓名</th>
+							<th width="23%">文章标题</th>
+							<th width="23%">文章摘要</th>
+							<th width="23%">文章链接</th>
+							<th width="16%">操作</th>
+						</tr>
+					</thead>
+                    <tr ng-repeat="jdPushArticle in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                    	<td>
+                    		<div class="checkbox clip-check check-primary checkbox-inline">
+	                    		<input id="checkbox{{jdPushArticle.uuid}}" type="checkbox" ng-model="jdPushArticle.selected" ng-click="changeSelection($index)"/>
+	                    		<label for="checkbox{{jdPushArticle.uuid}}" style="vertical-align: middle;"></label>
+                    		</div>
+                    	</td>
+                    	<td class="center">{{jdPushArticle.doctorName}}</td>
+						<td class="center" title="{{jdPushArticle.title}}">
+							<span ng-if="jdPushArticle.title.length<=20">{{jdPushArticle.title | limitTo : 20}}</span>
+							<span ng-if="jdPushArticle.title.length>20">{{jdPushArticle.title | limitTo : 20}}...</span>
+						</td>
+						<td class="center" title="{{jdPushArticle.summary}}">
+							<span ng-if="jdPushArticle.summary.length<=20">{{jdPushArticle.summary}}</span>
+							<span ng-if="jdPushArticle.summary.length>20">{{jdPushArticle.summary | limitTo : 20}}...</span>
+						</td>
+						<td class="center" title="{{jdPushArticle.url}}">
+							<a href="{{jdPushArticle.url}}" target="_blank">
+								<span ng-if="jdPushArticle.url.length<=20">{{jdPushArticle.url}}</span>
+								<span ng-if="jdPushArticle.url.length>20">{{jdPushArticle.url | limitTo : 20}}...</span>
+							</a>
+						</td>
+                        <td class="center">
+                            <div class="visible-md visible-lg hidden-sm hidden-xs">
+								<a href="#" ng-click="send(jdPushArticle.uuid)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="推送文章消息"><i
+										class="fa fa-share-square-o"></i></a>
+                                <a href="#" ng-click="edit(jdPushArticle)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="编辑"><i
+                                        class="fa fa-edit"></i></a>
+                                <a href="#" ng-click="deleteItem(jdPushArticle.uuid)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="删除"><i
+                                        class="fa fa-trash fa fa-white"></i></a>
+                            </div>
+                            <div class="visible-xs visaoible-sm hidden-md hidden-lg">
+                                <div class="btn-group" dropdown is-open="status.isopen">
+                                    <button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle" dropdown-toggle>
+                                        <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right dropdown-light" role="menu">
+										<li>
+											<a href="#" ng-click="send(jdPushArticle.uuid)">推送文章消息</a>
+										</li>
+                                        <li>
+                                            <a href="#" ng-click="edit(jdPushArticle)">编辑</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" ng-click="deleteItem(jdPushArticle.uuid)">删除</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <script type="text/ng-template" id="searchJdPushArticle.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>查询条件</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="s_name">
+										医生姓名
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="s_name" class="form-control" ng-model="searchInfos.doctorName">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="s_title">
+										文章标题
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="s_title" class="form-control" ng-model="searchInfos.title">
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+                <script type="text/ng-template" id="editJdPushArticle.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>推送文章信息</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="name">
+										医生
+									</label>
+									<div class="col-sm-6">
+										<input type="text" class="col-sm-12" ng-model="doctorName" id="name" readonly>
+									</div>
+									<div class="col-sm-3">
+										<button ng-click="selectDoctor()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+											选择医生 <i class="fa fa-plus"></i>
+										</button>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="title">
+										文章标题
+									</label>
+									<div class="col-sm-8">
+										<input type="title" id="title" class="form-control" ng-model="jdPushArticleInfo.title" maxlength="60">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="summary">
+										文章摘要
+									</label>
+									<div class="col-sm-8">
+										<textarea id="summary" class="form-control" ng-model="jdPushArticleInfo.summary" maxlength="200"></textarea>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="url">
+										文章链接
+									</label>
+									<div class="col-sm-8">
+										<textarea id="url" class="form-control" ng-model="jdPushArticleInfo.url" maxlength="255"></textarea>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+
+				<script type="text/ng-template" id="selectDoctor.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>医生选择</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<div class="col-md-12">
+								<div class="col-md-3">
+									<label class="col-sm-5">地区</label>
+									<select class="col-sm-6" ng-model="searchInfo.districtId"
+											ng-options="jdDistrict.uuid as jdDistrict.name for jdDistrict in jdDistricts" ng-change="onDistrictChange(searchInfo.districtId)">
+										<option value="">全部</option>
+									</select>
+								</div>
+								<div class="col-md-3">
+									<label class="col-sm-5"> 医院</label>
+									<select class="col-sm-6" ng-model="searchInfo.hospitalId"
+											ng-options="jdHospital.hospitalId as jdHospital.name for jdHospital in jdHospitals">
+										<option value="">全部</option>
+									</select>
+								</div>
+								<div class="col-md-3">
+									<label class="col-sm-5">科室</label>
+									<select class="col-sm-6" ng-model="searchInfo.departmentId"
+											ng-options="jdDepartment.uuid as jdDepartment.name for jdDepartment in jdDepartments">
+										<option value="">全部</option>
+									</select>
+								</div>
+								<div class="col-md-3">
+									<label class="col-sm-5">职称</label>
+									<select class="col-sm-6" ng-model="searchInfo.titleId"
+											ng-options="jdTitle.uuid as jdTitle.name for jdTitle in jdTitles">
+										<option value="">全部</option>
+									</select>
+								</div>
+								<br/>
+								<br/>
+								<div class="col-md-3">
+									<label class="col-sm-5">姓名</label>
+									<input class="col-sm-6" type="text" ng-model="searchInfo.name">
+									</input>
+								</div>
+								<div style="clear: both"/>
+								<div class="table-responsive" style="margin-top:25px;">
+									<table ng-table="tableParams" class="table table-hover">
+										<thead>
+										<tr>
+											<th></th>
+											<th>姓名</th>
+											<th>地区</th>
+											<th>医院</th>
+											<th>科室</th>
+											<th>职称</th>
+										</tr>
+										</thead>
+										<tr ng-repeat="jdoctor in data" ng-class-odd="'odd'" ng-class-even="'even'">
+											<td>
+												<div class="checkbox clip-check check-primary checkbox-inline">
+													<input id="checkbox{{jdoctor.uuid}}" type="checkbox" ng-model="jdoctor.selected" ng-click="changeSelection($index)"/>
+													<label for="checkbox{{jdoctor.uuid}}" style="vertical-align: middle;"></label>
+												</div>
+											</td>
+											<td class="center">{{jdoctor.name}}</td>
+											<td class="center">{{jdoctor.district}}</td>
+											<td class="center">{{jdoctor.hospital}}</td>
+											<td class="center">{{jdoctor.department}}</td>
+											<td class="center">{{jdoctor.title}}</td>
+										</tr>
+									</table>
+								</div>
+								<div style="clear: both"/>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="clear($event)">清除</button>
+						<button class="btn btn-primary" ng-click="query()">查询</button>
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+            </div>
+        </div>
+    </div>
+</div>

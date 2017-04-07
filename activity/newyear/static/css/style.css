@@ -1,0 +1,924 @@
+body {
+  background: #ffdb4f;
+}
+.backgroundb29937 {
+  background: #b29937;
+}
+.backgroundfff {
+  background: #ffffff;
+}
+.monkey_bg {
+  position: absolute;
+  width: 16rem;
+  height: 23.7rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/monkey.png") center center no-repeat;
+  background-size: contain;
+  overflow: hidden;
+  bottom: 0;
+  left: 50%;
+  margin-left: -8rem;
+}
+.monkey_bg2 {
+  position: absolute;
+  width: 16rem;
+  height: 23.65rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/monkey2.png") center center no-repeat;
+  background-size: contain;
+  overflow: hidden;
+  bottom: 0;
+  left: 50%;
+  margin-left: -8rem;
+}
+.logo {
+  width: 4.65rem;
+  height: 1.65rem;
+  margin: 1.925rem auto 0;
+}
+.monkey_bg2 .logo {
+  margin: 1rem auto 0;
+}
+.title {
+  width: 12.7rem;
+  height: 7.85rem;
+  margin: 1.275rem auto 0;
+}
+.title2 {
+  width: 7.425rem;
+  height: 9.675rem;
+  margin: 0.125rem auto 0;
+}
+.title3 {
+  width: 7.325rem;
+  height: 2.45rem;
+  margin: 0.375rem auto 0;
+}
+.title3 img {
+  max-width: 100%;
+}
+.title img {
+  max-width: 100%;
+}
+.title2 img {
+  max-width: 100%;
+}
+.logo img {
+  max-width: 100%;
+}
+.btn {
+  display: block;
+  width: 7.125rem;
+  height: 1.9rem;
+}
+.star {
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/btn.png") 0 0 no-repeat;
+  background-size: 7.125rem 4.25rem;
+  margin: 1.3rem auto 0;
+}
+.rule {
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/btn.png") 0 bottom no-repeat;
+  background-size: 7.125rem 4.25rem;
+  margin: 0.5rem auto 0;
+}
+.cardnumber {
+  width: 11.6rem;
+  height: 2.475rem;
+  margin: 0.25rem auto 0;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/cardnumber.png") center center no-repeat;
+  background-size: contain;
+}
+.cardnumber span {
+  width: 2.125rem;
+  height: 2.125rem;
+  overflow: hidden;
+  top: 0.175rem;
+  left: 2.8rem;
+  font-size: 0.65rem;
+  line-height: 2.125rem;
+  text-align: center;
+  color: #ffffff;
+}
+.btn_ground {
+  width: 12.25rem;
+  height: 1.775rem;
+  margin: 0.125rem auto 0;
+}
+.btn_ground a {
+  width: 5.775rem;
+  height: 1.775rem;
+}
+.look {
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/group.png") 0 0 no-repeat;
+  background-size: 12.25rem 1.775rem;
+}
+.popularity {
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/group.png") right 0 no-repeat;
+  background-size: 12.25rem 1.775rem;
+}
+.patients_rules {
+  padding-top: 1.9rem;
+  width: 14.4rem;
+  height: 18.6rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/page.png") center center no-repeat;
+  background-size: contain;
+  margin: 1.725rem auto 0;
+}
+.rules_title {
+  left: 50%;
+  top: -0.325rem;
+  width: 7.125rem;
+  height: 1.475rem;
+  margin-left: -3.5625rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/rules.png") center center no-repeat;
+  background-size: contain;
+}
+.patientsRule {
+  width: 12.15rem;
+  height: 14.5rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/panitenRules.png") center center no-repeat;
+  background-size: contain;
+  margin: 0 auto;
+}
+.btn2 {
+  color: #ffffff;
+  font-size: 0.85rem;
+  text-align: center;
+  display: block;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/btn_bg.png") center center no-repeat;
+  background-size: 100% 100%;
+  font-weight: bold;
+}
+.return_btn {
+  width: 5.1rem;
+  height: 1.525rem;
+  line-height: 1.4rem;
+  margin: 1.05rem auto 0;
+}
+.doctor_rules {
+  padding-top: 1.9rem;
+  width: 14.4rem;
+  height: 22.6rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/page2.png") center center no-repeat;
+  background-size: contain;
+  margin: 1.725rem auto 0;
+}
+.doctorRule {
+  width: 12.125rem;
+  height: 19.3rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/doctorRules.png") center center no-repeat;
+  background-size: contain;
+  margin: 0 auto;
+}
+.return_btn2 {
+  margin-top: 0.6rem;
+}
+.popular {
+  width: 14.4rem;
+  height: 15.425rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/pbg.png") center center no-repeat;
+  background-size: contain;
+  margin: 2.275rem auto 1.025rem auto;
+  padding-top: 2.5rem;
+}
+.popular_title {
+  width: 10rem;
+  height: 3.925rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/ptitle.png") center center no-repeat;
+  background-size: contain;
+  top: -1.675rem;
+  left: 50%;
+  margin-left: -5rem;
+}
+.iscroll_wrap {
+  margin: 0 auto;
+  height: 13.6rem;
+  overflow: hidden;
+}
+.popular_list {
+  width: 11.75rem;
+  margin: 0 auto;
+}
+.popular_list li {
+  height: 3.4rem;
+  display: -webkit-box;
+  display: box;
+  border-bottom: 1px solid #f7f4f4;
+}
+.polularnumber {
+  height: 3.4rem;
+  line-height: 3.4rem;
+  color: #c3996b;
+  font-size: 0.9rem;
+  font-weight: bolder;
+  vertical-align: top;
+  width: 1.4rem;
+}
+.popularpic {
+  height: 3.4rem;
+  width: 1.925rem;
+}
+.popular_pic_wrap {
+  height: 1.925rem;
+  width: 1.925rem;
+  border-radius: 100%;
+  top: 50%;
+  left: 0;
+  margin-top: -0.9625rem;
+  overflow: hidden;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img//noheader.png") center center no-repeat;
+  background-size: 1.525rem 1.7rem;
+  border: 1px solid #c9c4be;
+}
+.popular_pic_wrap img {
+  max-width: 100%;
+}
+.popularshow {
+  -webkit-box-flex: 1;
+  box-flew: 1;
+  height: 2.4rem;
+  padding-left: 0.425rem;
+  padding-top: 1rem;
+}
+.popularname {
+  font-size: 0.7rem;
+  height: 0.75rem;
+  line-height: 0.75rem;
+}
+.popular_hp {
+  width: 100%;
+  height: 0.25rem;
+  background: #c3996b;
+  border-radius: 2.5rem;
+  margin-top: 0.3rem;
+  overflow: hidden;
+}
+.popular_hp span {
+  top: 0;
+  left: 0;
+  background: #f20c00;
+  height: 0.25rem;
+}
+.popular_btn {
+  width: 14.4rem;
+  height: 1.925rem;
+  margin: 1.025rem auto 0;
+}
+.popular_left {
+  width: 6.875rem;
+  height: 1.925rem;
+  line-height: 1.75rem;
+}
+.popular_right {
+  width: 6.875rem;
+  height: 1.925rem;
+  line-height: 1.75rem;
+}
+.prize_title {
+  width: 15rem;
+  height: 4.075rem;
+  margin: 0.425rem auto 0;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/prizetitle.png") center center no-repeat;
+  background-size: contain;
+  overflow: hidden;
+}
+.prize_title p:first-child {
+  font-size: 0.85rem;
+  line-height: 0.85rem;
+  font-weight: bolder;
+  color: #e80c01;
+  margin: 1rem 0 0.35rem 0;
+  text-align: center;
+}
+.prize_title p:last-child {
+  color: #512700;
+  text-align: center;
+  font-size: 0.65rem;
+}
+.prize_bg {
+  width: 16rem;
+  height: 19.725rem;
+  margin: -0.25rem auto 0;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/prize.png") center center no-repeat;
+  background-size: contain;
+  overflow: hidden;
+}
+.Award_information {
+  height: 6.675rem;
+  padding-top: 5.65rem;
+}
+.Award_message,
+.prize_fill {
+  width: 13.2rem;
+  margin: 0 auto;
+}
+.Award_message {
+  text-align: center;
+  color: #fef36b;
+  font-size: 0.75rem;
+  font-weight: bolder;
+}
+.prize_fill li {
+  height: 1.475rem;
+  overflow: hidden;
+}
+.prize_phone {
+  width: 7.35rem;
+  font-size: 0.75rem;
+  height: 1.475rem;
+  line-height: 1.475rem;
+  padding: 0 0.675rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/input.png") center center no-repeat;
+  background-size: 100% 100%;
+}
+input::-webkit-input-placeholder {
+  color: #7c4b00!important;
+}
+.prize_phone + div {
+  width: 4.2rem;
+  height: 1.55rem;
+  line-height: 1.55rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/btn4.png") center center no-repeat;
+  background-size: 100% 100%;
+  color: #512700;
+  font-size: 0.7rem;
+  text-align: center;
+  font-weight: bold;
+}
+.prize_fill li:last-child {
+  margin-top: 0.575rem;
+}
+.accept {
+  width: 5.05rem;
+  height: 1.85rem;
+  line-height: 1.85rem;
+  text-align: center;
+  font-weight: bold;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/btn2.png") center center no-repeat;
+  background-size: contain;
+  color: #512700;
+  font-size: 1.1rem;
+  margin: 0.7rem auto 0;
+}
+.again_ground {
+  width: 100%;
+  margin-top: 3.125rem;
+}
+.invite {
+  display: block;
+  width: 8.575rem;
+  height: 1.775rem;
+  line-height: 1.65rem;
+  margin: 0 auto 0.575rem;
+}
+.again_wrap {
+  width: 13.925rem;
+  margin: 0 auto;
+}
+.again_wrap a {
+  width: 6.525rem;
+  height: 1.775rem;
+  line-height: 1.65rem;
+}
+.select_background_title {
+  top: 0.55rem;
+  left: 50%;
+  margin-left: -4.7625rem;
+  width: 9.525rem;
+  height: 1.5rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/selectbg.png") center center no-repeat;
+  background-size: contain;
+  z-index: 999999;
+}
+.select_background_titck {
+  font-size: 0.65rem;
+  width: 100%;
+  text-align: center;
+  color: #ffffff;
+  left: 0;
+  top: 1.5rem;
+  z-index: 9999999999999999;
+}
+.select_background_titck2 {
+  font-size: 0.65rem;
+  width: 100%;
+  text-align: center;
+  color: #512700;
+  /*opacity: 0.4;*/
+  margin-top: -0.875rem;
+}
+.prompt_dialog_box {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999999999999;
+  display: none;
+}
+.prompt_font {
+  width: 4.075rem;
+  height: 1.475rem;
+  left: 50%;
+  margin-left: -2.0375rem;
+}
+.prompt_font2 {
+  width: 3.4rem;
+  height: 1.475rem;
+  left: 50%;
+  margin-left: -1.7rem;
+}
+.prompt_font2 img {
+  max-width: 100%;
+}
+.prompt_font img {
+  max-width: 100%;
+}
+.left_right_gif {
+  width: 6.6rem;
+  height: 1.9rem;
+  left: 50%;
+  margin-left: -3.3rem;
+}
+.left_right_gif img {
+  max-width: 100%;
+}
+.top1 {
+  top: 6.525rem;
+}
+.top2 {
+  top: 9.05rem;
+}
+.top3 {
+  top: 18.025rem;
+}
+.top4 {
+  top: 20.35rem;
+}
+.top5 {
+  top: 8.225rem;
+}
+.top6 {
+  top: 17.9rem;
+}
+.top7 {
+  top: 7.75rem;
+}
+.top8 {
+  top: 17.5rem;
+}
+.top_gif {
+  width: 2.95rem;
+  height: 2.75rem;
+}
+.top_gif img {
+  max-width: 100%;
+}
+.top_gif {
+  left: 50%;
+  margin-left: 2.95rem;
+}
+.background_style {
+  width: 14.05rem;
+  height: 17.025rem;
+  text-align: center;
+}
+.background_style_wrap .swiper-container {
+  width: 14.05rem;
+  height: 17rem;
+  margin: 1.325rem auto 0.25rem;
+  overflow: hidden;
+}
+.background_style img {
+  max-width: 100%;
+}
+.these {
+  padding-top: 0.9rem;
+  width: 14rem;
+  height: 2.225rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/select.png") 0 0 no-repeat;
+  background-size: contain;
+  margin: 0 auto;
+}
+.these_title {
+  font-size: 0.65rem;
+  height: 1.425rem;
+  line-height: 1.425rem;
+  text-align: center;
+  color: #512700;
+  padding-top: 0.5rem;
+  font-weight: bold;
+}
+.these .swiper-container {
+  height: 2.225rem;
+  overflow: hidden;
+}
+.select_doctor_title {
+  width: 6.275rem;
+  height: 1.35rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/selectdoctor.png") center center no-repeat;
+  background-size: contain;
+  top: 0.45rem;
+  left: 50%;
+  margin-left: -3.1375rem;
+  z-index: 999;
+}
+.showcard {
+  width: 14.05rem;
+  height: 19.575rem;
+  margin: 1.4rem auto 0;
+  text-align: center;
+}
+.showcard[attr='3'] img {
+  left: 0.375rem;
+}
+.show_backgroundimage {
+  max-width: 100%;
+}
+.show_wish {
+  width: 8.05rem;
+  height: 12.925rem;
+  left: 50%;
+  margin-left: -4.025rem;
+  top: 1.825rem;
+}
+.show_wish img {
+  max-width: 100%;
+}
+.search_doctor {
+  width: 13.65rem;
+  padding-left: 0.4rem;
+  margin: 0.9rem auto 0;
+}
+.search_doctor input {
+  width: 7.05rem;
+  height: 1.525rem;
+  line-height: 1.525rem;
+  padding: 0 0.65rem;
+  font-size: 0.55rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/search_doctor.png") 0 0 no-repeat;
+  background-size: contain;
+}
+.send {
+  width: 4.825rem;
+  height: 1.675rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/send.png") 0 0 no-repeat;
+  background-size: contain;
+}
+.search_wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  display: none;
+}
+.search_banner {
+  width: 100%;
+  height: 2.4rem;
+  background: #ffdb4f;
+  overflow: hidden;
+}
+.show_search {
+  top: 2.4rem;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+}
+.search_input_wrap {
+  width: 12.575rem;
+  margin: 0.375rem auto 0;
+}
+.search_input {
+  width: 7.75rem;
+  height: 1.175rem;
+  line-height: 1.175rem;
+  padding: 0 0.65rem;
+  font-size: 0.55rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/search.png") 0 0 no-repeat;
+  background-size: contain;
+}
+.ok_select {
+  width: 3.325rem;
+  height: 1.25rem;
+  line-height: 1.25rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/ok.png") 0 0 no-repeat;
+  background-size: contain;
+  color: #ffffff;
+  font-size: 0.525rem;
+  text-align: center;
+  font-weight: bold;
+}
+.recommend {
+  width: 13.25rem;
+  margin: 0.725rem auto 0;
+  display: none;
+}
+.recommend section {
+  color: #ffffff;
+  font-size: 0.55rem;
+}
+.recommend ul li {
+  width: 25%;
+  height: 0.975rem;
+  margin-top: 0.55rem;
+}
+.recommend ul li span {
+  display: block;
+  margin: 0 auto;
+  width: 2.8rem;
+  height: 0.975rem;
+  line-height: 0.975rem;
+  color: #512700;
+  font-size: 0.55rem;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 1.25rem;
+}
+#select_result li {
+  width: auto;
+  margin-right: 1rem;
+}
+#select_result li span {
+  width: auto;
+  height: 1.25rem;
+  line-height: 1.25rem;
+}
+.result section span {
+  display: block;
+  width: 3.3125rem;
+}
+.result {
+  display: none;
+}
+.result ul li span {
+  background: none;
+  color: #ffffff;
+  text-align: left;
+  margin: 0;
+}
+.invite_show {
+  width: 14.875rem;
+  margin: 0.7rem auto;
+  text-align: center;
+}
+.invite_show img {
+  max-width: 100%;
+}
+.monkey_bg3 {
+  position: absolute;
+  width: 16rem;
+  height: 23.375rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/monkey3.png") center center no-repeat;
+  background-size: contain;
+  overflow: hidden;
+  bottom: 0;
+  left: 50%;
+  margin-left: -8rem;
+}
+.monkey_bg3 .logo {
+  width: 2.975rem;
+  height: 1.075rem;
+  margin: 1.025rem auto 0;
+}
+.monkey_bg3 .title {
+  width: 11.525rem;
+  height: 7.35rem;
+  margin: 0.375rem auto 0;
+}
+.share {
+  width: 5.15rem;
+  height: 1.1rem;
+  margin: 0.475rem auto 0;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/atten.png") 0 0 no-repeat;
+  background-size: contain;
+}
+.orcode {
+  text-align: center;
+  width: 5.575rem;
+  height: 5.575rem;
+  margin: 0.3rem auto 0.575rem;
+}
+.orcode img {
+  max-width: 100%;
+}
+.attent_btn {
+  width: 12.25rem;
+  height: 1.775rem;
+  margin: 0.125rem auto 0;
+}
+.attent_btn a {
+  width: 5.75rem;
+  height: 1.775rem;
+}
+.attent_btn a:first-child {
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/btn3.png") 0 0 no-repeat;
+  background-size: 12.25rem 1.775rem;
+}
+.attent_btn a:last-child {
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/btn3.png") right 0 no-repeat;
+  background-size: 12.25rem 1.775rem;
+}
+.doctor_recevice {
+  width: 14.05rem;
+  height: 20.5rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/doctorr.png") center center no-repeat;
+  background-size: contain;
+  margin: 0.575rem auto;
+  overflow: hidden;
+}
+.doctor_recevice h1 {
+  width: 8.875rem;
+  height: 2.725rem;
+  top: 0;
+  left: 4.15rem;
+}
+.doctor_recevice h1 img {
+  max-width: 100%;
+}
+.doctor_recevice_card {
+  width: 11.6rem;
+  height: 1.675rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/card.png") center center no-repeat;
+  background-size: contain;
+  margin: 2.4rem auto 0;
+}
+.show_reviceived_number {
+  width: 2.725rem;
+  height: 1.675rem;
+  line-height: 1.675rem;
+  top: 0;
+  left: 2.575rem;
+  color: #512700;
+  font-size: 0.65rem;
+  text-align: center;
+}
+.wish_list {
+  height: 4.5rem;
+  overflow: hidden;
+  margin-top: 0.6rem;
+}
+.wish li {
+  text-align: center;
+  color: #ffffff;
+  font-size: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+.wish li p:first-child {
+  margin-bottom: 0.4rem;
+}
+.doctor_recevice_title {
+  width: 6.025rem;
+  height: 1.15rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/Group-8.png") center center no-repeat;
+  background-size: contain;
+  margin: 0.375rem auto 0;
+}
+.decorate {
+  width: 12.975rem;
+  height: 3.525rem;
+  margin: 1rem auto 0;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/sth.png") 0 0 no-repeat;
+  background-size: contain;
+}
+.discuss {
+  width: 14.05rem;
+  height: 4.175rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/discuss.png") 0 0 no-repeat;
+  background-size: 100% 100%;
+  bottom: 0rem;
+  left: 0;
+}
+.discuss_title2 {
+  width: 6.675rem;
+  height: 1.325rem;
+  background: url(http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/discuss2.png) 0 0 no-repeat;
+  background-size: contain;
+  z-index: 99999;
+  left: 50%;
+  top: -0.25rem;
+  margin-left: -3.3375rem;
+}
+.doctor_share {
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/doctor_shape.png") center center no-repeat;
+  background-size: contain;
+  width: 15.5rem;
+  height: 13.675rem;
+  margin: 0.65rem auto 0;
+}
+.doctor_img {
+  width: 9.8rem;
+  height: 11.9rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/doctorimg.png") 0 0 no-repeat;
+  background-size: contain;
+  left: 50%;
+  margin-left: -4.9rem;
+  top: -0.25rem;
+  overflow: hidden;
+  text-align: center;
+}
+.doctor_img_wrap {
+  width: 4.725rem;
+  height: 3.725rem;
+  background: #ffffff;
+  border-radius: 100%;
+  left: 50%;
+  top: 0.875rem;
+  margin-left: -2.3625rem;
+  text-align: center;
+  overflow: hidden;
+  padding-top: 1rem;
+}
+.doctor_share_name {
+  text-align: center;
+  color: #ffffff;
+  z-index: 999999999;
+  top: 5.75rem;
+  left: 0;
+  width: 100%;
+  font-size: 0.65rem;
+}
+.discuss_doctor {
+  width: 15.15rem;
+  height: 4.475rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/discuss.png") 0 0 no-repeat;
+  background-size: 100% 100%;
+  margin: 1.25rem auto 0;
+}
+.discuss_title {
+  width: 9.525rem;
+  height: 1.275rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/discuss2.png") center center no-repeat;
+  background-size: contain;
+  top: -0.65rem;
+  left: 50%;
+  margin-left: -4.7625rem;
+}
+.discuss_doctor_wrap {
+  width: 14.475rem;
+  height: 2.85rem;
+  left: 50%;
+  margin-left: -7.2375rem;
+  top: 1rem;
+  overflow: hidden;
+}
+.discuss_doctor_wrap2 {
+  top: 0.75rem;
+}
+.discuss_doctor_wrap2 #Evaluate_list {
+  width: 13.25rem;
+  margin: 0 auto;
+}
+.discuss_doctor_wrap ul li {
+  color: #512700;
+  font-size: 0.65rem;
+  line-height: 1rem;
+  text-align: center;
+}
+.doctor_car_number {
+  width: 15.275rem;
+  height: 2.65rem;
+  left: 50%;
+  top: 8.75rem;
+  margin-left: -7.6375rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/cardnnumber2.png") 0 0 no-repeat;
+  background-size: contain;
+  z-index: 999;
+}
+.doctor_car_number_show {
+  left: 50%;
+  top: 0;
+  width: 2.65rem;
+  height: 2.65rem;
+  margin-left: -1.325rem;
+  line-height: 2.65rem;
+  font-size: 0.65rem;
+  text-align: center;
+  color: #ffffff;
+}
+.share_wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999999999;
+}
+.share_marked_words {
+  width: 11.825rem;
+  height: 19.6rem;
+  background: url("http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/share.png") 0 0 no-repeat;
+  background-size: contain;
+  margin: 1.925rem auto 0;
+}
+@media screen and (max-height: 480px) {
+  .monkey_bg {
+    position: inherit;
+    margin: 0.3rem auto 0;
+  }
+  .monkey_bg3 {
+    margin: 0.625rem auto 0;
+  }
+}

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+
+
+    <display-name>CYS Weixin Server</display-name>
+    <welcome-file-list>
+        <welcome-file>login.html</welcome-file>
+    </welcome-file-list>
+	
+    <!-- Spring Session配置 指定哪些请求需要共享session -->
+	<filter>
+	    <filter-name>springSessionRepositoryFilter</filter-name>
+	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+	    <filter-name>springSessionRepositoryFilter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- Servlet Filter that binds a JPA EntityManager to the thread for the entire processing of the request -->
+	<filter>
+		<filter-name>openEntityManagerFilter</filter-name>
+		<filter-class>
+			org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter
+	    </filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>openEntityManagerFilter</filter-name>
+		<url-pattern>/rest/*</url-pattern>
+	</filter-mapping>  
+	<filter-mapping>
+		<filter-name>openEntityManagerFilter</filter-name>
+		<url-pattern>/wxapi/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>openEntityManagerFilter</filter-name>
+		<url-pattern>/cyspay/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- Log process filter -->
+	<filter>
+	    <filter-name>logProcessFilter</filter-name>
+	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+	    <filter-name>logProcessFilter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- Proxy for a standard Servlet Filter, delegating to a Spring-managed bean that implements the Filter 
+ interface（把普通的servlet filter让spring管理起来 ） -->
+    <filter>
+        <filter-name>appRequestAuthFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy
+        </filter-class>
+    </filter>
+    <filter>
+        <filter-name>wechatOpenidAuthEndpoint</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy
+        </filter-class>
+    </filter>
+    <filter>
+        <filter-name>tokenBasedAuthenticationFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy
+        </filter-class>	
+    </filter>
+    <filter>
+        <filter-name>sessionBasedAuthenticationFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy
+        </filter-class>	
+    </filter>
+
+	<!-- 处理app过来的页面请求，根据token获取用户身份 -->
+    <!-- 处理app过来的页面请求，在过滤器中根据token获取用户身份 -->
+    <filter-mapping>
+        <filter-name>appRequestAuthFilter</filter-name>
+        <url-pattern>/app/doctor/toVisitArrange.htm</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>appRequestAuthFilter</filter-name>
+        <url-pattern>/app/doctor/toOrderList.htm</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>appRequestAuthFilter</filter-name>
+        <url-pattern>/app/doctor/toOrderDetail.htm</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>appRequestAuthFilter</filter-name>
+        <url-pattern>/wxapi/activity/doctorLuckDraw/*</url-pattern>
+    </filter-mapping>
+    
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy
+        </filter-class>
+    </filter>
+
+    <!--处理微信过来的请求，根据code获取openid-->
+    <!--患者-->
+    <servlet>
+        <servlet-name>WechatCodeServlet</servlet-name>
+        <servlet-class>cn.com.chengyisheng.security.wx.OpenIdAuthEndpointServlet</servlet-class>
+        <init-param>
+            <param-name>wechatSource</param-name>
+            <param-value>patient</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>WechatCodeServlet</servlet-name>
+        <url-pattern>/AuthWechat/code</url-pattern>
+    </servlet-mapping>
+
+    <!--处理微信过来的请求，根据code获取openid-->
+    <!--医生-->
+    <servlet>
+        <servlet-name>WechatCodeByDoctorServlet</servlet-name>
+        <servlet-class>cn.com.chengyisheng.security.wx.OpenIdAuthEndpointServlet</servlet-class>
+        <init-param>
+            <param-name>wechatSource</param-name>
+            <param-value>doctor</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>WechatCodeByDoctorServlet</servlet-name>
+        <url-pattern>/AuthWechatByDoctor/code</url-pattern>
+    </servlet-mapping>
+
+
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!--weixin api 拦截器获取-->
+    <filter-mapping>
+        <filter-name>wechatOpenidAuthEndpoint</filter-name>
+        <url-pattern>/wxapi/private/*</url-pattern>
+        <url-pattern>/genericapi/private/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>sessionBasedAuthenticationFilter</filter-name>
+        <url-pattern>/cyspay/private/*</url-pattern>
+        <url-pattern>/weixin/patient/confirmPaymentByBalance.htm</url-pattern>
+        <url-pattern>/weixin/patient/wechatOrderok.htm</url-pattern>
+    </filter-mapping>
+    
+    <!--doctor(目前) token api 拦截器-->
+    <filter-mapping>
+        <filter-name>tokenBasedAuthenticationFilter</filter-name>
+        <url-pattern>/genericapi/private/*</url-pattern>
+    </filter-mapping>
+
+    <!--  解决中文乱码问题-->
+    <filter>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <servlet>
+        <servlet-name>spring-mvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet
+        </servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring/webmvc-config.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+     <servlet>
+       <servlet-name>JerseyServlet</servlet-name>
+       <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
+       <init-param>
+           <param-name>com.sun.jersey.config.property.packages</param-name>
+           <param-value>cn.aidee.framework.security.web;cn.aidee.jdoctor.web;cn.aidee.jdoctor.interfaces.controller;org.codehaus.jackson.jaxrs</param-value>
+       </init-param>
+       <load-on-startup>2</load-on-startup>
+     </servlet>
+    <servlet-mapping>
+        <servlet-name>spring-mvc</servlet-name>
+        <url-pattern>*.htm</url-pattern>
+    </servlet-mapping>
+
+      <servlet-mapping>
+        <servlet-name>JerseyServlet</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+      </servlet-mapping>
+
+	<!-- wxapi开头的都归spring管理 -->
+    <servlet-mapping>
+        <servlet-name>spring-mvc</servlet-name>
+        <url-pattern>/wxapi/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>spring-mvc</servlet-name>
+        <url-pattern>/cyspay/*</url-pattern>
+    </servlet-mapping>
+    <!-- genericapi开头的都归spring管理 -->
+    <servlet-mapping>
+        <servlet-name>spring-mvc</servlet-name>
+        <url-pattern>/genericapi/*</url-pattern>
+    </servlet-mapping>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath*:spring/web-context.xml
+        </param-value>
+    </context-param>
+    
+    <context-param>
+  	 	<param-name>spring.profiles.default</param-name>
+   		<param-value>prod</param-value>
+	</context-param>
+	
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener>
+    <session-config>
+        <session-timeout>120</session-timeout>
+    </session-config>
+</web-app>

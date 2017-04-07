@@ -1,0 +1,172 @@
+<style>
+.modal-dialog {
+	width: 80%;
+}
+</style>
+
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div ng-controller="PushPatientTextMessageCtrl" class="col-md-12">
+			<div class="form-group">
+				<div class="col-sm-1">方式选择:</div>
+				<div class="col-sm-3">
+					<select ng-model="deviceType">
+						<option value="MO">手机</option>
+						<option value="WX">微信</option>
+					</select>
+				</div>
+				<div class="col-sm-9">
+					<textarea rows="10" class="form-control" ng-model="content"></textarea>
+				</div>
+			</div>
+			<div style="clear: both">
+				<br />
+
+				<div class="col-sm-3">
+					<button ng-click="personselect()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+						选择用户 <i class="fa fa-plus"></i>
+					</button>
+				</div>
+			</div>
+			<script type="text/ng-template" id="personselect.html">
+                <div class="modal-header">
+                    <h5 class="modal-title"><b>用户选择1</b></h5>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                <label class="col-sm-5">省份</label>
+                                <select id="districtId" class="col-sm-6" ng-model="searchInfos.districtId"
+                                        ng-change="changeDistrictAreas(searchInfos.districtId)"
+                                        ng-options="jdDistrict.uuid as jdDistrict.name for jdDistrict in jdDistricts">
+                                    <option value="">全部</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="col-sm-5">城市</label>
+                                <select id="districtAreaId" class="col-sm-6" ng-model="searchInfos.districtAreaId"
+                                        ng-options="jdDistrictArea.uuid as jdDistrictArea.name for jdDistrictArea in jdDistrictAreas">
+                                    <option value="">全部</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="col-sm-5">姓名</label>
+                                <input type="text" class="col-sm-6" ng-model="searchInfos.name">
+                                </input>
+                            </div>
+
+                            <div class="col-md-5" style="margin:10px 0">
+                                <label class="col-sm-5">手机号码</label>
+                                <input type="text" class="col-sm-7" ng-model="searchInfos.phoneNumber">
+                            </div>
+
+                            <div class="col-md-7" style="margin:10px 0">
+                                <label class="col-sm-5">openid</label>
+                                <input type="text" class="col-sm-7" ng-model="searchInfos.openid">
+                            </div>
+
+                            <div style="clear: both"/>
+                            <div class="col-md-6">
+                                <b style="margin-top:25px;"><strong>用户列表 </strong></b>&nbsp;&nbsp;
+                                <b style="margin-top:25px;">
+                                    <strong>总记录数:</strong>&nbsp; {{tableParams.total()}}
+                                </b>
+                            </div>
+                            <div class="col-md-6">
+                                <b style="margin-top:25px;"><strong>已选用户列表 </strong></b>&nbsp;&nbsp;
+                                <b style="margin-top:25px;">
+                                    <strong>总选择数:</strong>&nbsp; {{personList.length}}
+                                </b>
+                            </div>
+                            <div style="clear: both"/>
+
+                            <div class="table-responsive col-md-6"
+                                 style="margin-top:5px; height:450px; overflow:auto; border:1px solid #000000;">
+                                <table ng-table="tableParams" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th style="text-align:left;width:6%;">
+                                            <div class="checkbox clip-check check-primary checkbox-inline">
+                                                <input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()"/>
+                                                <label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+                                            </div>
+                                        </th>
+                                        <th>姓名</th>
+                                        <th>地区</th>
+                                        <th>手机号码</th>
+                                        <th>openid</th>
+                                    </tr>
+                                    </thead>
+                                    <tr ng-repeat="jdpatient in data" ng-class-odd="'odd'" ng-class-even="'even'">
+                                        <td>
+                                            <div class="checkbox clip-check check-primary checkbox-inline">
+                                                <input id="checkbox{{jdpatient.uuid}}" type="checkbox"
+                                                       ng-model="jdpatient.selected"
+                                                       ng-click="changeSelection($index)"/>
+                                                <label for="checkbox{{jdpatient.uuid}}"
+                                                       style="vertical-align: middle;"></label>
+                                            </div>
+                                        </td>
+                                        <td class="center" ng-if="jdpatient.name.length>4" title="{{jdpatient.name}}">
+                                            {{jdpatient.name | limitTo:4}}...
+                                        </td>
+                                        <td class="center" ng-if="jdpatient.name.length<=4">
+                                            {{jdpatient.name}}
+                                        </td>
+                                        <td class="center">{{jdpatient.district}}</td>
+                                        <td class="center">{{jdpatient.phoneNumber}}</td>
+                                        <td class="center">{{jdpatient.openid}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="table-responsive col-md-6"
+                                 style="margin-top:5px;height:450px; overflow:auto; border:1px solid #000000;">
+                                <table class="table table-hover">
+                                    <thead>
+                                    	<tr>
+                                    	<th class="center" >姓名</th>
+                                    	<th class="center" >地区</th>
+                                    	<th class="center" >手机号码</th>
+										<th class="center" >openid</th>
+                                    	<th class="center" >操作</th>
+                                    	</tr>
+                                    </thead>
+                                    <tr ng-repeat="personInList in personList" ng-class-odd="'odd'"
+                                        ng-class-even="'even'">
+                                        <td class="center" ng-if="personInList.name.length>4"
+                                            title="{{personInList.name}}">
+                                            {{personInList.name | limitTo:4}}...
+                                        </td>
+                                        <td class="center" ng-if="personInList.name.length<=4">
+                                            {{personInList.name}}
+                                        </td>
+                                        <td class="center">{{personInList.district}}</td>
+                                        <td class="center">{{personInList.phoneNumber}}</td>
+                                        <td class="center">{{personInList.openid}}</td>
+                                        <td class="left">
+                                            <a href="#" ng-click="delete(personInList)"
+                                               class="btn btn-transparent btn-xs">
+                                                <i class="fa fa-trash fa fa-white"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer center">
+                    <button class="btn btn-primary" ng-click="clear()">清空条件</button>
+                    <button class="btn btn-primary" ng-click="query()">查询</button>
+                    <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                    <button class="btn btn-primary" ng-click="send($event)">发送</button>
+                    <button class="btn btn-primary" ng-click="sendAll($event)">发送全部</button>
+                </div>
+            </script>
+		</div>
+	</div>
+</div>

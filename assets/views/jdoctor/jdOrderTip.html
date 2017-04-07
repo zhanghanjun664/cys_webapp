@@ -1,0 +1,21 @@
+<section id="page-title" style="padding: 25px 0;">
+	<div class="row">
+		<div class="col-sm-8">
+			<h1 class="mainTitle" translate="sidebar.nav.config.JDORDERTIP"></h1>
+		</div>
+	</div>
+</section>
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div ng-controller="JdOrderTipCtrl" class="col-md-12">
+            <div>
+				<textarea id="tip" rows="10" ng-model="jdOrderTip.tip" class="form-control" maxlength="1000"></textarea>
+			</div>
+			<div class="text-center" style="margin-top: 30px;">
+				<button ng-click="edit()" type="button" class="btn btn-wide btn-primary">
+					保存 <i class="fa fa-save"></i>
+				</button>
+			</div>
+        </div>
+    </div>
+</div>

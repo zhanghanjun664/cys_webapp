@@ -1,0 +1,144 @@
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div ng-controller="ButtonPermitCtrl"class="col-md-12">
+            <button ng-click="edit()" ng-if="user.developer" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+                新增 <i class="fa fa-plus"></i>
+            </button>
+            <button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
+                编辑 <i class="fa fa-edit"></i>
+            </button>
+            <button ng-click="deleteAll()" type="button" class="btn btn-wide btn-danger" style="min-width: 30px;">
+                删除 <i class="fa fa-trash"></i>
+            </button>
+            <button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+                查询 <i class="fa fa-search"></i>
+            </button>
+            <div class="table-responsive" style="margin-top: 25px;">
+                <table ng-table="tableParams" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th style="text-align:left;width:6%;">
+                            <div class="checkbox clip-check check-primary checkbox-inline">
+                                <input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()"/>
+                                <label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+                            </div>
+                        </th>
+                        <th>按钮编码</th>
+                        <th>按钮描述</th>
+                        <th>有权限角色</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="buttonPermit in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                        <td>
+                            <div class="checkbox clip-check check-primary checkbox-inline">
+                                <input id="checkbox{{buttonPermit.uuid}}" type="checkbox" ng-model="buttonPermit.selected" ng-click="changeSelection($index)"/>
+                                <label for="checkbox{{buttonPermit.uuid}}" style="vertical-align: middle;"></label>
+                            </div>
+                        </td>
+                        <td class="center">{{buttonPermit.name}}</td>
+                        <td class="center">{{buttonPermit.description}}</td>
+                        <td class="center">{{displayRoleNameList(buttonPermit.roleList)}}</td>
+                        <td class="center">
+                            <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                <a href="#" ng-click="edit(buttonPermit)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="编辑"><i
+                                        class="fa fa-edit"></i></a>
+                                <a href="#" ng-click="deleteItem(buttonPermit.uuid)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="删除"><i
+                                        class="fa fa-trash fa fa-white"></i></a>
+                            </div>
+                            <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                <div class="btn-group" dropdown is-open="status.isopen">
+                                    <button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle" dropdown-toggle>
+                                        <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right dropdown-light" role="menu">
+                                        <li>
+                                            <a href="#" ng-click="edit(buttonPermit)">编辑</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" ng-click="deleteItem(buttonPermit.uuid)">删除</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <script type="text/ng-template" id="searchButtonPermit.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>查询条件</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_name">
+                                        按钮编码
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="s_name" class="form-control" ng-model="searchInfos.name" maxlength="21">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="clear()">清空条件</button>
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+
+                <script type="text/ng-template" id="editbuttonPermit.html">
+                    <div class="modal-header">
+						<h5 class="modal-title"><b>按钮信息</b></h5>
+					</div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form"class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="name">
+                                        按钮编码
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input ng-if="user.developer" type="text" id="name" class="form-control" ng-model="buttonPermitInfo.name">
+                                        <input ng-if="!user.developer" disabled type="text" id="name" class="form-control" ng-model="buttonPermitInfo.name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="role">
+                                        有权限角色
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <ui-select id="role" multiple ng-model="buttonPermitInfo.buttonSelectRole" theme="bootstrap" ng-disabled="disabled">
+                                            <ui-select-match>
+                                                {{$item.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="Role in roles | propsFilter:{name:$select.search,code:$select.search}">
+                                                <div ng-bind-html="Role.name | highlight:$select.search"></div>
+
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="description">
+                                        按钮描述
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <textarea rows="5" id="description" class="form-control" ng-model="buttonPermitInfo.description"></textarea>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

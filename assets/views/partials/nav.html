@@ -1,0 +1,242 @@
+<script>
+	$("#navigation-menu").append(userMenuList);
+</script>
+
+<!-- start: SEARCH FORM -->
+<div class="search-form">
+	<a class="s-open" href="#">
+		<i class="ti-search"></i>
+	</a>
+	<div class="input-group" style="padding: 5px 10px 0px 10px;min-width:250px;" ng-controller="AideeSearchMenuCtrl">
+		<ui-select ng-model="menu.selected" theme="bootstrap" on-select="menuSelected($item, $model);">
+			<ui-select-match placeholder="{{ 'sidebar.search.PLACEHOLDER' | translate }}">
+				{{$select.selected.name}}
+			</ui-select-match>
+			<ui-select-choices repeat="item in menus | filter: $select.search">
+				<div ng-bind-html="item.name | highlight: $select.search"></div>
+			</ui-select-choices>
+		</ui-select>
+
+	</div>
+</div>
+<!-- end: SEARCH FORM -->
+<!-- start: MAIN NAVIGATION MENU -->
+<div class="navbar-title">
+	<span translate="sidebar.heading.NAVIGATION">Main Navigation</span>
+</div>
+<ul class="main-navigation-menu" id="navigation-menu">
+	<!--
+	<li ng-class="{'active open':$state.includes('app.ui')}">
+		<a href="javascript:void(0)">
+			<div class="item-content">
+				<div class="item-media">
+					<i class="ti-settings"></i>
+				</div>
+				<div class="item-inner">
+					<span class="title" translate="sidebar.nav.element.MAIN"> UI Elements </span><i class="icon-arrow"></i>
+				</div>
+			</div>
+		</a>
+		<ul class="sub-menu">
+			<li ui-sref-active="active">
+				<a ui-sref="app.ui.elements">
+					<span class="title" translate="sidebar.nav.element.ELEMENTS"> Elements </span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.ui.buttons">
+					<span class="title" translate="sidebar.nav.element.BUTTONS"> Buttons </span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.ui.links">
+					<span class="title" translate="sidebar.nav.element.LINKS"> Links </span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.ui.icons">
+					<span class="title" translate="sidebar.nav.element.FONTAWESOME"> Font Awesome Icons </span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.ui.lineicons">
+					<span class="title" translate="sidebar.nav.element.LINEARICONS"> Linear Icons </span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.ui.modals">
+					<span class="title" translate="sidebar.nav.element.MODALS"> Modals </span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.ui.toggle">
+					<span class="title" translate="sidebar.nav.element.TOGGLE"> Toggle </span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.ui.tabs_accordions">
+					<span class="title" translate="sidebar.nav.element.TABS"> Tabs &amp; Accordions </span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.ui.panels">
+					<span class="title" translate="sidebar.nav.element.PANELS"> Panels </span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.ui.notifications">
+					<span class="title" translate="sidebar.nav.element.NOTIFICATIONS"> Notifications </span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.ui.treeview">
+					<span class="title" translate="sidebar.nav.element.TREEVIEW"> Treeview </span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.ui.media">
+					<span class="title" translate="sidebar.nav.element.MEDIA"> Media Object </span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.ui.nestable">
+					<span class="title" translate="sidebar.nav.element.NESTABLE"> Nestable List </span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.ui.typography">
+					<span class="title" translate="sidebar.nav.element.TYPOGRAPHY"> Typography </span>
+				</a>
+			</li>
+		</ul>
+	</li>
+	<li ng-class="{'active open':$state.includes('app.table')}">
+		<a href="javascript:void(0)">
+			<div class="item-content">
+				<div class="item-media">
+					<i class="ti-layout-grid2"></i>
+				</div>
+				<div class="item-inner">
+					<span class="title" translate="sidebar.nav.tables.MAIN"> Tables </span><i class="icon-arrow"></i>
+				</div>
+			</div>
+		</a>
+		<ul class="sub-menu">
+            <li ui-sref-active="active">
+                <a ui-sref="app.table.aidee">
+                    <span class="title" translate="sidebar.nav.tables.AIDEE"></span>
+                </a>
+            </li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.table.basic">
+					<span class="title" translate="sidebar.nav.tables.BASIC">Basic Tables</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.table.responsive">
+					<span class="title" translate="sidebar.nav.tables.RESPONSIVE">Responsive Tables</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.table.data">
+					<span class="title" translate="sidebar.nav.tables.DATA">Advanced Data Tables</span>
+				</a>
+			</li>
+		</ul>
+	</li>
+	<li ng-class="{'active open':$state.includes('app.form')}">
+		<a href="javascript:void(0)">
+			<div class="item-content">
+				<div class="item-media">
+					<i class="ti-pencil-alt"></i>
+				</div>
+				<div class="item-inner">
+					<span class="title" translate="sidebar.nav.forms.MAIN"> Forms </span><i class="icon-arrow"></i>
+				</div>
+			</div>
+		</a>
+		<ul class="sub-menu">
+			<li ui-sref-active="active">
+				<a ui-sref="app.form.elements">
+					<span class="title" translate="sidebar.nav.forms.ELEMENTS">Form Elements</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.form.xeditable">
+					<span class="title" translate="sidebar.nav.forms.XEDITABLE">Form Elements</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.form.texteditor">
+					<span class="title" translate="sidebar.nav.forms.TEXTEDITOR">Text Editor</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.form.wizard">
+					<span class="title" translate="sidebar.nav.forms.WIZARD">Form Wizard</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.form.validation">
+					<span class="title" translate="sidebar.nav.forms.VALIDATION">Form Validation</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.form.cropping">
+					<span class="title" translate="sidebar.nav.forms.CROPPING">Image Cropping</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.form.upload">
+					<span class="title" translate="sidebar.nav.forms.UPLOAD">Multiple File Upload</span>
+				</a>
+			</li>
+		</ul>
+	</li>
+	<li ng-class="{'active open':$state.includes('app.pages')}">
+		<a href="javascript:void(0)">
+			<div class="item-content">
+				<div class="item-media">
+					<i class="ti-layers-alt"></i>
+				</div>
+				<div class="item-inner">
+					<span class="title" translate="sidebar.nav.pages.MAIN"> Pages </span><i class="icon-arrow"></i>
+				</div>
+			</div>
+		</a>
+		<ul class="sub-menu">
+			<li ui-sref-active="active">
+				<a ui-sref="app.pages.user">
+					<span class="title" translate="sidebar.nav.pages.USERPROFILE">User Profile</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.pages.invoice">
+					<span class="title" translate="sidebar.nav.pages.INVOICE">Invoice</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.pages.timeline">
+					<span class="title" translate="sidebar.nav.pages.TIMELINE">Timeline</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.pages.calendar">
+					<span class="title" translate="sidebar.nav.pages.CALENDAR">Calendar</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.pages.messages">
+					<span class="title" translate="sidebar.nav.pages.MESSAGES">Messages</span>
+				</a>
+			</li>
+			<li ui-sref-active="active">
+				<a ui-sref="app.pages.blank">
+					<span class="title" translate="sidebar.nav.pages.BLANKPAGE">Blank Page</span>
+				</a>
+			</li>
+		</ul>
+	</li>
+	-->
+</ul>
+<!-- end: MAIN NAVIGATION MENU -->

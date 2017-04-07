@@ -1,0 +1,114 @@
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div ng-controller="loginLogCtrl" class="col-md-12">
+			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<p style="margin-top: 25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+			<div class="table-responsive">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+						<tr>
+							<th style="text-align: left; width: 6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()" /> <label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th>登录时间</th>
+							<th>用户Id</th>
+							<th>登录IP</th>
+							<th>请求来源</th>
+							<th>渠道来源</th>
+						</tr>
+					</thead>
+
+					<tr ng-repeat="obj in $data" ng-class-odd="'odd'" ng-class-even="'even'" id="tr{{obj.id}}">
+						<td>
+							<div class="checkbox clip-check check-primary checkbox-inline">
+								<input id="checkbox{{obj.id}}" type="checkbox" ng-model="obj.selected" ng-click="changeSelection($index)" /> <label
+									for="checkbox{{obj.id}}" style="vertical-align: middle;"></label>
+							</div>
+						</td>
+						<td class="center">{{obj.dateCreated}}</td>
+						<td class="center">{{obj.userId}}</td>
+						<td class="center">{{obj.ip}}</td>
+						<td class="center">{{getDeviceStr(obj.device)}}</td>
+						<td class="center">{{getChannelStr(obj.channel)}}</td>
+					</tr>
+				</table>
+				<script type="text/ng-template" id="searchLoginLog.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>查询条件</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										时间
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="createTimeStart" style="width: 130px;" ng-model="searchInfos.createTimeStart"
+											   onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'%y-%M-%d\'}',dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})" />
+										至
+										<input type="text" id="createTimeEnd" style="width: 130px;" ng-model="searchInfos.createTimeEnd"
+											   onFocus="WdatePicker({minDate:'#F{$dp.$D(\'createTimeStart\')}',maxDate:'%y-%M-%d',dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										用户Id
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="s_userId" class="form-control" ng-model="searchInfos.userId" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										登录IP
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="s_ip" class="form-control" ng-model="searchInfos.ip" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										请求来源
+									</label>
+									<div class="col-sm-9">
+										<select class="col-sm-12" ng-model="searchInfos.device"
+												ng-options="device.value as device.name for device in deviceList">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="statusId">
+										渠道来源
+									</label>
+									<div class="col-sm-9">
+										<select class="col-sm-12" ng-model="searchInfos.channel"
+												ng-options="channel.value as channel.name for channel in channelList">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+

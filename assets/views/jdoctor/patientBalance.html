@@ -1,0 +1,102 @@
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div ng-controller="patientBalanceCtrl" class="col-md-12">
+			<button ng-click="search()" type="button"
+				class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<button ng-click="exportBalance()" type="button"
+				class="btn btn-wide btn-success" style="min-width: 30px;">
+				导出Excel <i class="fa fa-download"></i>
+			</button>
+			<p style="margin-top: 25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+			<div class="table-responsive">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+						<tr>
+							<!--2-->
+							<th>用户手机</th>
+							<!--1-->
+							<th>用户名字</th>
+							<!--3-->
+							<th>账户总收入</th>
+							<!--4-->
+							<th>账户总支出</th>
+							<!--5-->
+							<th>账户余额</th>
+
+						</tr>
+					</thead>
+					<tr ng-repeat="payment in $data" ng-class-odd="'odd'"
+						ng-class-even="'even'">
+						<!--手机号码-->
+						<td class="center">{{payment.phoneNumber}}</td>
+						<!--患者名称-->
+						<td class="center">{{payment.name}}</td>
+						<!--账户总收入-->
+						<td class="center">{{payment.deposit}}</td>
+						<!--账户总支出-->
+						<td class="center">{{payment.expense}}</td>
+						<!--账户余额-->
+						<td class="center">{{payment.balance}}</td>
+					</tr>
+				</table>
+				<script type="text/ng-template" id="searchPatientBalanceCtrl.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>查询条件</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_name">
+                                        用户名字
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="s_name" class="form-control" ng-model="searchInfos.userName" maxlength="11">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_phoneNumber">
+                                        用户手机
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="s_phoneNumber" class="form-control" ng-model="searchInfos.phoneNumber" maxlength="11">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="clear()">清空条件</button>
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+			</div>
+		</div>
+		<div ng-controller="summaryStatementCtrl" class="col-md-12">
+            <p style="margin-top:25px;">
+                <strong>收支历史总计:</strong>
+            </p>
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>总收入</th>
+                        <th>总支出</th>
+                        <th>当前余额总计</th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="summary in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                        <td class="center">{{summary.deposit}}</td>
+                        <td class="center">{{summary.expense}}</td>
+                        <td class="center">{{summary.balance}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>  
+	</div>
+</div>

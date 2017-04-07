@@ -1,0 +1,156 @@
+<style>
+input.checkbox_vertical {
+	vertical-align: -2px;
+	margin-right: 2px;
+	margin-left: 5px;
+}
+
+.tags {
+	margin: 0;
+}
+
+.tag-item {
+	color: #31708f !important;
+	background: #d9edf7 !important;
+}
+
+.adTag-item {
+	width: 125px;
+	display: inline-block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+</style>
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div ng-controller="tagCtrl" class="col-md-12">
+			<button ng-click="edit()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+				新增 <i class="fa fa-plus"></i>
+			</button>
+			<button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
+				编辑 <i class="fa fa-edit"></i>
+			</button>
+			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<p style="margin-top: 25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+			<div class="table-responsive">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+						<tr>
+							<th style="text-align: left; width: 6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()" /> <label for="selectAllCheckbox"
+										style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th>标签名</th>
+							<th>所属分组</th>
+							<th>所属业务</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+
+					<tr ng-repeat="obj in $data" ng-class-odd="'odd'" ng-class-even="'even'" id="tr{{obj.id}}">
+						<td>
+							<div class="checkbox clip-check check-primary checkbox-inline">
+								<input id="checkbox{{obj.id}}" type="checkbox" ng-model="obj.selected" ng-click="changeSelection($index)" /> <label
+									for="checkbox{{obj.id}}" style="vertical-align: middle;"></label>
+							</div>
+						</td>
+						<td class="center">{{obj.name}}</td>
+						<td class="center">{{obj.typeName}}</td>
+						<td class="center">{{obj.businessTypeNameList.join(",")}}</td>
+						<td class="center">
+							<div class="visible-md visible-lg hidden-sm hidden-xs">
+								<a href="#" ng-click="edit(obj)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top"
+									tooltip="编辑"><i class="fa fa-edit"></i></a>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<script type="text/ng-template" id="searchTag.html">
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<b>查询条件</b>
+					</h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 标签名 </label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" ng-model="searchInfos.name">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 所属分类 </label>
+								<div class="col-sm-9">
+									<select class="col-sm-12" ng-model="searchInfos.type" ng-options="tagType.id as tagType.name for tagType in tagTypeList">
+										<option value="">全部</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="skill"> 所属业务 </label>
+								<div class="col-sm-9">
+									<ui-select multiple ng-model="searchInfos.businessTypeList" theme="bootstrap" ng-disabled="disabled"> <ui-select-match>
+									{{$item.name}} </ui-select-match> <ui-select-choices repeat="item.id as item in businessTypeList | propsFilter: {name: $select.search} "> <small><span
+										ng-bind-html="''+item.name | highlight: $select.search"></span> </small> </ui-select-choices> </ui-select>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+				</div>
+				</script>
+				<script type="text/ng-template" id="editTag.html">
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<b>标签维护</b>
+					</h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 标签名 </label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" ng-model="obj.name">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 所属分类 </label>
+								<div class="col-sm-9">
+									<select class="col-sm-12" ng-model="obj.type" ng-options="tagType.id as tagType.name for tagType in tagTypeList">
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="skill"> 所属业务 </label>
+								<div class="col-sm-9">
+									<ui-select multiple ng-model="obj.businessTypeList" theme="bootstrap" ng-disabled="disabled"> <ui-select-match>
+									{{$item.name}} </ui-select-match> <ui-select-choices repeat="item.id as item in businessTypeList | propsFilter: {name: $select.search} "> <small><span
+										ng-bind-html="''+item.name | highlight: $select.search"></span> </small> </ui-select-choices> </ui-select>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+				</div>
+				</script>
+			</div>
+		</div>
+	</div>
+</div>

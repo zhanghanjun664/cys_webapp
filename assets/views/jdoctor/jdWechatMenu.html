@@ -1,0 +1,185 @@
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div ng-controller="JdWechatMenuCtrl" class="col-md-12">
+        	<button ng-click="edit()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+				新增 <i class="fa fa-plus"></i>
+			</button>
+			<button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
+				编辑 <i class="fa fa-edit"></i>
+			</button>
+			<button ng-click="deleteAll()" type="button" class="btn btn-wide btn-danger" style="min-width: 30px;">
+				删除 <i class="fa fa-trash"></i>
+			</button>
+			<button ng-click="generateMenu()" type="button" class="btn btn-wide btn-green" style="min-width: 30px;">
+				生成菜单 <i class="fa fa-toggle-right"></i>
+			</button>
+			<p style="margin-top:25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                	<thead>
+						<tr>
+							<th style="text-align:left;width:6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()"/>
+									<label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th>菜单名称</th>
+							<th>菜单级别</th>
+							<th>菜单序号</th>
+							<th>菜单类型</th>
+							<th>父菜单</th>
+							<th>编码或url</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+                    <tr ng-repeat="jdWechatMenu in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                    	<td>
+                    		<div class="checkbox clip-check check-primary checkbox-inline">
+	                    		<input id="checkbox{{jdWechatMenu.uuid}}" type="checkbox" ng-model="jdWechatMenu.selected" ng-click="changeSelection($index)"/>
+	                    		<label for="checkbox{{jdWechatMenu.uuid}}" style="vertical-align: middle;"></label>
+                    		</div>
+                    	</td>
+                    	<td class="center">{{jdWechatMenu.name}}</td>
+						<td class="center">{{showMenuLevel(jdWechatMenu.level)}}</td>
+						<td class="center">{{jdWechatMenu.seq}}</td>
+						<td class="center">{{showMenuType(jdWechatMenu.type)}}</td>
+						<td class="center">{{showParentMenu(jdWechatMenu.parentId)}}</td>
+						<td class="center" title="{{jdWechatMenu.value}}">{{jdWechatMenu.value | limitTo:15}}</td>
+                        <td class="center">
+                            <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                <a href="#" ng-click="edit(jdWechatMenu)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="编辑"><i
+                                        class="fa fa-edit"></i></a>
+                                <a href="#" ng-click="deleteItem(jdWechatMenu.uuid)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="删除"><i
+                                        class="fa fa-trash fa fa-white"></i></a>
+                            </div>
+                            <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                <div class="btn-group" dropdown is-open="status.isopen">
+                                    <button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle" dropdown-toggle>
+                                        <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right dropdown-light" role="menu">
+                                        <li>
+                                            <a href="#" ng-click="edit(jdWechatMenu)">编辑</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" ng-click="deleteItem(jdWechatMenu.uuid)">删除</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <script type="text/ng-template" id="editJdWechatMenu.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>公众号菜单信息</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="name">
+										菜单名称
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="name" class="form-control" ng-model="jdWechatMenuInfo.name">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="level">
+										菜单级别
+									</label>
+									<div class="col-sm-8">
+										<select id="level" ng-model="jdWechatMenuInfo.level" class="col-sm-12">
+											<option value="1">一级</option>
+											<option value="2">二级</option>
+											<option value="3">无</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="seq">
+										菜单序号
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="seq" class="form-control" ng-model="jdWechatMenuInfo.seq">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="type">
+										菜单类型
+									</label>
+									<div class="col-sm-8">
+										<select id="type" ng-model="jdWechatMenuInfo.type" class="col-sm-12">
+											<option value="button">按钮</option>
+											<option value="article">图文</option>
+											<option value="web">网页</option>
+											<option value="group">父菜单</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group" ng-if="jdWechatMenuInfo.level==2">
+									<label class="col-sm-3 control-label" for="parentId">
+										父菜单
+									</label>
+									<div class="col-sm-8">
+										<select id="parentId" ng-options="parentMenu.uuid as parentMenu.name for parentMenu in parentMenus"
+												ng-model="jdWechatMenuInfo.parentId"  class="col-sm-12">
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="value">
+										编码或url
+									</label>
+									<div class="col-sm-8">
+										<textarea id="value" class="form-control" ng-model="jdWechatMenuInfo.value"></textarea>
+									</div>
+								</div>
+								<div class="form-group" ng-if="jdWechatMenuInfo.type == 'article'">
+									<label class="col-sm-3 control-label" for="title">
+										标题
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="title" class="form-control" ng-model="jdWechatMenuInfo.title">
+									</div>
+								</div>
+								<div class="form-group" ng-if="jdWechatMenuInfo.type == 'button' || jdWechatMenuInfo.type == 'article'">
+									<label class="col-sm-3 control-label" for="description">
+										内容
+									</label>
+									<div class="col-sm-8">
+										<textarea id="description" rows="5" class="form-control" ng-model="jdWechatMenuInfo.description"></textarea>
+									</div>
+								</div>
+								<div class="form-group" ng-if="jdWechatMenuInfo.type == 'article'">
+									<label class="col-sm-3 control-label" for="picUrl">
+										图片链接
+									</label>
+									<div class="col-sm-8">
+										<textarea id="picUrl" rows="2" class="form-control" ng-model="jdWechatMenuInfo.picUrl"></textarea>
+									</div>
+								</div>
+								<div class="form-group" ng-if="jdWechatMenuInfo.type == 'article'">
+									<label class="col-sm-3 control-label" for="webUrl">
+										网页链接
+									</label>
+									<div class="col-sm-8">
+										<textarea id="webUrl" rows="3" class="form-control" ng-model="jdWechatMenuInfo.webUrl"></textarea>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+            </div>
+        </div>
+    </div>
+</div>

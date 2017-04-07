@@ -1,0 +1,146 @@
+/*
+author : kepin
+date : 2015-8-13
+*/
+
+html,body{width:100%;height:100%;margin:0;padding:0;font-size:100%;background:#F2F2F2;}
+.padding-left-clr{ padding-left: 0px;}
+.padding-right-clr{ padding-right: 0px;}
+.padding-clr{padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;}
+.fsize-14{font-size:14px;}
+.fsize-16{font-size:16px;}
+.fsize-20{font-size:20px;}
+.marginTop20{margin-top: 20px;}
+.fcolor{color:#157efd;}
+
+
+/* login css */
+.container {
+	padding-right: 0px;
+	padding-left: 0px;
+}
+.logo{
+	background: transparent url("../images/logo.png") no-repeat scroll 0% 0%;
+	background-size: 40px 40px;
+	margin-top: 5px;
+	height: 45px;
+	font-size: 18px;
+	line-height: 40px;
+	border-bottom: 1px solid #a7a6ab;
+	background-position: 5px 0px;
+	background-color: #f6f6f8;
+}
+.home-btn1{
+	border-radius: 0px;
+	border-right: none;
+	border-left: none;
+	border-bottom: none;
+	height: 45px;
+}
+.home-btn2{
+	border-radius: 0px;
+	border-right: none;
+	border-left: none;
+	height: 45px;
+}
+.login-form,.regist-form{
+	margin-top: 20px;
+}
+.login-form label.inpt,.regist-form label.inpt {
+	height: 45px;
+	line-height: 45px;
+	margin-bottom: 0px;
+	background: #fff;
+	font-size: 16px;
+	font-weight: normal;
+}
+.login-form .labelphone,.regist-form .labelphone{
+	border-top: 1px solid #CCC;
+}
+.login-form .labelpass,.regist-form .labelverCode{
+	border-top: 1px solid #CCC;
+	border-bottom: 1px solid #CCC;
+}
+.loginBtn{
+	width:100%;
+}
+.regDiv{
+	position: absolute;
+	bottom:20px;
+}
+.regBtn{
+	width:100%;
+}
+
+#MsgBoxDiv,#MsgBoxDiv2{
+	width:100%;
+	height:100%;
+	position:fixed;
+	left:0;
+	top:0;
+	z-index:1000000;
+	background:rgba(0,0,0,0.65);
+	display:none;
+}
+#MsgBoxDiv ul,#MsgBoxDiv2 ul{
+	width:84%;
+	overflow:hidden;
+	margin-left:8%;
+	padding-left: 0px;
+	background:#fff;
+	border-radius:0.4em;
+	-webkit-border-radius:0.4em;
+}
+#MsgBoxDiv ul li,#MsgBoxDiv2 ul li{
+	width:100%;
+	overflow:hidden;
+	text-align:center;
+	list-style: none;
+}
+#MsgBoxDiv ul li:nth-child(1) p,#MsgBoxDiv2 ul li:nth-child(1) p{
+	width:100%;
+	text-align:center;
+	font-size:22px;
+	color:#000;
+}
+#MsgBoxDiv ul li:nth-child(1),#MsgBoxDiv2 ul li:nth-child(1) {
+	border-bottom: 1px solid #B2B2B2;
+}
+#MsgBoxDiv ul li:nth-child(2),#MsgBoxDiv2 ul li:nth-child(2){
+	border-top:#FFFFFF 0.04em solid;
+	-webkit-border-top:#FFFFFF 0.04em solid;
+	font-size:22px;
+	color:#157efd;
+}
+
+/* regist css */
+.getCodeDiv{
+	width: 25%;
+	border-radius: 2px;
+	text-align: center;
+	font-size: 16px;
+	color: #9b9b9b;
+	background: #fff none repeat scroll 0% 0%;
+	float: right;
+	position: absolute;
+	right: 20px;
+	height: 35px;
+	line-height: 35px;
+	top: 5px;
+	border: 1px solid #9b9b9b;
+}
+.regist-form .labelinviCode{
+	border-bottom: 1px solid #CCC;
+}
+.regist-form #inviCode{
+	border-top: none;
+}
+#MsgBoxDiv2 #btnli2 div:first-child{border-right: 1px solid #B2B2B2;}
+/*#MsgBoxDiv2{display:block;}*/
+.regist-form .labelpass{
+	border-top: 1px solid #CCC;
+}
+.regist-form .labelpass2{
+	border-top: 1px solid #CCC;
+	border-bottom: 1px solid #CCC;
+}

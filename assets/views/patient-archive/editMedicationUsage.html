@@ -1,0 +1,70 @@
+
+    <div class="modal-header">
+        <h5 class="modal-title"><b>药品治疗</b></h5>
+    </div>
+    <div class="modal-body">
+        <div class="panel-body">
+            <form role="form" class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        药品名称
+                    </label>
+                    <div class="col-sm-9">
+                        <ui-select id="medication" style="width: 300px" ng-model="record.medication" theme="bootstrap">
+                            <ui-select-match placeholder="输入药品名称查找">
+                               {{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="med.name as med in matchingMedicationList track by $index" refresh="refreshMedications($select.search)" refresh-delay="0">
+                               <div ng-bind-html="med.name"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                     </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        服用时间
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" id="start_date" style="width: 130px;" ng-model="record.startDateInString"
+                               onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'end_date\')||\'%y-%M-%d\'}',dateFmt:'yyyy-MM-dd',readOnly:true})" />
+                        至
+                        <input type="text" id="end_date" style="width: 130px;" ng-model="record.endDateInString"
+                               onFocus="WdatePicker({minDate:'#F{$dp.$D(\'start_date\')}',maxDate:'%y-%M-%d',dateFmt:'yyyy-MM-dd',readOnly:true})" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        服用频次
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" id="freq_days" style="width: 50px;"  ng-model="record.frequencyDays" >
+                        <label>天</label>
+                        <input type="text" id="freq_times"  style="width: 50px;" ng-model="record.frequencyTimes" >
+                        <label>次</label>
+                    </div> 
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                       每次剂量
+                    </label>
+                    <div class="col-sm-9">
+                        <label>每次</label>
+                        <input type="text" id="surgery" style="width: 80px;" ng-model="record.dosage" >
+                        <label>*请标注单位</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        备注
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" id="remark" class="form-control" ng-model="record.remark" >
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+    </div>

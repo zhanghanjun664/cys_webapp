@@ -1,0 +1,112 @@
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div ng-controller="categorySetCtrl" class="col-md-12">
+            <button ng-click="edit()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+                新增 <i class="fa fa-plus"></i>
+            </button>
+            <p style="margin-top:25px;">
+                <strong>总记录数:</strong> {{tableParams.total()}}
+            </p>
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th style="text-align:left;width:6%;">
+                            <div class="checkbox clip-check check-primary checkbox-inline">
+                                <input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()"/>
+                                <label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+                            </div>
+                        </th>
+                        <th>疾病类型</th>
+                        <th>是否展示患者端</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="sickCategorySetQueryModel in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                        <td>
+                            <div class="checkbox clip-check check-primary checkbox-inline">
+                                <input id="checkbox{{sickCategorySetQueryModel.uuid}}" type="checkbox" ng-model="sickCategorySetQueryModel.selected" ng-click="changeSelection($index)"/>
+                                <label for="checkbox{{sickCategorySetQueryModel.uuid}}" style="vertical-align: middle;"></label>
+                            </div>
+                        </td>
+                        <td class="center">{{sickCategorySetQueryModel.name}}</td>
+                        <td class="center">{{showOnPatientType(sickCategorySetQueryModel.isShowOnPatient)}}</td>
+                        <td class="center">
+                            <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                <a href="#" ng-click="edit(sickCategorySetQueryModel)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="编辑"><i
+                                        class="fa fa-edit"></i></a>
+                                <a href="#" ng-click="deleteItem(sickCategorySetQueryModel.uuid)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="删除"><i
+                                        class="fa fa-trash fa fa-white"></i></a>
+                            </div>
+                            <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                <div class="btn-group" dropdown is-open="status.isopen">
+                                    <button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle" dropdown-toggle>
+                                        <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right dropdown-light" role="menu">
+                                        <li>
+                                            <a href="#" ng-click="edit(sickCategorySetQueryModel)">编辑</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <script type="text/ng-template" id="editSickCategarySet.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>疾病类型信息</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="skill">
+                                        类型名称
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select id="sickCategaName" class="col-sm-12"
+                                                ng-model="sickCategorySetQueryModel.sickCategoryid"
+                                                ng-options="sickCategary.uuid as sickCategary.name for sickCategary in sickCategaryList">
+                                        </select>
+                                    </div>
+                                    <!--<div class="col-sm-8">-->
+                                        <!--<ui-select id="skill" multiple ng-model="jdDoctorInfo.doctorSelectSkills" theme="bootstrap" ng-disabled="disabled" limit="1">-->
+                                            <!--<ui-select-match>-->
+                                                <!--{{$item.name}} &lt;{{$item.categaryName}}&gt;-->
+                                            <!--</ui-select-match>-->
+                                            <!--<ui-select-choices repeat="doctorSkill in doctorSkills | propsFilter: {name: $select.search, categaryName: $select.search}">-->
+                                                <!--<div ng-bind-html="doctorSkill.name | highlight: $select.search"></div>-->
+                                                <!--<small> 类型: <span ng-bind-html="''+doctorSkill.categaryName | highlight: $select.search"></span> </small>-->
+                                            <!--</ui-select-choices>-->
+                                        <!--</ui-select>-->
+                                    <!--</div>-->
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" style="padding-top:13px;">
+                                        展示在患者端
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <div class="radio clip-radio radio-primary radio-inline">
+                                            <input type="radio" id="isShowOnPatient_yes" ng-model="sickCategorySetQueryModel.isShowOnPatient" value="true">
+                                            <label for="isShowOnPatient_yes">是</label>
+                                        </div>
+                                        <div class="radio clip-radio radio-primary radio-inline">
+                                            <input type="radio" id="isShowOnPatient_no" ng-model="sickCategorySetQueryModel.isShowOnPatient" value="false">
+                                            <label for="isShowOnPatient_no">否</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

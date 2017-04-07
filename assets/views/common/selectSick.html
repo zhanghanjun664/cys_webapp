@@ -1,0 +1,43 @@
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>ICD疾病选择</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                <div class="col-md-11">
+                                    <label class="col-sm-2">名称</label>
+                                    <input class="col-sm-6" type="text" ng-model="searchInfo.name" placeholder="输入疾病名搜索">
+                                    </input>
+                                </div>
+                                <div style="clear: both"/>
+                                <div class="table-responsive" style="margin-top:25px;">
+                                    <table ng-table="tableParams" class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th></th>
+                                           <th>疾病编码</th>
+                                           <th>ICD疾病名称</th>
+                                        </tr>
+                                        </thead>
+                                        <tr ng-repeat="sick in data" ng-class-odd="'odd'" ng-class-even="'even'">
+                                            <td>
+                                                <div class="checkbox clip-check check-primary checkbox-inline">
+                                                    <input id="checkbox{{sick.uuid}}" type="checkbox" ng-model="sick.selected" ng-click="changeSelection($index)"/>
+                                                    <label for="checkbox{{sick.uuid}}" style="vertical-align: middle;"></label>
+                                                </div>
+                                            </td>
+                                            <td class="center">{{sick.code}}</td>
+                                            <td class="center">{{sick.name}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div style="clear: both"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="clear($event)">清除</button>
+                        <button class="btn btn-primary" ng-click="query()">查询</button>
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>

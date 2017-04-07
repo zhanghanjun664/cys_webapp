@@ -1,0 +1,261 @@
+<style>
+input.checkbox_vertical {
+	vertical-align: -2px;
+	margin-right: 2px;
+	margin-left: 5px;
+}
+
+.tags {
+	margin: 0;
+}
+
+.tag-item {
+	color: #31708f !important;
+	background: #d9edf7 !important;
+}
+
+.adTag-item {
+	width: 125px;
+	display: inline-block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+</style>
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div ng-controller="adItemCtrl" class="col-md-12">
+			<button ng-click="edit()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+				新增 <i class="fa fa-plus"></i>
+			</button>
+			<button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
+				编辑 <i class="fa fa-edit"></i>
+			</button>
+			<button ng-click="deleteAll()" type="button" class="btn btn-wide btn-danger" style="min-width: 30px;">
+				删除 <i class="fa fa-trash"></i>
+			</button>
+			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<p style="margin-top: 25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+			<div class="table-responsive">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+						<tr>
+							<th style="text-align: left; width: 6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()" /> <label for="selectAllCheckbox"
+										style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th>广告素材名</th>
+							<th>跳转链接</th>
+							<th>广告位id</th>
+							<th>标签</th>
+							<th>权重</th>
+							<th>是否生效</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+
+					<tr ng-repeat="obj in $data" ng-class-odd="'odd'" ng-class-even="'even'" id="tr{{obj.id}}">
+						<td>
+							<div class="checkbox clip-check check-primary checkbox-inline">
+								<input id="checkbox{{obj.id}}" type="checkbox" ng-model="obj.selected" ng-click="changeSelection($index)" /> <label
+									for="checkbox{{obj.id}}" style="vertical-align: middle;"></label>
+							</div>
+						</td>
+						<td class="center">{{obj.name}}</td>
+						<td class="center">{{obj.link}}</td>
+						<td class="center">{{obj.positionId}}</td>
+						<td class="center">{{getTagNames(obj.tags)}}</td>
+						<td class="center">{{obj.weight}}</td>
+						<td class="center">{{getItemName(obj.status,statusList)}}</td>
+						<td class="center">
+							<div class="visible-md visible-lg hidden-sm hidden-xs">
+								<a href="#" ng-click="edit(obj)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top"
+									tooltip="编辑"><i class="fa fa-edit"></i></a> <a href="#" ng-click="deleteItem(obj.id)"
+									class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="删除"><i
+									class="fa fa-trash fa fa-white"></i></a>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<script type="text/ng-template" id="searchAdItem.html">
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<b>查询条件</b>
+					</h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 广告素材名 </label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" ng-model="searchInfos.name">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 广告位id </label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" ng-model="searchInfos.positionId">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 权重 </label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" ng-model="searchInfos.weight">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" style="padding-top: 13px;"> 是否生效 </label>
+								<div class="col-sm-9">
+									<div class="radio clip-radio radio-primary radio-inline">
+										<input type="radio" id="status_yes" ng-model="searchInfos.status" value="true"> <label
+											for="status_yes">是</label>
+									</div>
+									<div class="radio clip-radio radio-primary radio-inline">
+										<input type="radio" id="status_no" ng-model="searchInfos.status" value="false"> <label for="status_no">否</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="skill"> 标签 </label>
+								<div class="col-sm-8">
+									<div class="panel-group" style="margin-top: 8px">
+										<span style="font-size: 13px">已选:</span>
+										<tags-input on-tag-removed="removeTag($tag)" ng-model="searchInfos.selectedTagList" display-property="name"
+											key-property="id" add-from-autocomplete-only="true" placeholder="请勾选下方标签"></tags-input>
+
+										<div ng-repeat="tagType in adTags.tagTypeSet" class="panel panel-info">
+											<div class="panel-heading" ng-click="panelClick($event)">
+												<span data-toggle="collapse" href="#collapseSearch{{tagType}}"><i class="fa fa-angle-down"></i> {{tagType}}</span>											</div>
+											<div id="collapseSearch{{tagType}}" class="panel-collapse collapse">
+												<div class="panel-collapse ">
+													<div class="panel-body">
+														<span title="{{tag.name}}" ng-repeat="tag in adTags.tagMap[tagType]" class="adTag-item"> <input
+														type="checkbox" ng-checked="{{tag.selected}}" value="{{tag.id}}" class="checkbox_vertical"
+														ng-click="checkTag(this,$event)" />{{tag.name}}
+														</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+				</div>
+								</script>
+				<script type="text/ng-template" id="editAdItem.html">
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<b>广告素材</b>
+					</h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<div class="col-sm-12" flow-init="{singleFile:true,target:uploadUrl,testChunks:false}" flow-name="upload.flow"
+									flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]"
+									flow-file-success="uploadSuccess($file, $message)" style="max-height: 700px; text-align: center">
+									<div class="user-image">
+										<div class="thumbnail">
+											<img src="http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/logo_new.jpg" alt=""
+												ng-if="!upload.flow.files.length && noImage"> <img ng-src="{{obj.mediaCode}}" alt=""
+												ng-if="!upload.flow.files.length && !noImage"> <img flow-img="upload.flow.files[0]"
+												ng-if="upload.flow.files.length">
+										</div>
+										<div class="user-image-buttons" ng-if="upload.flow.files.length">
+											<span class="btn btn-primary" flow-btn><i class="fa fa-pencil"></i></span> <span class="btn btn-danger"
+												ng-click="upload.flow.cancel()"> <i class="fa fa-times"></i>
+											</span>
+										</div>
+										<div class="user-image-buttons" ng-if="!upload.flow.files.length">
+											<span class="btn btn-primary" flow-btn><i class="fa fa-pencil"></i></span> <span class="btn btn-danger"
+												ng-if="!noImage" ng-click="removeImage()"><i class="fa fa-times"></i></span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 广告素材名 </label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" ng-model="obj.name">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 跳转链接 </label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" ng-model="obj.link">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 广告位id </label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" ng-model="obj.positionId">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 权重 </label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" ng-model="obj.weight">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" style="padding-top: 13px;"> 是否生效 </label>
+								<div class="col-sm-8">
+									<div class="radio clip-radio radio-primary radio-inline">
+										<input type="radio" id="status_yes" ng-model="obj.status" value="true"> <label for="status_yes">是</label>
+									</div>
+									<div class="radio clip-radio radio-primary radio-inline">
+										<input type="radio" id="status_no" ng-model="obj.status" value="false"> <label for="status_no">否</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="skill"> 标签 </label>
+								<div class="col-sm-8">
+									<div class="panel-group" style="margin-top: 8px">
+										<span style="font-size: 13px">已选:</span>
+										<tags-input on-tag-removed="removeTag($tag)" ng-model="obj.selectedTagList" display-property="name"
+											key-property="id" add-from-autocomplete-only="true" placeholder="请勾选下方标签"></tags-input>
+
+										<div ng-repeat="tagType in adTags.tagTypeSet" class="panel panel-info">
+											<div class="panel-heading" >
+												<span data-toggle="collapse" href="#collapse{{tagType}}"><i class="fa fa-angle-down"></i> {{tagType}}</span>
+											</div>
+											<div id="collapse{{tagType}}" class="panel-collapse collapse">
+												<div class="panel-body">
+													<span title="{{tag.name}}" ng-repeat="tag in adTags.tagMap[tagType]" class="adTag-item"> <input
+														type="checkbox" ng-checked="{{tag.selected}}" value="{{tag.id}}" class="checkbox_vertical"
+														ng-click="checkTag(this,$event)" />{{tag.name}}
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+				</div>
+				 				</script>
+			</div>
+		</div>
+	</div>
+</div>

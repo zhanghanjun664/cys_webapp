@@ -1,0 +1,509 @@
+<style>
+.modal-dialog {
+	width: 1000px !important;
+}
+</style>
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div ng-controller="JdOrderCtrl" class="col-md-12">
+			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<button ng-click="export()" button-code="exportBtnCode" type="button" class="aidee-button btn btn-wide btn-primary" style="min-width: 30px;">
+				导出Excel <i class="fa fa-download"></i>
+			</button>
+			<p style="margin-top:25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+			<div class="table-responsive">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+					<tr>
+						<th width="7%">医生</th>
+						<th width="10%">医院</th>
+						<th width="7%">预约时间</th>
+						<th width="7%">下单时间</th>
+						<th width="7%">下单用户</th>
+						<th width="7%">用户电话</th>
+						<th width="7%">用户城市</th>
+						<th width="7%">用户来源</th>
+						<th width="7%">订单来源</th>
+						<th width="7%">患者姓名</th>
+						<th width="7%">患者电话</th>
+						<th width="7%">是否手术</th>
+						<th width="5%">状态</th>
+						<th width="7%">操作</th>
+					</tr>
+					</thead>
+					<tr ng-repeat="order in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+						<td class="center">{{order.doctor}}</td>
+						<td class="center" title="{{order.hospital}}">{{order.hospital | limitTo:9}}</td>
+						<td class="center">{{order.appointmentTime}}</td>
+						<td class="center">{{order.createDate}}</td>
+						<td class="center">{{order.patient}}</td>
+						<td class="center">{{order.patientPhoneNumber}}</td>
+						<td class="center">{{order.patientLocation}}</td>
+						<td class="center">{{order.sceneName ? order.sceneName : '无'}}</td>
+						<td class="center">{{showOrderSource(order.source)}}</td>
+						<td class="center">{{order.name}}</td>
+						<td class="center">{{order.phoneNumber}}</td>
+						<td class="center">
+							<label ng-if="order.useOperation == true">是</label>
+							<label ng-if="order.useOperation == false">否</label>
+						</td>
+						<td class="center">{{showOrderStatus(order.status)}}</td>
+						<td class="center">
+							<div class="visible-md visible-lg hidden-sm hidden-xs">
+								<a href="#" ng-click="more(order)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="更多"><i
+										class="fa fa-search"></i></a>
+								<a href="#" button-code="editBtnCode" ng-click="edit(order)" class="aidee-button btn btn-transparent btn-xs" tooltip-placement="top" tooltip="编辑"><i
+										class="fa fa-edit"></i></a>
+								<a ng-if="order.source =='SANJIU' && order.status!='WAITTO_PAY' && order.status!='NO_PAY' && order.status!='CANCEL_WITHIN' && order.status!='CANCEL_OVERTIME' && order.status!='CANCEL_DOCTOR' && order.status!='FINISHED'" href="#" button-code="editBtnCode"  ng-click="change39Order(order)" class="aidee-button btn btn-transparent btn-xs" tooltip-placement="top" tooltip="已完成评价未分享"><i
+										class="fa fa-glass"></i></a>
+							</div>
+							<div class="visible-xs visible-sm hidden-md hidden-lg">
+								<div class="btn-group" dropdown is-open="status.isopen">
+									<button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle" dropdown-toggle>
+										<i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu pull-right dropdown-light" role="menu">
+										<li>
+											<a href="#" ng-click="more(order)">更多</a>
+										</li>
+										<li>
+											<a href="#" class="aidee-button" button-code="editBtnCode" ng-click="edit(order)">编辑</a>
+										</li>
+										<li ng-if="order.source =='SANJIU' && order.status!='WAITTO_PAY' && order.status!='NO_PAY' && order.status!='CANCEL_WITHIN' && order.status!='CANCEL_OVERTIME' && order.status!='CANCEL_DOCTOR' && order.status!='FINISHED'">
+											<a href="#" class="aidee-button" button-code="editBtnCode" ng-click="change39Order(order)">已完成评价未分享</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<script type="text/ng-template" id="searchJdOrder.html">
+				<div class="modal-header">
+					<h5 class="modal-title"><b>查询条件</b></h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="orderNumber">
+									订单号
+								</label>
+								<div class="col-sm-9">
+									<input type="text" id="orderNumber" class="form-control" ng-model="searchInfos.orderNumber" maxlength="15">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="order_exceed" style="font-size:12px;">
+									是否支付诊金
+								</label>
+								<div class="col-sm-9">
+									<select id="order_exceed" class="form-control" ng-model="searchInfos.exceed">
+										<option value="">全部</option>
+										<option value="1">是</option>
+										<option value="2">否</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="order_status">
+									状态
+								</label>
+								<div class="col-sm-9">
+									<select id="order_status" class="form-control" ng-model="searchInfos.status"
+											ng-options="status.value as status.name for status in orderStatus">
+										<option value="">全部</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="oppointmentTimeStart">
+									预约时间段
+								</label>
+								<div class="col-sm-9">
+									<input type="text" id="oppointmentTimeStart" style="width: 130px;" ng-model="searchInfos.oppointmentTimeStart"
+										   onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'oppointmentTimeEnd\')}',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+									至
+									<input type="text" id="oppointmentTimeEnd" style="width: 130px;" ng-model="searchInfos.oppointmentTimeEnd"
+										   onFocus="WdatePicker({minDate:'#F{$dp.$D(\'oppointmentTimeStart\')}',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="createTimeStart">
+									下单时间段
+								</label>
+								<div class="col-sm-9">
+									<input type="text" id="createTimeStart" style="width: 130px;" ng-model="searchInfos.createTimeStart"
+										   onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'%y-%M-%d %H:%m\'}',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+									至
+									<input type="text" id="createTimeEnd" style="width: 130px;" ng-model="searchInfos.createTimeEnd"
+										   onFocus="WdatePicker({minDate:'#F{$dp.$D(\'createTimeStart\')}',maxDate:'%y-%M-%d %H:%m',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="scene">
+									用户来源
+								</label>
+								<div class="col-sm-9">
+									<ui-select id="scene" multiple ng-model="searchInfos.qrcodeList" theme="bootstrap">
+										<ui-select-match>
+											{{$item.name}}
+										</ui-select-match>
+										<ui-select-choices repeat="jdQrcode in jdQrcodeList" refresh="refreshAddresses($select.search)" refresh-delay="0">
+											<div ng-bind-html="jdQrcode.name | highlight: $select.search"></div>
+										</ui-select-choices>
+									</ui-select>
+
+									<!--<ui-select id="scene" multiple ng-model="searchInfos.qrcodeList" theme="bootstrap">-->
+										<!--<ui-select-match placeholder="输入姓名查找用户来源">-->
+											<!--{{$item.name}}-->
+										<!--</ui-select-match>-->
+
+										<!--<ui-select-choices repeat="jdQrcode in jdQrcodeList " refresh="refreshAddresses($select.search)" refresh-delay="0">-->
+											<!--<div ng-bind-html="jdQrcode.name | highlight: $select.search"></div>-->
+										<!--</ui-select-choices>-->
+
+									<!--</ui-select>-->
+
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="orderPlus_source">
+									订单来源
+								</label>
+								<div class="col-sm-8">
+									<select id="orderPlus_source" class="form-control" ng-model="searchInfos.source"
+											ng-options="source.value as source.name for source in orderSourceType">
+										<option value="">全部</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="s_name">
+									患者姓名
+								</label>
+								<div class="col-sm-9">
+									<input type="text" id="s_name" class="form-control" ng-model="searchInfos.name" maxlength="21">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="s_phoneNumber">
+									手机号码
+								</label>
+								<div class="col-sm-9">
+									<input type="text" id="s_phoneNumber" class="form-control" ng-model="searchInfos.phoneNumber" maxlength="11">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="districtId">
+									医院城市
+								</label>
+								<div class="col-sm-9">
+									<select id="districtId" class="form-control" ng-model="searchInfos.districtId"
+											ng-options="district.uuid as district.name for district in districts">
+										<option value="">全部</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="doctor">
+									医生姓名
+								</label>
+								<div class="col-sm-9">
+									<input type="text" id="doctor" class="form-control" ng-model="searchInfos.doctor" maxlength="11">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="bdName">
+									BD人员
+								</label>
+								<div class="col-sm-9">
+									<input type="text" id="bdName" class="form-control" ng-model="searchInfos.bdName" maxlength="11">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="bdName">
+									是否手术治疗
+								</label>
+								<div class="col-sm-9">
+									<select id="useOperation" class="form-control" ng-model="searchInfos.useOperation">
+										<option value="">全部</option>
+										<option value="true">是</option>
+										<option value="false">否</option>
+									</select>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+				</div>
+			</script>
+			<script type="text/ng-template" id="moreOrderInfo.html">
+				<div class="modal-header">
+					<h5 class="modal-title"><b>更多信息</b></h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-12">
+									订单号：{{orderInfo.orderNumber}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									医生诊金：{{orderInfo.consultationFee}} 元
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									补贴/现金券：{{orderInfo.consultationFee+orderInfo.deposit-orderInfo.totalFee}} 元
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									保证金：{{orderInfo.deposit}} 元
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									实际支付：{{orderInfo.totalFee}} 元
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									BD人员：{{orderInfo.bdName}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									患者身份证：{{orderInfo.idCard}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									患者性别：{{orderInfo.gender}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									患者年龄：{{orderInfo.age}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									病情描述：{{orderInfo.sickDescription}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12" ng-if="orderInfo.useOperation == true">
+									是否手术治疗：是
+								</label>
+								<label class="col-sm-12" ng-if="orderInfo.useOperation == false">
+									是否手术治疗：否
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									微信支付-商户订单号：{{orderInfo.wxPayBillno}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									微信红包-商户单号：{{orderInfo.redPackBillno}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									备注：{{orderInfo.remark}}
+								</label>
+							</div>
+                          <div class="form-group">
+								<label class="col-sm-12">
+									诊断结果：{{orderInfo.diagnosis}}
+								</label>
+							</div>
+                          <div class="form-group">
+								<label class="col-sm-12">
+									诊断为：{{orderInfo.sicks}}
+								</label>
+							</div>
+                           <div class="form-group">
+								<label class="col-sm-12">
+									疾病备注：{{orderInfo.sickRemark}}
+								</label>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="cancel($event)">关闭</button>
+				</div>
+			</script>
+			<script type="text/ng-template" id="editOrder.html">
+				<div class="modal-header">
+					<h5 class="modal-title"><b>订单信息</b></h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-6">
+									订单号：{{jdOrderInfo.orderNumber}}
+								</label>
+								<label class="col-sm-6">
+									订单金额：{{jdOrderInfo.totalFee}} 元
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-6">
+									患者姓名：{{jdOrderInfo.name}}
+								</label>
+								<label class="col-sm-6">
+									身份证：{{jdOrderInfo.idCard}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-6">
+									患者电话：{{jdOrderInfo.phoneNumber}}
+								</label>
+								<label class="col-sm-6">
+									年龄：{{jdOrderInfo.age}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									病情描述：{{jdOrderInfo.sickDescription}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12" ng-if="orderInfo.useOperation == true">
+									是否手术治疗：是
+								</label>
+								<label class="col-sm-12" ng-if="orderInfo.useOperation == false">
+									是否手术治疗：否
+								</label>
+							</div>
+							<div class="form-group" ng-if="jdOrder.status!='WAITTO_DIAGNOSE' && jdOrder.status!='WAITTO_CONFIRM'">
+								<label class="col-sm-12">
+									状态：{{showOrderStatus(jdOrderInfo.status)}}
+								</label>
+							</div>
+							<div class="form-group" ng-if="jdOrder.status=='WAITTO_DIAGNOSE' || jdOrder.status=='WAITTO_CONFIRM'">
+								<label class="col-sm-2" for="editorder_status">
+									状态：
+								</label>
+								<div class="col-sm-6" style="padding-left: 0;">
+									<select id="editorder_status" class="col-sm-12" ng-model="jdOrderInfo.status"
+											ng-options="status.value as status.name for status in orderStatus">
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2" for="remark">
+									备注：
+								</label>
+								<div class="col-sm-9"  style="padding-left: 0;">
+									<textarea class="form-control" ng-model="jdOrderInfo.remark" id="remark" maxlength="250"></textarea>
+								</div>
+							</div>
+                            <div class="form-group">
+									<label class="col-sm-2"  style="margin-right:0px;">
+										诊断结果:
+									</label>
+										<select id="diagnosis" class="col-sm-7"  style="padding-left:0px;" ng-model="jdOrderInfo.diagnosis"
+                                             ng-options="diagnosis for diagnosis in allDiagnosiss">											
+										</select>
+									
+								</div>
+                            <div class="form-group">
+								<label class="col-sm-2 text-left " for="scene" style="margin-right:0px;">
+									诊断为：
+								</label>
+								 <div class="col-sm-6" style="padding-left: 0px;">
+									<ui-select id="scene" multiple tagging tagging-label=" 从列表选择" ng-model="data.selectedSicks" theme="bootstrap" >
+										<ui-select-match placeholder="下拉或右侧按钮选择疾病">
+											{{$item.name}}
+										</ui-select-match>
+										<ui-select-choices repeat="sick in data.allSickList | propsFilter: {name: $select.search}">
+                                            <small><span ng-bind-html="''+sick.name | highlight: $select.search"></span> </small>									
+                                        </ui-select-choices>
+									</ui-select>
+								</div>
+                               <div class="col-sm-3">
+                                        <button ng-click="selectSick()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+                                                                                                        选择疾病<i class="fa fa-plus"></i>
+                                        </button>
+                               </div>
+                             </div>
+                             <div class="form-group">
+								<label class="col-sm-2">
+									疾病备注：
+								</label>
+                                     <textarea class="col-sm-5"  name="sickRemark" ng-model="jdOrderInfo.sickRemark" ></textarea>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-if="jdOrder.status=='WAITTO_DIAGNOSE' || jdOrder.status=='WAITTO_CONFIRM'" ng-click="ok($event)">确定</button>
+				</div>
+			</script>
+			<script type="text/ng-template" id="selectSick.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>ICD疾病选择</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                <div class="col-md-11">
+                                    <label class="col-sm-2">名称</label>
+                                    <input class="col-sm-6" type="text" ng-model="searchInfo.name" placeholder="输入疾病名搜索">
+                                    </input>
+                                </div>
+                                <div style="clear: both"/>
+                                <div class="table-responsive" style="margin-top:25px;">
+                                    <table ng-table="tableParams" class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th></th>
+                                           <th>疾病编码</th>
+                                           <th>ICD疾病名称</th>
+                                        </tr>
+                                        </thead>
+                                        <tr ng-repeat="sick in data" ng-class-odd="'odd'" ng-class-even="'even'">
+                                            <td>
+                                                <div class="checkbox clip-check check-primary checkbox-inline">
+                                                    <input id="checkbox{{sick.uuid}}" type="checkbox" ng-model="sick.selected" ng-click="changeSelection($index)"/>
+                                                    <label for="checkbox{{sick.uuid}}" style="vertical-align: middle;"></label>
+                                                </div>
+                                            </td>
+                                            <td class="center">{{sick.code}}</td>
+                                            <td class="center">{{sick.name}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div style="clear: both"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="clear($event)">清除</button>
+                        <button class="btn btn-primary" ng-click="query()">查询</button>
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>谢谢您 橙医生</title>
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<script src="../static/js/app/rem.js"></script>
+	<link rel="stylesheet" href="../static/css/base.css">
+	<link rel="stylesheet" href="../static/css/style.css">
+
+	<script type="text/javascript" src="../static/js/libs/requirejs/require.js"></script>
+	<script type="text/javascript" src="../static/js/app.js"></script>
+	<script>
+		require(['doctorReceived'],function(s){
+			s.prompt_dialog_box();
+			s.BlessedLanguage();
+			s.getEvaluate();
+			s.doctorShare();
+			s.getAppId();
+		});
+	</script>
+
+</head>
+<body>
+
+<div class="prompt_dialog_box" id="box2">
+
+	<div class="prompt_font2 pa top5"><img src="http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/top1.png" alt=""></div>
+	<div class="top_gif pa top7"><img src="http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/top.gif" alt=""></div>
+	<div class="prompt_font2 pa top6"><img src="http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/top2.png" alt=""></div>
+	<div class="top_gif pa top8"><img src="http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/top.gif" alt=""></div>
+</div>
+
+	<div class="doctor_recevice pr">
+		<h1 class="pa"><img src="../static/images/newyear.png" alt=""></h1>
+		<div class="doctor_recevice_card pr">
+			<div class="show_reviceived_number pa" id="show_reviceived_number"></div>
+		</div>
+		<div class="doctor_recevice_title"></div>
+
+		<div class="wish_list pr" id="wish_list">
+			<ul class="wish pr" id="wish">
+				<!--<li>-->
+					<!--<p>XXX祝您：</p>-->
+					<!--<p>万事如意,心想事“橙”</p>-->
+				<!--</li>-->
+
+				<!--<li>-->
+					<!--<p>XXX祝您：</p>-->
+					<!--<p>万事如意,心想事“橙”</p>-->
+				<!--</li>-->
+
+				<!--<li>-->
+					<!--<p>XXX祝您：</p>-->
+					<!--<p>万事如意,心想事“橙”</p>-->
+				<!--</li>-->
+
+				<!--<li>-->
+					<!--<p>XXX祝您：</p>-->
+					<!--<p>万事如意,心想事“橙”</p>-->
+				<!--</li>-->
+			</ul>
+		</div>
+
+		<div class="decorate"></div>
+		<div class="discuss pa">
+			<div class="discuss_title2 pa"></div>
+				
+			<div class="discuss_doctor_wrap discuss_doctor_wrap2 pa" id="discuss_doctor_wrap2">
+			<ul id="Evaluate_list">
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>年轻有为，工作认真，服务好，妙赞\(≧▽≦)/</li>-->
+				<!--<li>黄医生的服务态度很好，让我非常满意</li>-->
+				<!--<li>黄医生很负责 经验丰富 对病人很丽耐心</li>-->
+				<!--<li>黄医生人真好，工作热情，专业水平高</li>-->
+				<li>……</li>
+			</ul>
+		</div>
+
+
+		</div>
+		
+
+
+
+
+
+
+	</div>
+
+	<div class="popular_btn clearfix">
+		<a href="popularlist2.html" class="fl popular_left btn2">人气医生榜</a>
+		<a href="javascript:void(0)" class="fr popular_right btn2" id="doctor_share">炫耀一下</a>
+	</div>
+
+</body>
+
+</html>

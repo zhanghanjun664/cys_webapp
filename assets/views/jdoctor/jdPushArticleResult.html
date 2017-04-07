@@ -1,0 +1,101 @@
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div ng-controller="JdPushArticleResultCtrl" class="col-md-12">
+			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<p style="margin-top:25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                	<thead>
+						<tr>
+							<th width="23%">文章标题</th>
+							<th width="18%">文章链接</th>
+							<th width="8%">用户</th>
+							<th width="8%">医生</th>
+							<th width="10%">推送时间</th>
+							<th width="7%">是否成功</th>
+							<th width="7%">推送结果码</th>
+							<th width="20%">推送结果描述</th>
+						</tr>
+					</thead>
+                    <tr ng-repeat="jdPushArticleResult in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+						<td class="center" title="{{jdPushArticleResult.articleTitle}}">
+							<span ng-if="jdPushArticleResult.articleTitle.length<=20">{{jdPushArticleResult.articleTitle | limitTo : 20}}</span>
+							<span ng-if="jdPushArticleResult.articleTitle.length>20">{{jdPushArticleResult.articleTitle | limitTo : 20}}...</span>
+						</td>
+						<td class="center" title="{{jdPushArticleResult.url}}">
+							<a href="{{jdPushArticleResult.url}}" target="_blank">
+								<span ng-if="jdPushArticleResult.url.length<=20">{{jdPushArticleResult.url}}</span>
+								<span ng-if="jdPushArticleResult.url.length>20">{{jdPushArticleResult.url | limitTo : 20}}...</span>
+							</a>
+						</td>
+						<td class="center">{{jdPushArticleResult.patientName}}</td>
+						<td class="center">{{jdPushArticleResult.doctorName}}</td>
+						<td class="center">{{jdPushArticleResult.createDate}}</td>
+						<td class="center">{{jdPushArticleResult.status==true?"是":"否"}}</td>
+						<td class="center">{{jdPushArticleResult.statusCode}}</td>
+						<td class="center" title="{{jdPushArticleResult.reason}}">
+							<span ng-if="jdPushArticleResult.reason.length<=20">{{jdPushArticleResult.reason}}</span>
+							<span ng-if="jdPushArticleResult.reason.length>20">{{jdPushArticleResult.reason | limitTo : 20}}...</span>
+						</td>
+                    </tr>
+                </table>
+                <script type="text/ng-template" id="searchJdPushArticleResult.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>查询条件</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="patient_name">
+										用户
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="patient_name" class="form-control" ng-model="searchInfos.patientName">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="doctor_name">
+										医生
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="doctor_name" class="form-control" ng-model="searchInfos.doctorName">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="s_title">
+										标题
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="s_title" class="form-control" ng-model="searchInfos.title">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="s_status">
+										是否成功
+									</label>
+									<div class="col-sm-8">
+										<select id="s_status" class="form-control" ng-model="searchInfos.status">
+											<option value="">全部</option>
+											<option value="1">是</option>
+											<option value="0">否</option>
+										</select>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+            </div>
+        </div>
+    </div>
+</div>

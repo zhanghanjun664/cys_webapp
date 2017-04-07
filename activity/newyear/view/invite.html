@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>感恩橙医生 橙意贺新春</title>
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<script src="../static/js/app/rem.js"></script>
+	<link rel="stylesheet" href="../static/css/base.css">
+	<link rel="stylesheet" href="../static/css/style.css">
+
+	<script type="text/javascript" src="../static/js/libs/requirejs/require.js"></script>
+	<script type="text/javascript" src="../static/js/app.js"></script>
+	<script>
+		require(['invite'],function(s){
+			s.getCardMessage();
+		});
+	</script>
+
+</head>
+<body>
+		<div class="invite_show">
+			<div class="pr">
+
+				<div class="showcard" >
+					<img src="" alt="" class="show_backgroundimage pr">
+				</div>
+
+				<div class="show_wish pa">
+					<img src="" alt="" class="show_wish_images">
+				</div>
+
+			</div>
+		</div>
+
+		<div class="popular_btn clearfix">
+			<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx549181202951b22f&redirect_uri=http://m.chengyisheng.com.cn/wxapi/activity/newyear2016/index&response_type=code&scope=snsapi_userinfo&state=ORDER#wechat_redirect" class="fl popular_left btn2">制作贺卡</a>
+			<a href="patientsRules.html" class="fr popular_right btn2">活动规则</a>
+		</div>
+</body>
+</html>

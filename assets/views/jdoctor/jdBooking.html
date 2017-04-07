@@ -1,0 +1,122 @@
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div ng-controller="JdBookingCtrl" class="col-md-12">
+            <button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+                查询 <i class="fa fa-search"></i>
+            </button>
+            <button ng-click="export()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+                导出Excel <i class="fa fa-download"></i>
+            </button>
+            <p style="margin-top:25px;">
+                <strong>总记录数:</strong> {{tableParams.total()}}
+            </p>
+
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>医生</th>
+                        <th>医院</th>
+                        <th>放号时间</th>
+                        <th>日期</th>
+                        <th>诊金</th>
+                        <th>是否被约</th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="jdBooking in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                        <td class="center">{{jdBooking.name}}</td>
+                        <td class="center">{{displayHospitalName(jdBooking.jdHospitalId)}}</td>
+                        <td class="center">{{jdBooking.createDate}}</td>
+                        <td class="center">{{jdBooking.dateTime}}</td>
+                        <td class="center">{{jdBooking.fee}}</td>
+                        <td class="center">{{displayBooked(jdBooking.hasBooked)}}</td>
+                    </tr>
+                </table>
+            </div>
+            <script type="text/ng-template" id="searchJdBooking.html">
+                <div class="modal-header">
+                    <h5 class="modal-title"><b>查询条件</b></h5>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <form role="form" class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="name">
+                                    医生姓名：
+                                </label>
+
+                                <div class="col-sm-8">
+                                    <input type="text" id="name" class="form-control"
+                                           ng-model="searchInfos.name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="districtId">
+                                    地区
+                                </label>
+
+                                <div class="col-sm-8">
+                                    <select id="districtId" class="col-sm-12" ng-model="searchInfos.districtId"
+                                            ng-options="jdDistrict.uuid as jdDistrict.name for jdDistrict in jdDistricts"
+                                            ng-change="onDistrictChange(searchInfos.districtId)">
+                                        <option value="">全部</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="jdHospitalId">
+                                    医院:
+                                </label>
+
+                                <div class="col-sm-8">
+                                    <select id="jdHospitalId" class="col-sm-12" ng-model="searchInfos.jdHospitalId"
+                                            ng-options="jdHospital.hospitalId as jdHospital.name for jdHospital in jdHospitals">
+                                        <option value="">全部</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="startTime">
+                                    开始时间：
+                                </label>
+
+                                <div class="col-sm-8">
+                                    <input type="text" id="startTime" class="form-control"
+                                           ng-model="searchInfos.startTime"
+                                           onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="endTime">
+                                    结束时间：
+                                </label>
+
+                                <div class="col-sm-8">
+                                    <input type="text" id="endTime" class="form-control" ng-model="searchInfos.endTime"
+                                           onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="hasBooked">
+                                    是否被约
+                                </label>
+
+                                <div class="col-sm-8">
+                                    <select id="hasBooked" class="col-sm-12" ng-model="searchInfos.hasBooked"
+                                            ng-options="booked.id as booked.name for booked in bookeds">
+                                        <option value="">全部</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-click="clear()">清空条件</button>
+                    <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                    <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                </div>
+            </script>
+        </div>
+    </div>
+</div>

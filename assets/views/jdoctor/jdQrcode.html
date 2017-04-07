@@ -1,0 +1,244 @@
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div ng-controller="JdQrcodeCtrl" class="col-md-12">
+            <button ng-click="edit()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+                新增 <i class="fa fa-plus"></i>
+            </button>
+            <button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+                查询 <i class="fa fa-search"></i>
+            </button>
+            <p style="margin-top:25px;">
+                <strong>总记录数:</strong> {{tableParams.total()}}
+            </p>
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th width="20%">推广渠道</th>
+                        <th width="20%">渠道编码</th>
+                        <th width="20%">二维码地址</th>
+                        <th width="20%">二维码推荐链接</th>
+                        <th width="8%">赠送余额</th>
+                        <th width="8%">关注推送</th>
+                        <th width="10%">现金券配置</th>
+                        <th width="5%">操作</th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="jdQrcode in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                        <td class="center">{{jdQrcode.name}}</td>
+                        <td class="center">{{jdQrcode.sceneStr}}</td>
+                        <td class="center"><a ng-click="showQrcode(jdQrcode.url)">{{jdQrcode.url}}</a></td>
+                        <td class="center"><a target="_blank" href="http://m.chengyisheng.com.cn/weixin/qrcodeSpread/selectQrcodeSpread.htm?sceneStr={{jdQrcode.sceneStr}}">http://m.chengyisheng.com.cn/selectQrcodeSpread.htm?sceneStr={{jdQrcode.sceneStr}}</a></td>
+                        <td class="center">{{displayRedpack(jdQrcode.redpack)}}</td>
+                        <td class="center">{{displayContentType(jdQrcode.content)}}</td>
+                        <td class="center">{{displayCoupon(jdQrcode.coupon)}}</td>
+                        <td class="center">
+                            <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                <a href="#" ng-click="edit(jdQrcode)" class="btn btn-transparent btn-xs"
+                                   tooltip-placement="top" tooltip="编辑">
+                                    <i class="fa fa-edit"></i></a>
+                            </div>
+                            <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                <div class="btn-group" dropdown is-open="status.isopen">
+                                    <button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle"
+                                            dropdown-toggle>
+                                        <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right dropdown-light" role="menu">
+                                        <li>
+                                            <a href="#" ng-click="edit(jdQrcode)">编辑</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <script type="text/ng-template" id="searchJdQrcode.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>查询条件</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_name">
+                                        推广渠道
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="s_name" class="form-control" ng-model="searchInfos.name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_sceneStr">
+                                        渠道编码
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="s_sceneStr" class="form-control" ng-model="searchInfos.sceneStr">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_give">
+                                        赠送余额
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select id="s_give" ng-model="searchInfos.give" class="col-sm-12">
+                                            <option value="">全部</option>
+                                            <option value="1">是</option>
+                                            <option value="0">否</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_push">
+                                        关注推送
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select id="s_push" ng-model="searchInfos.push" class="col-sm-12">
+                                            <option value="">全部</option>
+                                            <option value="1">自定义</option>
+                                            <option value="0">默认</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_coupon">
+                                        现金券配置
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select id="s_coupon" ng-model="searchInfos.coupon" class="col-sm-12">
+                                            <option value="">全部</option>
+                                            <option value="1">自定义</option>
+                                            <option value="0">默认</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="clear()">清空条件</button>
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+                <script type="text/ng-template" id="editJdQrcode.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>推广渠道二维码</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="name">
+                                        推广渠道
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="name" class="form-control"
+                                               ng-model="jdQrcodeInfo.name" maxlength="30">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="sceneStr">
+                                        渠道编码
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="sceneStr" class="form-control" ng-disabled="disabled"
+                                               ng-model="jdQrcodeInfo.sceneStr" maxlength="60">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" style="padding-top:13px;">
+                                        赠送余额
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <div class="radio clip-radio radio-primary radio-inline">
+                                            <input type="radio" id="yes" ng-model="flag" value="true">
+                                            <label for="yes">是</label>
+                                        </div>
+                                        <div class="radio clip-radio radio-primary radio-inline">
+                                            <input type="radio" id="no" ng-model="flag" value="false"
+                                                   ng-click="setRedpack()">
+                                            <label for="no">否</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-if="flag=='true'">
+                                    <label class="col-sm-3 control-label" for="redpack">
+                                        赠送金额
+                                    </label>
+                                    <div class="col-sm-7">
+                                        <input type="text" id="redpack" class="form-control" ng-model="jdQrcodeInfo.redpack"><span
+                                            style="float: right; margin: -26px -20px;">元</span>
+                                    </div>
+                                </div>
+                                <div ng-if="!typeSign">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label" style="padding-top:13px;">
+                                            关注推送
+                                        </label>
+                                        <div class="col-sm-8">
+                                            <div class="radio clip-radio radio-primary radio-inline">
+                                                <input type="radio" id="defined" ng-model="signInfo.contentSign" value="true">
+                                                <label for="defined">自定义</label>
+                                            </div>
+                                            <div class="radio clip-radio radio-primary radio-inline">
+                                                <input type="radio" id="default" ng-model="signInfo.contentSign" value="false"
+                                                       ng-click="setContent()">
+                                                <label for="default">默认</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" ng-if="signInfo.contentSign=='true'">
+                                        <label class="col-sm-3 control-label" for="content">
+                                            推送内容
+                                        </label>
+                                        <div class="col-sm-7">
+                                            <textarea id="content" rows="5" class="form-control"
+                                                      ng-model="jdQrcodeInfo.content" maxlength="500">
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" style="padding-top:13px;">
+                                        现金券配置
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <div class="radio clip-radio radio-primary radio-inline">
+                                            <input type="radio" id="couponDefined" ng-model="couponSign" value="true">
+                                            <label for="couponDefined">自定义</label>
+                                        </div>
+                                        <div class="radio clip-radio radio-primary radio-inline">
+                                            <input type="radio" id="couponDefault" ng-model="couponSign" value="false"
+                                                   ng-click="setCoupon()">
+                                            <label for="couponDefault">默认</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-if="couponSign=='true'">
+                                    <label class="col-sm-3 control-label" for="coupon">
+                                        配置内容
+                                    </label>
+                                    <div class="col-sm-7">
+                                        <textarea id="coupon" rows="2" class="form-control" ng-model="jdQrcodeInfo.coupon" maxlength="20">
+                                        </textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-if="couponSign=='true'">
+                                    <div class="col-sm-11" style="margin-left: 4%">
+                                        第一个参数表示金额，第二个参数表示有效期（单位：天），两个参数之间用英文字符“;”分隔。
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

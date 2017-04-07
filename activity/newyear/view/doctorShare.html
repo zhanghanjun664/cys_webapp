@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>谢谢您 橙医生</title>
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<script src="../static/js/app/rem.js"></script>
+	<link rel="stylesheet" href="../static/css/base.css">
+	<link rel="stylesheet" href="../static/css/style.css">
+
+
+	<script type="text/javascript" src="../static/js/libs/requirejs/require.js"></script>
+	<script type="text/javascript" src="../static/js/app.js"></script>
+	<script>
+		require(['doctorShare'],function(s){
+			s.getDoctorMsg();
+			s.getEvaluate();
+		});
+	</script>
+
+</head>
+<body>
+
+	<div class="doctor_share pr">
+		<div class="doctor_img pa">
+			<div class="doctor_img_wrap pa" id="doctor_header"></div>
+		</div>
+		
+		<div class="doctor_share_name pa">我是<span id="doctor_name"></span></div>
+
+		<div class="doctor_car_number pa">
+			<div class="doctor_car_number_show pa" id="doctor_car_number_show"></div>
+		</div>
+	</div>
+
+	<div class="discuss_doctor pr">
+		<div class="discuss_title pa"></div>
+		<div class="discuss_doctor_wrap pa" id="discuss_doctor_wrap">
+			<ul id="Evaluate_list">
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<!--<li>万事如意,心想事“橙”</li>-->
+				<li>……</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="popular_btn clearfix">
+		<a href="popularlist.html" class="fl popular_left btn2">人气医生榜</a>
+		<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx549181202951b22f&redirect_uri=http://m.chengyisheng.com.cn/wxapi/activity/newyear2016/index&response_type=code&scope=snsapi_userinfo&state=ORDER#wechat_redirect" class="fr popular_right btn2">给我送贺卡</a>
+	</div>
+
+
+</body>
+</html>

@@ -1,0 +1,222 @@
+<style>
+.app-modal-window .modal-dialog {
+	width: 1000px;
+}
+
+.ui-select-container {
+	z-index: 10001;
+}
+</style>
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div ng-controller="FollowupCtrl" class="col-md-12">
+			<!-- <button ng-click="edit()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+				新增 <i class="fa fa-plus"></i>
+			</button> -->
+			<button ng-click="update()" type="button"
+				class="btn btn-wide btn-warning" style="min-width: 30px;">
+				编辑 <i class="fa fa-edit"></i>
+			</button>
+			<button ng-click="deleteAll()" type="button"
+				class="btn btn-wide btn-danger" style="min-width: 30px;">
+				删除 <i class="fa fa-trash"></i>
+			</button>
+			<button ng-click="search()" type="button"
+				class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<p style="margin-top: 25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+			<div class="table-responsive">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+						<tr>
+							<th style="text-align: left; width: 6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox"
+										ng-click="selectAll()" /> <label for="selectAllCheckbox"
+										style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th>随访模板title</th>
+							<th>来源</th>
+							<th>创建时间</th>
+							<th>是否精选模板</th>
+							<th>权重</th>
+							<th>所属科室</th>
+							<th>收藏数</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tr ng-repeat="followupTemplate in $data" ng-class-odd="'odd'"
+						ng-class-even="'even'" id="tr{{followupTemplate.id}}">
+						<td>
+							<div class="checkbox clip-check check-primary checkbox-inline">
+								<input id="checkbox{{followupTemplate.id}}" type="checkbox"
+									ng-model="followupTemplate.selected"
+									ng-click="changeSelection($index)" /> <label
+									for="checkbox{{followupTemplate.id}}"
+									style="vertical-align: middle;"></label>
+							</div>
+						</td>
+						<td class="center">{{followupTemplate.name}}</td>
+						<td class="center">{{followupTemplate.ownerName}}</td>
+						<td class="center">{{followupTemplate.dateCreated}}</td>
+						<td class="center">{{followupTemplate.isStarred?"是":"否"}}</td>
+						<td class="center">{{followupTemplate.popularity}}</td>
+						<td class="center">{{followupTemplate.departmentNames}}</td>
+						<td class="center">{{followupTemplate.favorites}}</td>
+						<td class="center">
+							<div class="visible-md visible-lg hidden-sm hidden-xs">
+								<a href="#" ng-click="edit(followupTemplate)"
+									class="btn btn-transparent btn-xs" tooltip-placement="top"
+									tooltip="编辑"><i class="fa fa-edit"></i></a> <a href="#"
+									ng-click="deleteItem(followupTemplate.id,followupTemplate.ownerType)"
+									class="btn btn-transparent btn-xs tooltips"
+									tooltip-placement="top" tooltip="删除"><i
+									class="fa fa-trash fa fa-white"></i></a>
+							</div>
+							<div class="visible-xs visible-sm hidden-md hidden-lg">
+								<div class="btn-group" dropdown is-open="status.isopen">
+									<button type="button"
+										class="btn btn-primary btn-o btn-sm dropdown-toggle"
+										dropdown-toggle>
+										<i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu pull-right dropdown-light" role="menu">
+										<li><a href="#" ng-click="edit(followupTemplate)">编辑</a>
+										</li>
+										<li><a href="#"
+											ng-click="deleteItem(followupTemplate.id)">删除</a></li>
+									</ul>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<script type="text/ng-template" id="searchfollowupTemplate.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>查询条件</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="s_title">
+										随访模板title
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="s_title" class="form-control" ng-model="searchInfos.name" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="s_title">
+										来源
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="s_ownerName" class="form-control" ng-model="searchInfos.ownerName" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="s_title">
+										科室
+									</label>
+									<div class="col-sm-9">
+										<ui-select id="skill" multiple ng-model="searchInfos.followupTemplateDepartments" theme="bootstrap" ng-disabled="disabled">
+											<ui-select-match>
+												{{$item.name}}
+											</ui-select-match>
+											<ui-select-choices repeat="department in departments | propsFilter: {name: $select.search}">
+												<small><span ng-bind-html="''+department.name | highlight: $select.search"></span> </small>
+											</ui-select-choices>
+										</ui-select>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+				<script type="text/ng-template" id="editfollowupTemplate.html">
+					<div class="modal-header" style="width:1000px">
+						<h5 class="modal-title"><b>随访信息</b></h5>
+					</div>
+					<div class="modal-body" style="width:1000px">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="title">
+										随访模板title
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="title" class="form-control" ng-model="followupTemplateInfo.name" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="ownerName">
+										来源
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="ownerName" class="form-control" ng-model="followupTemplateInfo.ownerName" >
+									</div>
+								</div>
+                                <div class="form-group">
+									<label class="col-sm-3 control-label" for="popularity">
+										是否为精选模板
+									</label>
+                                    <div class="col-sm-8" >
+										<div class="radio clip-radio radio-primary radio-inline" >
+											<input type="radio" id="isStarred_yes" name="isStarred" ng-model="followupTemplateInfo.isStarred" value="true"  >
+											<label for="isStarred_yes">是</label>
+										</div>
+										<div class="radio clip-radio radio-primary radio-inline" >
+											<input type="radio" id="isStarred_no" name="isStarred" ng-model="followupTemplateInfo.isStarred" value="false" >
+											<label for="isStarred_no">否</label>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="popularity">
+										权重
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="popularity" class="form-control" ng-model="followupTemplateInfo.popularity" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="departmentids">
+										所属科室
+									</label>
+									<div class="col-sm-8">
+										<ui-select id="department" multiple ng-model="data.followupTemplateDepartments" theme="bootstrap" ng-disabled="disabled">
+													<ui-select-match>
+														{{$item.name}}
+													</ui-select-match>
+													<ui-select-choices repeat="department in departments | propsFilter: {name: $select.search}">
+														<small><span ng-bind-html="''+department.name | highlight: $select.search"></span> </small>
+													</ui-select-choices>
+												</ui-select>
+									</div>
+								</div>
+                               
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+

@@ -1,0 +1,177 @@
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div ng-controller="deviceBoundCtrl" class="col-md-12">
+			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<p style="margin-top: 25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+			<div class="table-responsive">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+						<tr>
+							<th style="text-align: left; width: 6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()" /> <label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th>设备名称</th>
+							<th>用户按钮</th>
+							<th>橙医生二维码序列号</th>
+							<th>设备sn</th>
+							<th>openid</th>
+							<th>微信昵称</th>
+							<th>用户手机号</th>
+							<th>家庭联系人手机号</th>
+							<th>绑定时间</th>
+							<th>绑定家庭联系人姓名</th>
+							<th>绑定家庭联系人关系</th>
+							<th>状态</th>
+						</tr>
+					</thead>
+
+					<tr ng-repeat="obj in $data" ng-class-odd="'odd'" ng-class-even="'even'" id="tr{{obj.id}}">
+						<td>
+							<div class="checkbox clip-check check-primary checkbox-inline">
+								<input id="checkbox{{obj.id}}" type="checkbox" ng-model="obj.selected" ng-click="changeSelection($index)" /> <label
+									for="checkbox{{obj.id}}" style="vertical-align: middle;"></label>
+							</div>
+						</td>
+						<td class="center">{{obj.deviceName}}</td>
+						<td class="center">{{obj.position}}</td>
+						<td class="center">{{obj.cysDeviceId}}</td>
+						<td class="center">{{obj.serialNumInDevice}}</td>
+						<td class="center">{{obj.ownerOpenid}}</td>
+						<td class="center">{{obj.masterName}}</td>
+						<td class="center">{{obj.masterPhoneNumber}}</td>
+						<td class="center">{{obj.familyPhoneNumber}}</td>
+						<td class="center">{{obj.auditable.dateCreated}}</td>
+						<td class="center">{{obj.familyName}}</td>
+						<td class="center">{{obj.relationToMe}}</td>
+						<td class="center">{{getItemName(obj.status,statusList)}}</td>
+					</tr>
+				</table>
+				<script type="text/ng-template" id="searchDeviceBound.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>查询条件</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										设备品牌
+									</label>
+									<div class="col-sm-9">
+										<select class="col-sm-12" ng-model="searchInfos.brand"
+												ng-options="brand.value as brand.name for brand in brandList">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										设备类型
+									</label>
+									<div class="col-sm-9">
+										<select class="col-sm-12" ng-model="searchInfos.type"
+												ng-options="type.value as type.name for type in typeList">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										橙医生二维码序列号
+									</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="searchInfos.cysDeviceId" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										设备SN
+									</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="searchInfos.serialNumInDevice" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										微信昵称
+									</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="searchInfos.masterName" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										用户手机号
+									</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="searchInfos.masterPhoneNumber" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										绑定家庭联系人关系
+									</label>
+									<div class="col-sm-9">
+										<select class="col-sm-12" ng-model="searchInfos.relationToMe"
+												ng-options="relation.value as relation.name for relation in relationList">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										是否注册用户
+									</label>
+									<div class="col-sm-9">
+										<select class="col-sm-12" ng-model="searchInfos.ownerType"
+												ng-options="ownerType.value as ownerType.name for ownerType in ownerTypes">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										绑定时间
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="createTimeStart" style="width: 130px;" ng-model="searchInfos.createTimeStart"
+											   onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'%y-%M-%d\'}',dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})" />
+										至
+										<input type="text" id="createTimeEnd" style="width: 130px;" ng-model="searchInfos.createTimeEnd"
+											   onFocus="WdatePicker({minDate:'#F{$dp.$D(\'createTimeStart\')}',maxDate:'%y-%M-%d',dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="statusId">
+										状态
+									</label>
+									<div class="col-sm-9">
+										<select class="col-sm-12" ng-model="searchInfos.status"
+												ng-options="status.value as status.name for status in statusList">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+

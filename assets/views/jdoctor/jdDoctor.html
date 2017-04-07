@@ -1,0 +1,1394 @@
+<style>
+.app-modal-window .modal-dialog {
+	width: 1000px;
+}
+.tags {
+	margin: 0;
+}
+
+input.checkbox_vertical {
+	vertical-align: -2px;
+	margin-right: 2px;
+	margin-left: 5px;
+}
+/*
+    解决新建文章对话框因为translate漂移过多导致对话框顶部显示不全(文章信息lable不可见)的问题
+    */
+.modal-dialog {
+	transform: translate(0, -5%) !important;
+}
+
+.float-textarea {
+	position: relative;
+	top: -22px;
+	right: 10px;
+	float: right;
+}
+
+.tag-item {
+	color: #31708f !important;
+	background: #d9edf7 !important;
+}
+
+.sickCategory-item {
+	width: 125px;
+	display: inline-block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+</style>
+<div class="container-fluid container-fullw bg-white"
+	ng-controller="DoctorParentCtrl">
+	<div class="row">
+		<div ng-controller="JdDoctorCtrl" class="col-md-12">
+			<button ng-click="edit()" type="button"
+				class="btn btn-wide btn-primary" style="min-width: 30px;">
+				新增 <i class="fa fa-plus"></i>
+			</button>
+			<button ng-click="update()" type="button"
+				class="btn btn-wide btn-warning" style="min-width: 30px;">
+				编辑 <i class="fa fa-edit"></i>
+			</button>
+			<button ng-click="deleteAll()" type="button"
+				class="btn btn-wide btn-danger" style="min-width: 30px;">
+				删除 <i class="fa fa-trash"></i>
+			</button>
+			<button ng-click="search()" type="button"
+				class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<p style="margin-top: 25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+				&nbsp;&nbsp;&nbsp;&nbsp; <strong>当天新增医生数:</strong>{{increaseCount}}
+			</p>
+			<div class="table-responsive">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+						<tr>
+							<th style="text-align: left; width: 6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox"
+										ng-click="selectAll()" /> <label for="selectAllCheckbox"
+										style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th>地区</th>
+							<th>医院</th>
+							<th>科室</th>
+							<th>职称</th>
+							<th>姓名</th>
+							<th>状态</th>
+							<th>总收入</th>
+							<th>录入时间</th>
+							<th>人气</th>
+							<th>是否开通申请放号</th>
+							<th>橙子号</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tr ng-repeat="jdDoctor in $data" ng-class-odd="'odd'"
+						ng-class-even="'even'" class="tr_doctor" id="tr{{jdDoctor.uuid}}"
+						ng-click="doctorSelectChange(jdDoctor.uuid)">
+						<td>
+							<div class="checkbox clip-check check-primary checkbox-inline">
+								<input id="checkbox{{jdDoctor.uuid}}" type="checkbox"
+									ng-model="jdDoctor.selected" ng-click="changeSelection($index)" />
+								<label for="checkbox{{jdDoctor.uuid}}"
+									style="vertical-align: middle;"></label>
+							</div>
+						</td>
+						<td class="center">{{displayDistrictName(jdDoctor.jdDistrictId)}}</td>
+						<!--<td class="center">{{displayHospitalName(jdDoctor.jdHospitalId)}}</td>-->
+						<td class="center">{{jdDoctor.hospital}}</td>
+						<td class="center">{{displayDepartmentName(jdDoctor.jdDepartmentId)}}</td>
+						<td class="center">{{displayTitleName(jdDoctor.jdTitleId)}}</td>
+						<td class="center">{{jdDoctor.name}}</td>
+						<td class="center">{{showDoctorAuditStatus(jdDoctor.status)}}</td>
+						<td class="center">{{jdDoctor.totalBalance}}</td>
+						<td class="center">{{displayCreateDate(jdDoctor.createDate)}}</td>
+						<td class="center">{{jdDoctor.popularity}}</td>
+						<td class="center">
+							<span ng-if="jdDoctor.applyPlus == true">是</span>
+							<span ng-if="jdDoctor.applyPlus == false">否</span>
+						</td>
+						<td class="center">{{jdDoctor.chengNum}}</td>
+						<td class="center">
+							<div class="visible-md visible-lg hidden-sm hidden-xs">
+								<a href="#" ng-click="edit(jdDoctor)"
+									class="btn btn-transparent btn-xs" tooltip-placement="top"
+									tooltip="编辑"><i class="fa fa-edit"></i></a> <a href="#"
+									ng-click="deleteItem(jdDoctor.uuid)"
+									class="btn btn-transparent btn-xs tooltips"
+									tooltip-placement="top" tooltip="删除"><i
+									class="fa fa-trash fa fa-white"></i></a>
+							</div>
+							<div class="visible-xs visible-sm hidden-md hidden-lg">
+								<div class="btn-group" dropdown is-open="status.isopen">
+									<button type="button"
+										class="btn btn-primary btn-o btn-sm dropdown-toggle"
+										dropdown-toggle>
+										<i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu pull-right dropdown-light" role="menu">
+										<li><a href="#" ng-click="edit(jdDoctor)">编辑</a></li>
+										<li><a href="#" ng-click="deleteItem(jdDoctor.uuid)">删除</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<script type="text/ng-template" id="searchJdDoctor.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>查询条件</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="createTimeStart">
+										时间
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="createTimeStart" style="width: 130px;" ng-model="searchInfos.createTimeStart"
+											   onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'%y-%M-%d\'}',dateFmt:'yyyy-MM-dd',readOnly:true})" />
+										至
+										<input type="text" id="createTimeEnd" style="width: 130px;" ng-model="searchInfos.createTimeEnd"
+											   onFocus="WdatePicker({minDate:'#F{$dp.$D(\'createTimeStart\')}',maxDate:'%y-%M-%d',dateFmt:'yyyy-MM-dd',readOnly:true})" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="districtId">
+										地区
+									</label>
+									<div class="col-sm-8">
+										<select id="districtId" class="col-sm-12" ng-model="searchInfos.districtId" ng-change="districtChange(searchInfos.districtId)"
+												ng-options="jdDistrict.uuid as jdDistrict.name for jdDistrict in jdDistricts">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="hospitalId">
+										医院
+									</label>
+									<div class="col-sm-8">
+										<input type="text" class="form-control" ng-change="changeKeyValue(searchField)" ng-model="searchField" style = 'display:block;width:200px' ng-click = 'hidden_search_doctor=!hidden_search_doctor' value="{{searchField}}"/></input>
+										<div ng-hide="hidden_search_doctor">
+											<select id="hospitalId" class="col-sm-12" ng-model="select_hospital"
+													style = 'width:200px' ng-change="changeHospital()" multiple
+													ng-options="data as data.name for data in datas">
+												<option value="">全部</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="departmentId">
+										科室
+									</label>
+									<div class="col-sm-8">
+										<select id="departmentId" class="col-sm-12" ng-model="searchInfos.departmentId"
+												ng-options="jdDepartment.uuid as jdDepartment.name for jdDepartment in jdDepartments">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="titleId">
+										职称
+									</label>
+									<div class="col-sm-8">
+										<select id="titleId" class="col-sm-12" ng-model="searchInfos.titleId"
+												ng-options="jdTitle.uuid as jdTitle.name for jdTitle in jdTitles">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="statusId">
+										状态
+									</label>
+									<div class="col-sm-8">
+										<select id="statusId" class="col-sm-12" ng-model="searchInfos.statusId"
+												ng-options="auditStatus.value as auditStatus.name for auditStatus in doctorAuditStatus">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="s_name">
+										姓名
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="s_name" class="form-control" ng-model="searchInfos.name" maxlength="21">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="s_phone">
+										联系电话
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="s_phone" class="form-control" ng-model="searchInfos.phoneNumber" maxlength="21">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" style="padding-top:13px;">
+										是否开通申请放号
+									</label>
+									<div class="col-sm-8">
+										<select id="applyPlus" class="col-sm-12" ng-model="searchInfos.applyPlus"
+												ng-options="boolStatus.value as boolStatus.name for boolStatus in cysBoolStatus">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+				<script type="text/ng-template" id="editJdDoctor.html">
+					<div class="modal-header">
+						<h5 class="modal-title">
+							<b>医生信息</b>
+						</h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body" style="padding: 0px;">
+							<tabset justified="true" class="tabbable"> <tab heading="基本信息">
+							<form role="form" class="form-horizontal">
+								<div class="edit-doc-image" flow-init="{singleFile:true,target:uploadUrl,testChunks:false}" flow-name="obj.flow"
+									flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]"
+									flow-file-success="uploadSuccess($file, $message)">
+									<div class="user-image doctor-image">
+										<div class="thumbnail">
+											<img src="assets/images/default-user.png" alt="" ng-if="!obj.flow.files.length && noImage"> <img
+												ng-src="{{jdDoctorInfo.headPic}}" alt="" ng-if="!obj.flow.files.length && !noImage"> <img
+												flow-img="obj.flow.files[0]" ng-if="obj.flow.files.length">
+										</div>
+										<div class="user-image-buttons" ng-if="obj.flow.files.length">
+											<span class="btn btn-primary" flow-btn><i class="fa fa-pencil"></i></span> <span class="btn btn-danger"
+												ng-click="obj.flow.cancel()"> <i class="fa fa-times"></i>
+											</span>
+										</div>
+										<div class="user-image-buttons" ng-if="!obj.flow.files.length">
+											<span class="btn btn-primary" flow-btn><i class="fa fa-pencil"></i></span> <span class="btn btn-danger"
+												ng-if="!noImage" ng-click="removeImage()"><i class="fa fa-times"></i></span>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="name"> 姓名 </label>
+									<div class="col-sm-8">
+										<input type="text" id="name" class="form-control" ng-model="jdDoctorInfo.name">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="jdDistrictId"> 地区 </label>
+									<div class="col-sm-8">
+										<select id="jdDistrictId" class="col-sm-12" ng-model="jdDoctorInfo.jdDistrictId"
+											ng-change="districtChange(jdDoctorInfo.jdDistrictId)"
+											ng-options="jdDistrict.uuid as jdDistrict.name for jdDistrict in jdDistricts">
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="jdHospitalId"> 医院 </label>
+									<div class="col-sm-8">
+										<select id="jdHospitalId" class="col-sm-12" ng-model="jdDoctorInfo.jdHospitalId"
+											ng-options="jdHospital.hospitalId as jdHospital.name for jdHospital in jdHospitals">
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="jdDepartmentId"> 科室 </label>
+									<div class="col-sm-8">
+										<select id="jdDepartmentId" class="col-sm-12" ng-model="jdDoctorInfo.jdDepartmentId"
+											ng-options="jdDepartment.uuid as jdDepartment.name for jdDepartment in jdDepartments">
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="jdTitleId"> 职称 </label>
+									<div class="col-sm-8">
+										<select id="jdTitleId" class="col-sm-12" ng-model="jdDoctorInfo.jdTitleId"
+											ng-options="jdTitle.uuid as jdTitle.name for jdTitle in jdTitles">
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="status"> 状态 </label>
+									<div class="col-sm-8">
+										<select id="status" class="col-sm-12" ng-model="jdDoctorInfo.status"
+											ng-options="auditStatu.value as auditStatu.name for auditStatu in auditStatus">
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="status"> 人气 </label>
+									<div class="col-sm-8">
+										<input type="text" id="popularity" class="form-control" ng-model="jdDoctorInfo.popularity">
+									</div>
+								</div>
+							</form>
+							</tab> <tab heading="扩展信息">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label vertical-middle-sm" for="seq"> 职称证明图片 </label>
+									<div class="thumbnail" style="height: 100%; border: 0px;">
+										<table>
+											<tr>
+												<td><img ng-click="open(jdDoctorInfo)" ng-src="{{jdDoctorInfo.certificateImage.split(';')[0]}}"
+													class="me-au-img pointer"></td>
+												<td><img ng-click="open(jdDoctorInfo)" ng-src="{{jdDoctorInfo.certificateImage.split(';')[1]}}"
+													class="me-au-img pointer"></td>
+												<td><img ng-click="open(jdDoctorInfo)" ng-src="{{jdDoctorInfo.certificateImage.split(';')[2]}}"
+													class="me-au-img pointer"></td>
+												<td><img ng-click="open(jdDoctorInfo)" ng-src="{{jdDoctorInfo.certificateImage.split(';')[3]}}"
+													class="me-au-img pointer"></td>
+											</tr>
+										</table>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="seq"> 排序序号 </label>
+									<div class="col-sm-8">
+										<input type="text" id="seq" class="form-control" ng-model="jdDoctorInfo.seq" maxlength="5">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" style="padding-top: 13px;"> 性别 </label>
+									<div class="col-sm-8">
+										<div class="radio clip-radio radio-primary radio-inline">
+											<input type="radio" id="male" ng-model="jdDoctorInfo.gender" value="m"> <label for="male">男</label>
+										</div>
+										<div class="radio clip-radio radio-primary radio-inline">
+											<input type="radio" id="female" ng-model="jdDoctorInfo.gender" value="f"> <label for="female">女</label>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="certificateNumber"> 执业证号 </label>
+									<div class="col-sm-8">
+										<input type="text" id="certificateNumber" class="form-control" ng-model="jdDoctorInfo.certificateNumber"
+											maxlength="50">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="startDateStr"> 从业时间 </label>
+									<div class="col-sm-8">
+										<input type="text" id="startDateStr" class="form-control" ng-model="jdDoctorInfo.startDateStr"
+											onClick="WdatePicker({maxDate:'%y-%M-%d',dateFmt:'yyyy-MM',readOnly:true})">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="officePhoneNumber"> 联系电话 </label>
+									<div class="col-sm-8">
+										<input type="text" id="officePhoneNumber" class="form-control" ng-model="jdDoctorInfo.officePhoneNumber"
+											maxlength="21">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="bdName"> BD人员姓名 </label>
+									<div class="col-sm-8">
+										<input type="text" id="bdName" class="form-control" ng-model="jdDoctorInfo.bdName" maxlength="21">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="bdPhoneNumber"> BD人员手机 </label>
+									<div class="col-sm-8">
+										<input type="text" id="bdPhoneNumber" class="form-control" ng-model="jdDoctorInfo.bdPhoneNumber"
+											maxlength="21">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="description"> 简介 </label>
+									<div class="col-sm-8">
+										<textarea id="description" rows="10" ng-model="jdDoctorInfo.description" class="form-control" maxlength="500"></textarea>
+										<span id="description-remainWord" class="float-textarea">0/500</span>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label"> 擅长 </label>
+									<div class="col-sm-8">
+										<textarea id="expertise" rows="4" ng-model="jdDoctorInfo.expertise" class="form-control" maxlength="200"></textarea>
+										<span id="expertise-remainWord" class="float-textarea">0/200</span>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="skill"> 出诊疾病 </label>
+									<div class="col-sm-8">
+										<div class="panel-group" style="margin-top: 8px">
+											<span style="font-size: 13px">已选:</span>
+											<tags-input on-tag-removed="removeTag($tag)" ng-model="jdDoctorInfo.selectedSickCategoryList"
+												display-property="name" key-property="uuid" add-from-autocomplete-only="true" placeholder="请勾选下方疾病大类"></tags-input>
+
+											<div ng-repeat="sickType in doctorSkills.sickCategoryTypeSet" class="panel panel-info">
+												<div class="panel-heading" ng-click="panelClick($event)">
+													<i class="fa fa-angle-down"></i> {{sickType}}
+												</div>
+												<div class="panel-body">
+
+													<span title="{{sickCategory.name}}" ng-repeat="sickCategory in doctorSkills.sickCategoryMap[sickType]" class="sickCategory-item"> <input type="checkbox"
+														ng-checked="{{sickCategory.selected}}" value="{{sickCategory.uuid}}" class="checkbox_vertical"
+														ng-click="checkSickCategory(this,$event)" />{{sickCategory.name}}
+													</span>
+												</div>
+											</div>
+
+										</div>
+
+
+
+
+									</div>
+								</div>
+							</form>
+							</tab> <tab heading="金额信息">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="recommandCode"> 邀请码 </label>
+									<div class="col-sm-8">
+										<input type="text" id="recommandCode" class="form-control" ng-model="jdDoctorInfo.recommandCode"
+											maxlength="15" disabled="disabled">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="totalBalance"> 总收入 </label>
+									<div class="col-sm-8">
+										<input type="text" id="totalBalance" class="form-control" ng-model="jdDoctorInfo.totalBalance"
+											disabled="disabled">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="accountBalance"> 余额 </label>
+									<div class="col-sm-8">
+										<input type="text" id="accountBalance" class="form-control" ng-model="jdDoctorInfo.accountBalance"
+											disabled="disabled">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="subsidy"> 补贴限额 </label>
+									<div class="col-sm-8">
+										<input type="text" id="subsidy" class="form-control" ng-model="jdDoctorInfo.subsidy">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="deposit"> 保证金 </label>
+									<div class="col-sm-8">
+										<input type="text" id="deposit" class="form-control" ng-model="jdDoctorInfo.deposit">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="freeCount"> 每天补贴号数 </label>
+									<div class="col-sm-8">
+										<input type="text" id="freeCount" class="form-control" ng-model="jdDoctorInfo.freeCount"> (小于0表示不限制)
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" style="padding-top:13px;">
+										开通申请放号
+									</label>
+									<div class="col-sm-8">
+										<div class="radio clip-radio radio-primary radio-inline">
+											<input type="radio" id="yesApplyPlus" ng-model="jdDoctorInfo.applyPlus" value="true">
+											<label for="yesApplyPlus">是</label>
+										</div>
+										<div class="radio clip-radio radio-primary radio-inline">
+											<input type="radio" id="noApplyPlus" ng-model="jdDoctorInfo.applyPlus" value="false">
+											<label for="noApplyPlus">否</label>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="operationAmount"> 手术预约金额 </label>
+									<div class="col-sm-8">
+										<input type="text" id="operationAmount" class="form-control" ng-model="jdDoctorInfo.operationAmount">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="operationName"> 单病种手术种类名称 </label>
+									<div class="col-sm-8">
+										<input type="text" id="operationName" class="form-control" ng-model="jdDoctorInfo.operationName">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="operationNumber"> 最近手术数量 </label>
+									<div class="col-sm-8">
+										<input type="text" id="operationNumber" class="form-control" ng-model="jdDoctorInfo.operationNumber">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="operationDay"> 平均住院天数 </label>
+									<div class="col-sm-8">
+										<input type="text" id="operationDay" class="form-control" ng-model="jdDoctorInfo.operationDay">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="operationAverageFee"> 手术平均费用 </label>
+									<div class="col-sm-8">
+										<input type="text" id="operationAverageFee" class="form-control" ng-model="jdDoctorInfo.operationAverageFee">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="complicationNumber"> 术后并发症数 </label>
+									<div class="col-sm-8">
+										<input type="text" id="complicationNumber" class="form-control" ng-model="jdDoctorInfo.complicationNumber">
+									</div>
+								</div>
+							</form>
+							</tab> <tab heading="个人二维码">
+							<form role="form" class="form-horizontal">
+								<div class="thumbnail aidee-medical-img center">
+									<div>
+										<img ng-src="{{jdDoctorInfo.qrCodeImageUrl}}" class="me-re-img" alt="暂未生成">
+									</div>
+								</div>
+							</form>
+							</tab> </tabset>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+					</script>
+				<script type="text/ng-template" id="certificateImages.html">
+					<div class="modal-body center">
+						<table>
+							<tr>
+								<td>
+									<img ng-if="jdDoctorInfo.certificateImage.split(';')[0].length==0" ng-src="assets/images/noPicture.jpg" class="me-au-ximg">
+									<img ng-if="jdDoctorInfo.certificateImage.split(';')[0].length>0" ng-src="{{jdDoctorInfo.certificateImage.split(';')[0]}}" class="me-au-ximg">
+								</td>
+								<td>
+									<img ng-if="jdDoctorInfo.certificateImage.split(';')[1].length==0" ng-src="assets/images/noPicture.jpg" class="me-au-ximg">
+									<img ng-if="jdDoctorInfo.certificateImage.split(';')[1].length>0" ng-src="{{jdDoctorInfo.certificateImage.split(';')[1]}}" class="me-au-ximg">
+								</td>
+								<td>
+									<img ng-if="jdDoctorInfo.certificateImage.split(';')[2].length==0" ng-src="assets/images/noPicture.jpg" class="me-au-ximg">
+									<img ng-if="jdDoctorInfo.certificateImage.split(';')[2].length>0" ng-src="{{jdDoctorInfo.certificateImage.split(';')[2]}}" class="me-au-ximg">
+								</td>
+								<td>
+									<img ng-if="jdDoctorInfo.certificateImage.split(';')[3].length==0" ng-src="assets/images/noPicture.jpg" class="me-au-ximg">
+									<img ng-if="jdDoctorInfo.certificateImage.split(';')[3].length>0" ng-src="{{jdDoctorInfo.certificateImage.split(';')[3]}}" class="me-au-ximg">
+								</td>
+							</tr>
+						</table>
+						<div class="center">
+							<button class="btn btn-primary" ng-click="cancel()">关闭</button>
+						</div>
+					</div>
+				</script>
+			</div>
+		</div>
+	</div>
+	<tabset class="tabbable" style="margin-top:20px"> <tab
+		heading="订单历史" ng-controller="DoctorOrderHistoryCtrl">
+	<button id="btn_ALL" ng-click="statusChange('ALL')" type="button"
+		class="btn btn-wide btn-primary active" style="min-width: 25px;">
+		全部</button>
+	<button id="btn_WAIT" ng-click="statusChange('WAIT')" type="button"
+		class="btn btn-wide btn-default active" style="min-width: 25px;">
+		待出诊</button>
+	<button id="btn_FINISH" ng-click="statusChange('FINISH')" type="button"
+		class="btn btn-wide btn-default active" style="min-width: 25px;">
+		已出诊</button>
+	<div class="table-responsive" style="margin-top: 15px;">
+		<table ng-table="tableParams" class="table table-hover">
+			<thead>
+				<tr>
+					<th>订单号</th>
+					<th>患者姓名</th>
+					<th>联系电话</th>
+					<th>年龄</th>
+					<th>订单状态</th>
+					<th>病情描述</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="order in $data" ng-class-odd="'odd'"
+				ng-class-even="'even'">
+				<td class="center">{{order.orderNumber}}</td>
+				<td class="center">{{order.name}}</td>
+				<td class="center">{{order.phoneNumber}}</td>
+				<td class="center">{{order.age}}</td>
+				<td class="center">{{showOrderStatus(order.status)}}</td>
+				<td class="center" ng-if="order.sickDescription.length>10"
+					title="{{order.sickDescription}}">{{order.sickDescription |
+					limitTo:10}}...</td>
+				<td class="center" ng-if="order.sickDescription.length<=10">
+					{{order.sickDescription}}</td>
+				<td class="center">
+					<div class="visible-md visible-lg hidden-sm hidden-xs">
+						<a href="#" ng-click="edit(order)"
+							class="btn btn-transparent btn-xs" tooltip-placement="top"
+							tooltip="编辑"><i class="fa fa-edit"></i></a>
+					</div>
+					<div class="visible-xs visaoible-sm hidden-md hidden-lg">
+						<div class="btn-group" dropdown is-open="status.isopen">
+							<button type="button"
+								class="btn btn-primary btn-o btn-sm dropdown-toggle"
+								dropdown-toggle>
+								<i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu pull-right dropdown-light" role="menu">
+								<li><a href="#" ng-click="edit(order)">编辑</a></li>
+							</ul>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<script type="text/ng-template" id="editOrder.html">
+				<div class="modal-header" >
+					<h5 class="modal-title"><b>订单信息</b></h5>
+				</div>
+				<div class="modal-body" >
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-6">
+									订单号：{{jdOrderInfo.orderNumber}}
+								</label>
+								<label class="col-sm-6">
+									患者姓名：{{jdOrderInfo.name}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-6">
+									联系电话：{{jdOrderInfo.phoneNumber}}
+								</label>
+								<label class="col-sm-6">
+									年龄：{{jdOrderInfo.age}}
+								</label>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									病情描述：{{jdOrderInfo.sickDescription}}
+								</label>
+							</div>
+							<div class="form-group" ng-if="jdOrder.status!='WAITTO_DIAGNOSE' && jdOrder.status!='WAITTO_CONFIRM'">
+								<label class="col-sm-12">
+									状态：{{showOrderStatus(jdOrderInfo.status)}}
+								</label>
+							</div>
+							<div class="form-group" ng-if="jdOrder.status=='WAITTO_DIAGNOSE' || jdOrder.status=='WAITTO_CONFIRM'">
+								<label class="col-sm-2" for="order_status">
+									状态：
+								</label>
+								<div class="col-sm-4">
+									<select id="order_status" class="col-sm-12" ng-model="jdOrderInfo.status"
+											ng-options="status.value as status.name for status in orderStatus">
+									</select>
+								</div>
+							</div>
+                            <div class="form-group">
+									<label class="col-sm-2"  style="margin-right:0px;">
+										诊断结果:
+									</label>
+										<select id="diagnosis" class="col-sm-7"  style="padding-left:0px;" ng-model="jdOrderInfo.diagnosis"
+                                             ng-options="diagnosis for diagnosis in allDiagnosiss">											
+										</select>
+									
+								</div>
+                            <div class="form-group">
+								<label class="col-sm-2 text-left " for="scene" style="margin-right:0px;">
+									诊断为：
+								</label>
+								 <div class="col-sm-6" style="padding-left: 0px;">
+									<ui-select id="scene" multiple tagging tagging-label=" 从列表选择" ng-model="data.selectedSicks" theme="bootstrap" >
+										<ui-select-match placeholder="下拉或右侧按钮选择疾病">
+											{{$item.name}}
+										</ui-select-match>
+										<ui-select-choices repeat="sick in data.allSickList | propsFilter: {name: $select.search}">
+                                            <small><span ng-bind-html="''+sick.name | highlight: $select.search"></span> </small>									
+                                        </ui-select-choices>
+									</ui-select>
+								</div>
+                               <div class="col-sm-3">
+                                        <button ng-click="selectSick()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+                                                                                                        选择疾病<i class="fa fa-plus"></i>
+                                        </button>
+                               </div>
+                             </div>
+                             <div class="form-group">
+								<label class="col-sm-2">
+									疾病备注：
+								</label>
+                                     <textarea class="col-sm-5"  name="sickRemark" ng-model="jdOrderInfo.sickRemark" ></textarea>
+							</div>
+                         </div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-if="jdOrder.status=='WAITTO_DIAGNOSE' || jdOrder.status=='WAITTO_CONFIRM'" ng-click="ok($event)">确定</button>
+				</div>
+			</script>
+			<script type="text/ng-template" id="selectSick.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>ICD疾病选择</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                <div class="col-md-11">
+                                    <label class="col-sm-2">名称</label>
+                                    <input class="col-sm-6" type="text" ng-model="searchInfo.name" placeholder="输入疾病名搜索">
+                                    </input>
+                                </div>
+                                <div style="clear: both"/>
+                                <div class="table-responsive" style="margin-top:25px;">
+                                    <table ng-table="tableParams" class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th></th>
+                                           <th>疾病编码</th>
+                                           <th>ICD疾病名称</th>
+                                        </tr>
+                                        </thead>
+                                        <tr ng-repeat="sick in data" ng-class-odd="'odd'" ng-class-even="'even'">
+                                            <td>
+                                                <div class="checkbox clip-check check-primary checkbox-inline">
+                                                    <input id="checkbox{{sick.uuid}}" type="checkbox" ng-model="sick.selected" ng-click="changeSelection($index)"/>
+                                                    <label for="checkbox{{sick.uuid}}" style="vertical-align: middle;"></label>
+                                                </div>
+                                            </td>
+                                            <td class="center">{{sick.code}}</td>
+                                            <td class="center">{{sick.name}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div style="clear: both"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="clear($event)">清除</button>
+                        <button class="btn btn-primary" ng-click="query()">查询</button>
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+             </script>
+			
+			 </tab> <tab heading="患者库" ng-controller="DoctorPatientDbCtrl">
+	<table ng-table="tableParams" class="table table-hover">
+		<thead>
+			<tr>
+				<th>地区</th>
+				<th>姓名</th>
+				<th>手机号码</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tr ng-repeat="jdPatient in $data" ng-class-odd="'odd'"
+			ng-class-even="'even'" class="tr_patient" id="tr{{jdPatient.uuid}}"
+			ng-click="loadOrderHistory(jdPatient.uuid)">
+			<td class="center">{{jdPatient.district}}</td>
+			<td class="center">{{jdPatient.name}}</td>
+			<td class="center">{{jdPatient.phoneNumber}}</td>
+			<td class="center">
+				<div class="visible-md visible-lg hidden-sm hidden-xs">
+					<a href="#" ng-click="showDetail(jdPatient.uuid)"
+						class="btn btn-transparent btn-xs" tooltip-placement="top"
+						tooltip="出诊历史"><i class="fa fa-search"></i></a>
+				</div>
+				<div class="visible-xs visaoible-sm hidden-md hidden-lg">
+					<div class="btn-group" dropdown is-open="status.isopen">
+						<button type="button"
+							class="btn btn-primary btn-o btn-sm dropdown-toggle"
+							dropdown-toggle>
+							<i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu pull-right dropdown-light" role="menu">
+							<li><a href="#" ng-click="showDetail(jdPatient.uuid)">出诊历史</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+	<script type="text/ng-template" id="patientDbOrderHistory.html">
+				<div class="modal-header">
+					<h5 class="modal-title"><b>出诊历史</b></h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<table ng-table="tableParams" class="table table-hover">
+							<thead>
+							<tr>
+								<th>订单号</th>
+								<th>患者姓名</th>
+								<th>联系电话</th>
+								<th>年龄</th>
+								<th>订单状态</th>
+								<th>病情描述</th>
+							</tr>
+							</thead>
+							<tr ng-repeat="order in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+								<td class="center">{{order.orderNumber}}</td>
+								<td class="center">{{order.name}}</td>
+								<td class="center">{{order.phoneNumber}}</td>
+								<td class="center">{{order.age}}</td>
+								<td class="center">
+									{{showOrderStatus(order.status)}}
+								</td>
+								<td class="center" ng-if="order.sickDescription.length>10" title="{{order.sickDescription}}">
+									{{order.sickDescription | limitTo:10}}...
+								</td>
+								<td class="center" ng-if="order.sickDescription.length<=10">
+									{{order.sickDescription}}
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="cancel($event)">关闭</button>
+				</div>
+			</script> </tab> <tab heading="发展用户" ng-controller="DoctorOfflineCtrl">
+	<button ng-click="exportOffline()" type="button"
+		class="btn btn-wide btn-primary" style="min-width: 30px;">
+		导出Excel <i class="fa fa-download"></i>
+	</button>
+	<p style="margin-top: 5px;">
+		<strong>总记录数:</strong> {{offlineTableParams.total()}}
+	</p>
+	<div class="table-responsive">
+		<table ng-table="offlineTableParams" class="table table-hover">
+			<thead>
+				<tr>
+					<th>城市</th>
+					<th>手机号码</th>
+					<th>微信名</th>
+					<th>注册时间</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="offline in $data" ng-class-odd="'odd'"
+				ng-class-even="'even'">
+				<td class="center">{{offline.location}}</td>
+				<td class="center">{{offline.phoneNumber}}</td>
+				<td class="center">{{offline.name}}</td>
+				<td class="center">{{offline.createDate}}</td>
+			</tr>
+		</table>
+	</div>
+	</tab> <tab heading="地址信息" ng-controller="DoctorAddressCtrl">
+	<button ng-click="edit()" type="button"
+		class="btn btn-wide btn-primary" style="min-width: 30px;">
+		新增 <i class="fa fa-plus"></i>
+	</button>
+	<p style="margin-top: 5px;">
+		<strong>总记录数:</strong> {{tableParams.total()}}
+	</p>
+	<div class="table-responsive">
+		<table ng-table="tableParams" class="table table-hover">
+			<thead>
+				<tr>
+					<th width="40%">就诊地址</th>
+					<th width="30%">交通指导</th>
+					<th width="10%">诊室</th>
+					<th width="5%">是否默认</th>
+					<th width="5%">操作</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="addressItem in $data" ng-class-odd="'odd'"
+				ng-class-even="'even'">
+				<td class="center" title="{{addressItem.address}}"><span
+					ng-if="addressItem.address!=null||addressItem.address.length<=25">{{addressItem.address}}</span>
+					<span
+					ng-if="addressItem.address!=null&&addressItem.address.length>25">{{addressItem.address
+						| limitTo:25}}...</span></td>
+				<td class="center" title="{{addressItem.trafficGuide}}"><span
+					ng-if="addressItem.trafficGuide==null||addressItem.trafficGuide.length<=225">{{addressItem.trafficGuide}}</span>
+					<span
+					ng-if="addressItem.address!=null&&addressItem.trafficGuide.length>25">{{addressItem.trafficGuide
+						| limitTo:25}}...</span></td>
+				<td class="center">{{addressItem.room}}</td>
+				<td class="center">
+					{{addressItem.isDefault==null?"否":addressItem.isDefault==true?"是":"否"}}
+				</td>
+				<td class="center">
+					<div class="visible-md visible-lg hidden-sm hidden-xs">
+						<a href="#" ng-click="edit(addressItem)"
+							class="btn btn-transparent btn-xs" tooltip-placement="top"
+							tooltip="编辑"><i class="fa fa-edit"></i></a> <a href="#"
+							ng-click="deleteItem(addressItem.uuid)"
+							class="btn btn-transparent btn-xs tooltips"
+							tooltip-placement="top" tooltip="删除"><i
+							class="fa fa-trash fa fa-white"></i></a>
+					</div>
+					<div class="visible-xs visible-sm hidden-md hidden-lg">
+						<div class="btn-group" dropdown is-open="status.isopen">
+							<button type="button"
+								class="btn btn-primary btn-o btn-sm dropdown-toggle"
+								dropdown-toggle>
+								<i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu pull-right dropdown-light" role="menu">
+								<li><a href="#" ng-click="edit(addressItem)">编辑</a></li>
+								<li><a href="#" ng-click="deleteItem(addressItem.uuid)">删除</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<script type="text/ng-template" id="editAddress.html">
+				<div class="modal-header">
+					<h5 class="modal-title"><b>地址信息</b></h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label" style="padding-top:13px;">
+									是否默认
+								</label>
+								<div class="col-sm-8">
+									<div class="radio clip-radio radio-primary radio-inline">
+										<input type="radio" id="yes" ng-model="address.isDefault" value="true">
+										<label for="yes">是</label>
+									</div>
+									<div class="radio clip-radio radio-primary radio-inline">
+										<input type="radio" id="no" ng-model="address.isDefault" value="false">
+										<label for="no">否</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="address">
+									就诊地址
+								</label>
+								<div class="col-sm-8">
+									<textarea id="address" rows="2" ng-model="address.address" class="form-control" maxlength="500"></textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="address">
+									诊室
+								</label>
+								<div class="col-sm-8">
+									<textarea id="room" rows="2" ng-model="address.room" class="form-control" maxlength="500"></textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="trafficGuide">
+									交通指导
+								</label>
+								<div class="col-sm-8">
+									<textarea id="trafficGuide" rows="10" ng-model="address.trafficGuide" class="form-control" maxlength="500"></textarea>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+				</div>
+			</script> </tab> <tab heading="银行卡信息" ng-controller="DoctorBankCardCtrl">
+	<button ng-click="edit()" type="button"
+		class="btn btn-wide btn-primary" style="min-width: 30px;">
+		新增 <i class="fa fa-plus"></i>
+	</button>
+	<p style="margin-top: 5px;">
+		<strong>总记录数:</strong> {{tableParams.total()}}
+	</p>
+	<div class="table-responsive" style="margin-top: 15px;">
+		<table ng-table="tableParams" class="table table-hover">
+			<thead>
+				<tr>
+					<th>开户银行</th>
+					<th>所属支行</th>
+					<th>银行卡号</th>
+					<th>持卡人姓名</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="bankCard in $data" ng-class-odd="'odd'"
+				ng-class-even="'even'">
+				<td class="center">{{bankCard.bankName}}</td>
+				<td class="center">{{bankCard.subBranch}}</td>
+				<td class="center">{{bankCard.receiptAccount}}</td>
+				<td class="center">{{bankCard.receiptName}}</td>
+				<td class="center">
+					<div class="visible-md visible-lg hidden-sm hidden-xs">
+						<a href="#" ng-click="edit(bankCard)"
+							class="btn btn-transparent btn-xs" tooltip-placement="top"
+							tooltip="编辑"><i class="fa fa-edit"></i></a> <a href="#"
+							ng-click="deleteItem(bankCard.uuid)"
+							class="btn btn-transparent btn-xs tooltips"
+							tooltip-placement="top" tooltip="删除"><i
+							class="fa fa-trash fa fa-white"></i></a>
+					</div>
+					<div class="visible-xs visible-sm hidden-md hidden-lg">
+						<div class="btn-group" dropdown is-open="status.isopen">
+							<button type="button"
+								class="btn btn-primary btn-o btn-sm dropdown-toggle"
+								dropdown-toggle>
+								<i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu pull-right dropdown-light" role="menu">
+								<li><a href="#" ng-click="edit(bankCard)">编辑</a></li>
+								<li><a href="#" ng-click="deleteItem(bankCard.uuid)">删除</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<script type="text/ng-template" id="editBankCard.html">
+				<div class="modal-header">
+					<h5 class="modal-title"><b>银行卡信息</b></h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="bankName">
+									开户银行
+								</label>
+								<div class="col-sm-8">
+									<select id="bankName" ng-model="bankCard.bankName" class="col-sm-12">
+										<option value="工商银行">工商银行</option>
+										<option value="中国银行">中国银行</option>
+										<option value="建设银行">建设银行</option>
+										<option value="农业银行">农业银行</option>
+										<option value="交通银行">交通银行</option>
+										<option value="招商银行">招商银行</option>
+										<option value="民生银行">民生银行</option>
+										<option value="光大银行">光大银行</option>
+										<option value="华夏银行">华夏银行</option>
+										<option value="中信银行">中信银行</option>
+										<option value="北京银行">北京银行</option>
+										<option value="上海银行">上海银行</option>
+										<option value="浦发银行">浦发银行</option>
+										<option value="中国邮政储蓄银行">中国邮政储蓄银行</option>
+										<option value="广发银行">广发银行</option>
+										<option value="南京银行">南京银行</option>
+										<option value="杭州银行">杭州银行</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="subBranch">
+									所属支行
+								</label>
+								<div class="col-sm-8">
+									<input type="text" id="subBranch" class="form-control" ng-model="bankCard.subBranch" maxlength="30">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="receiptAccount">
+									银行卡号
+								</label>
+								<div class="col-sm-8">
+									<input type="text" id="receiptAccount" class="form-control" ng-model="bankCard.receiptAccount" maxlength="30">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="receiptName">
+									持卡人姓名
+								</label>
+								<div class="col-sm-8">
+									<input type="text" id="receiptName" class="form-control" ng-model="bankCard.receiptName" maxlength="30">
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+				</div>
+			</script> </tab> <tab heading="见面咨询诊金设置" ng-controller="DoctorFeeCtrl">
+	<button ng-click="edit()" type="button"
+		class="btn btn-wide btn-primary" style="min-width: 30px;">
+		新增 <i class="fa fa-plus"></i>
+	</button>
+	<p style="margin-top: 5px;">
+		<strong>总记录数:</strong> {{tableParams.total()}}
+	</p>
+	<div class="table-responsive" style="margin-top: 15px;">
+		<table ng-table="tableParams" class="table table-hover">
+			<thead>
+				<tr>
+					<th>金额</th>
+					<th>是否默认</th>
+					<th>39渠道诊金</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="doctorFee in $data" ng-class-odd="'odd'"
+				ng-class-even="'even'">
+				<td class="center">{{doctorFee.fee}}</td>
+				<td class="center">
+					{{doctorFee.isDefault==null?"否":doctorFee.isDefault==true?"是":"否"}}
+				</td>
+				<td class="center">{{doctorFee.sanjiuFee}}</td>
+				<td class="center">
+					<div class="visible-md visible-lg hidden-sm hidden-xs">
+						<a href="#" ng-click="edit(doctorFee)"
+							class="btn btn-transparent btn-xs" tooltip-placement="top"
+							tooltip="编辑"><i class="fa fa-edit"></i></a> <a href="#"
+							ng-click="deleteItem(doctorFee)"
+							class="btn btn-transparent btn-xs tooltips"
+							tooltip-placement="top" tooltip="删除"><i
+							class="fa fa-trash fa fa-white"></i></a>
+					</div>
+					<div class="visible-xs visible-sm hidden-md hidden-lg">
+						<div class="btn-group" dropdown is-open="status.isopen">
+							<button type="button"
+								class="btn btn-primary btn-o btn-sm dropdown-toggle"
+								dropdown-toggle>
+								<i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu pull-right dropdown-light" role="menu">
+								<li><a href="#" ng-click="edit(doctorFee)">编辑</a></li>
+								<li><a href="#" ng-click="deleteItem(doctorFee)">删除</a></li>
+							</ul>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<script type="text/ng-template" id="editDoctorFee.html">
+				<div class="modal-header">
+					<h5 class="modal-title"><b>诊金信息</b></h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="fee">
+									诊金
+								</label>
+								<div class="col-sm-8">
+									<input type="text" id="fee" class="form-control" ng-model="doctorFee.fee" maxlength="4">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="sanjiuFee">
+									39渠道诊金
+								</label>
+								<div class="col-sm-8">
+									<input type="text" id="sanjiuFee" class="form-control" ng-model="doctorFee.sanjiuFee" maxlength="4">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" style="padding-top:13px;">
+									是否默认
+								</label>
+								<div class="col-sm-8">
+									<div class="radio clip-radio radio-primary radio-inline">
+										<input type="radio" id="fee_yes" ng-model="doctorFee.isDefault" value="true">
+										<label for="fee_yes">是</label>
+									</div>
+									<div class="radio clip-radio radio-primary radio-inline">
+										<input type="radio" id="fee_no" ng-model="doctorFee.isDefault" value="false">
+										<label for="fee_no">否</label>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+				</div>
+			</script> </tab> <tab heading="服务设置" ng-controller="DoctorServiceCtrl">
+	<p style="margin-top: 5px;">
+		<strong>总记录数:</strong> {{tableParams.total()}}
+	</p>
+	<div class="table-responsive" style="margin-top: 15px;">
+		<table ng-table="tableParams" class="table table-hover">
+			<thead>
+				<tr>
+					<th>服务类型</th>
+					<th>状态</th>
+					<th>服务价格</th>
+					<th>免费咨询天数</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="doctorService in $data" ng-class-odd="'odd'"
+				ng-class-even="'even'">
+				<td class="center">{{doctorService.serviceDesc}}</td>
+				<td class="center">{{doctorService.statusDesc}}</td>
+
+				<td class="center">{{doctorService.price < 0 ? '未设置' :
+					doctorService.price}}</td>
+				<td class="center">{{doctorService.freePeriod < 0 ? '永久' :
+					doctorService.freePeriod}}</td>
+				<td class="center">
+					<div class="visible-md visible-lg hidden-sm hidden-xs">
+						<a href="#" ng-click="edit(doctorService)"
+							class="btn btn-transparent btn-xs" tooltip-placement="top"
+							tooltip="编辑"><i class="fa fa-edit"></i></a>
+					</div>
+					<div class="visible-xs visible-sm hidden-md hidden-lg">
+						<div class="btn-group" dropdown is-open="status.isopen">
+							<button type="button"
+								class="btn btn-primary btn-o btn-sm dropdown-toggle"
+								dropdown-toggle>
+								<i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu pull-right dropdown-light" role="menu">
+								<li><a href="#" ng-click="edit(doctorService)">编辑</a></li>
+
+							</ul>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<script type="text/ng-template" id="editDoctorService.html">
+				<div class="modal-header">
+					<h5 class="modal-title"><b>服务设置</b></h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="serviceDesc">
+									服务类型
+								</label>
+								<div class="col-sm-8">
+									<input type="text" readonly="readonly" id="desc" class="form-control" ng-model="doctorService.serviceDesc" maxlength="4">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="price">
+									服务价格
+								</label>
+								<div class="col-sm-8">
+									<input type="text"  id="price" class="form-control" ng-model="doctorService.price" maxlength="4">
+								</div>
+							</div>
+
+							<div class="form-group" ng-if="doctorService.serviceDesc=='图文咨询'" >
+								<label class="col-sm-3 control-label" for="price" >
+									免费咨询期
+								</label>
+								<div class="col-sm-8">
+									<select id="freePeriod" ng-model="doctorService.freePeriod" class="col-sm-12">
+										<option value="0">0天</option>
+										<option value="1">1天</option>
+										<option value="7">7天</option>
+										<option value="30">30天</option>
+										<option value="-1">永久</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" style="padding-top:13px;">
+									状态
+								</label>
+								<div class="col-sm-8">
+									<div class="radio clip-radio radio-primary radio-inline">
+										<input type="radio" id="on" ng-model="doctorService.status" value="1">
+										<label for="on">开通</label>
+									</div>
+									<div class="radio clip-radio radio-primary radio-inline">
+										<input type="radio" id="off" ng-model="doctorService.status" value="0">
+										<label for="off">关闭</label>
+									</div>
+
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+				</div>
+			</script> </tab> <tab heading="保险设置" ng-controller="DoctorInsuranceCtrl">
+	<p style="margin-top: 5px;">
+		<strong>总记录数:</strong> {{tableParams.total()}}
+	</p>
+	<div class="table-responsive" style="margin-top: 15px;">
+		<table ng-table="tableParams" class="table table-hover">
+			<thead>
+				<tr>
+					<th>产品名称</th>
+					<th>保险提供商</th>
+					<th>状态</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="doctorInsurance in $data" ng-class-odd="'odd'"
+				ng-class-even="'even'">
+				<td class="center">{{doctorInsurance.name}}</td>
+				<td class="center">{{doctorInsurance.vendor}}</td>
+				<td class="center">{{doctorInsurance.status == 1 ? '提供' : '不提供'}}</td>
+				<td class="center">
+					<div class="visible-md visible-lg hidden-sm hidden-xs">
+						<a href="#" ng-click="edit(doctorInsurance)"
+							class="btn btn-transparent btn-xs" tooltip-placement="top"
+							tooltip="编辑"><i class="fa fa-edit"></i></a>
+					</div>
+					<div class="visible-xs visible-sm hidden-md hidden-lg">
+						<div class="btn-group" dropdown is-open="status">
+							<button type="button"
+								class="btn btn-primary btn-o btn-sm dropdown-toggle"
+								dropdown-toggle>
+								<i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu pull-right dropdown-light" role="menu">
+								<li><a href="#" ng-click="edit(doctorInsurance)">编辑</a></li>
+							</ul>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<script type="text/ng-template" id="editDoctorInsurance.html">
+				<div class="modal-header">
+					<h5 class="modal-title"><b>保险设置 -{{doctorInsurance.name}}</b></h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<div class="col-sm-8">
+									<div class="radio clip-radio radio-primary radio-inline">
+										<input type="radio" id="on" ng-model="doctorInsurance.status" value="1">
+										<label for="on">提供</label>
+									</div>
+									<div class="radio clip-radio radio-primary radio-inline">
+										<input type="radio" id="off" ng-model="doctorInsurance.status" value="0">
+										<label for="off">不提供</label>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+				</div>
+			</script> </tab> </tabset>
+</div>

@@ -1,0 +1,106 @@
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div ng-controller="JdDistrictCtrl" class="col-md-12">
+        	<button ng-click="edit()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+				新增 <i class="fa fa-plus"></i>
+			</button>
+			<button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
+				编辑 <i class="fa fa-edit"></i>
+			</button>
+			<button ng-click="deleteAll()" type="button" class="btn btn-wide btn-danger" style="min-width: 30px;">
+				删除 <i class="fa fa-trash"></i>
+			</button>
+			<p style="margin-top:25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                	<thead>
+						<tr>
+							<th style="text-align:left;width:6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()"/>
+									<label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th>地区名称</th>
+							<th>是否显示</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+                    <tr ng-repeat="jdDistrict in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                    	<td>
+                    		<div class="checkbox clip-check check-primary checkbox-inline">
+	                    		<input id="checkbox{{jdDistrict.uuid}}" type="checkbox" ng-model="jdDistrict.selected" ng-click="changeSelection($index)"/>
+	                    		<label for="checkbox{{jdDistrict.uuid}}" style="vertical-align: middle;"></label>
+                    		</div>
+                    	</td>
+                    	<td class="center">{{jdDistrict.name}}</td>
+						<td class="center">{{jdDistrict.isShow?"是":"否"}}</td>
+                        <td class="center">
+                            <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                <a href="#" ng-click="edit(jdDistrict)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="编辑"><i
+                                        class="fa fa-edit"></i></a>
+                                <a href="#" ng-click="deleteItem(jdDistrict.uuid)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="删除"><i
+                                        class="fa fa-trash fa fa-white"></i></a>
+                            </div>
+                            <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                <div class="btn-group" dropdown is-open="status.isopen">
+                                    <button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle" dropdown-toggle>
+                                        <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right dropdown-light" role="menu">
+                                        <li>
+                                            <a href="#" ng-click="edit(jdDistrict)">编辑</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" ng-click="deleteItem(jdDistrict.uuid)">删除</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <script type="text/ng-template" id="editJdDistrict.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>地区信息</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="name">
+										名称
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="name" class="form-control" ng-model="jdDistrictInfo.name" maxlength="32">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" style="padding-top:13px;">
+										是否显示
+									</label>
+									<div class="col-sm-8">
+										<div class="radio clip-radio radio-primary radio-inline">
+											<input type="radio" id="yes" ng-model="jdDistrictInfo.isShow" value="true">
+											<label for="yes">是</label>
+										</div>
+										<div class="radio clip-radio radio-primary radio-inline">
+											<input type="radio" id="no" ng-model="jdDistrictInfo.isShow" value="false">
+											<label for="no">否</label>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+            </div>
+        </div>
+    </div>
+</div>

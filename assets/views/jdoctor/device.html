@@ -1,0 +1,250 @@
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div ng-controller="deviceCtrl" class="col-md-12">
+			<button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
+				编辑 <i class="fa fa-edit"></i>
+			</button>
+			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<button ng-click="downloadQrcode()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+				批量下载橙医生二维码<i class="fa fa-download"></i>
+			</button>
+			<button ng-click="generateDeviceQrcode()" type="button" class="btn btn-wide btn-danger" style="min-width: 30px;">
+				生产橙医生二维码 <i class="fa fa-plus"></i>
+			</button>
+			<p style="margin-top: 25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+			<div class="table-responsive">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+						<tr>
+							<th style="text-align: left; width: 6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()" /> <label for="selectAllCheckbox"
+										style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th>橙医生二维码序列号</th>
+							<th>设备名称</th>
+							<th>设备第三方sn</th>
+							<th>是否绑定微信</th>
+							<th>是否绑定第三方</th>
+							<th>是否配置wifi</th>
+							<th>最近修改人</th>
+							<th>最近修改时间</th>
+							<th>上一次下载二维码时间</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+
+					<tr ng-repeat="obj in $data" ng-class-odd="'odd'" ng-class-even="'even'" id="tr{{obj.id}}">
+						<td>
+							<div class="checkbox clip-check check-primary checkbox-inline">
+								<input id="checkbox{{obj.id}}" type="checkbox" ng-model="obj.selected" ng-click="changeSelection($index)" /> <label
+									for="checkbox{{obj.id}}" style="vertical-align: middle;"></label>
+							</div>
+						</td>
+						<td class="center">{{obj.cysDeviceId}}</td>
+						<td class="center">{{obj.deviceName}}</td>
+						<td class="center">{{obj.serialNumInDevice}}</td>
+						<td class="center">{{getBoolString(obj.isBindWechat)}}</td>
+						<td class="center">{{getBoolString(obj.isBindPartner)}}</td>
+						<td class="center">{{getBoolString(obj.isConfigWifi)}}</td>
+						<td class="center">{{obj.auditable.updatedBy}}</td>
+						<td class="center">{{obj.auditable.dateUpdated}}</td>
+						<td class="center">{{obj.lastDownloadQrcode}}</td>
+						<td class="center">
+							<div class="visible-md visible-lg hidden-sm hidden-xs">
+								<a href="#" ng-click="edit(obj)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top"
+									tooltip="编辑"><i class="fa fa-edit"></i></a>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<div>
+					备注(数据说明):<br />是否绑定第三方:是否调用第三方接口绑定了第三方
+				</div>
+				<script type="text/ng-template" id="searchDevice.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>查询条件</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										橙医生二维码序列号
+									</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="searchInfos.cysDeviceId" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										设备品牌
+									</label>
+									<div class="col-sm-9">
+										<select class="col-sm-12" ng-model="searchInfos.brand"
+												ng-options="brand.value as brand.name for brand in brandList">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										设备类型
+									</label>
+									<div class="col-sm-9">
+										<select class="col-sm-12" ng-model="searchInfos.type"
+												ng-options="type.value as type.name for type in typeList">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										是否配置sn&qrcode
+									</label>
+									<div class="col-sm-9">
+										<select class="col-sm-12" ng-model="searchInfos.isConfigSN"
+												ng-options="isConfigSN.value as isConfigSN.name for isConfigSN in isConfigSNList">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										第三方原始sn
+									</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="searchInfos.serialNumInDevice" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										是否绑定微信
+									</label>
+									<div class="col-sm-9">
+										<select class="col-sm-12" ng-model="searchInfos.isBindWechat"
+												ng-options="isBindWechat.value as isBindWechat.name for isBindWechat in isBindWechatList">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										是否配置wifi
+									</label>
+									<div class="col-sm-9">
+										<select class="col-sm-12" ng-model="searchInfos.isConfigWifi"
+												ng-options="isConfigWifi.value as isConfigWifi.name for isConfigWifi in isConfigWifiList">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-12 control-label" style="text-align: left;">
+										*备注：当设备品牌与类型选择"乐心血压计（wifi版）"时，"是否配置wifi"选项才生效
+									</label>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+				<script type="text/ng-template" id="editDevice.html">
+					<div class="modal-header" >
+						<h5 class="modal-title"><b>编辑二维码绑定设备</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<div class="col-sm-12" style="text-align:center">
+										<img style="max-width: 200px;max-height: 200px;" ng-src="{{obj.cysQrcodeShowUrl}}">
+										<div>{{obj.cysDeviceId}}</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										第三方SN
+									</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="obj.serialNumInDevice" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" >
+										第三方二维码内含url
+									</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="obj.partnerQrcodeTicket" >
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+				<script type="text/ng-template" id="generateDeviceQrcode.html">
+					<div class="modal-header" >
+						<h5 class="modal-title"><b>生成橙医生设备二维码</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										设备品牌
+									</label>
+									<div class="col-sm-9">
+										<select class="col-sm-12" ng-model="obj.brand"
+												ng-options="brand.value as brand.name for brand in brandList">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">
+										设备类型
+									</label>
+									<div class="col-sm-9">
+										<select class="col-sm-12" ng-model="obj.type"
+												ng-options="type.value as type.name for type in typeList">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" >
+										生成个数
+									</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" ng-model="obj.number" >
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+

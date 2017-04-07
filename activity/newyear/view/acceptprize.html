@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>感恩橙医生 橙意贺新春</title>
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<script src="../static/js/app/rem.js"></script>
+	<link rel="stylesheet" href="../static/css/base.css">
+	<link rel="stylesheet" href="../static/css/style.css">
+	<script type="text/javascript" src="../static/js/libs/requirejs/require.js"></script>
+	<script type="text/javascript" src="../static/js/app.js"></script>
+	<script>
+		require(['acceptprize'],function(s){
+			s.registerNext();
+			s.getCode();
+			s.getSendDoctorName();
+			s.getAppId();
+			s.share();
+			s.checkPrize();
+		});
+	</script>
+
+</head>
+<body class="backgroundfff">
+
+	<div class="prize_title">
+		<p>您的贺卡已经送出</p>
+		<p id="getName"></p>
+	</div>
+
+
+	<div class="prize_bg pr">
+
+
+		<div class="Award_information" id="Award_information">
+
+			<ul class="prize_fill">
+				<li class="clearfix">
+					<input type="tel" class="prize_phone" placeholder="输入手机号码" class="fl" id="phone" maxlength="11">
+					<div class="fr" id="getCode">获取验证码</div>
+				</li>
+
+				<li class="clearfix">
+					<input type="tel" class="prize_phone" placeholder="填写验证码" class="fl" id="code" maxlength="4">
+				</li>
+			</ul>
+			<div class="accept" id="accept" bol="true">抽奖</div>
+
+
+		</div>
+
+
+		<div class="again_ground">
+			<a href="javascript:void(0)" class="invite btn2" id="shareCard">邀请朋友发送贺卡</a>
+			<div class="again_wrap clearfix">
+				<a href="selectBackground.html" class="fl btn2">再送一张</a>
+				<a href="popularlist.html" class="fr btn2">人气医生榜</a>
+			</div>
+		</div>
+
+	</div>
+
+
+	<!--<div class="share_wrap">-->
+		<!--<div class="share_marked_words"></div>-->
+	<!--</div>-->
+
+
+</body>
+
+</html>

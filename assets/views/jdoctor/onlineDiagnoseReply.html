@@ -1,0 +1,61 @@
+<style>
+<!--
+.float-textarea {
+	position: relative;
+	top: -22px;
+	right: 10px;
+	float: right;
+}
+-->
+</style>
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div ng-controller="onlineDiagnoseReplyCtrl" class="col-md-12">
+			<form role="form" class="form-horizontal">
+				<div class="form-group">
+					<label class="col-sm-1 control-label"> 订单号: </label>
+					<div class="col-sm-2">
+						<input type="text" class="form-control" ng-model="obj.orderNumber">
+					</div>
+					<div class="col-sm-1">
+						<button class="btn btn-primary" ng-click="orderNumberQuery()">查询</button>
+					</div>
+				</div>
+				<div id="order-info" style="display: none">
+					<div class="form-group">
+						<label class="col-sm-1 control-label">电话:</label><label class="col-sm-2 control-label">{{obj.userId}}</label>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-1 control-label">渠道:</label><label class="col-sm-2 control-label">{{obj.channel}}</label>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-1 control-label">年龄:</label><label class="col-sm-2 control-label">{{obj.age}}</label>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-1 control-label">性别:</label><label class="col-sm-2 control-label">{{getItemName(obj.gender,genderList)}}</label>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-1 control-label">订单状态:</label><label class="col-sm-2 control-label">{{getItemName(obj.status,statusList)}}</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-1 control-label">回复的医生:</label>
+					<div class="col-sm-2">
+						<input type="text" class="form-control" ng-model="obj.replyDoctor">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-1 control-label">回复内容:</label>
+					<div class="col-sm-2">
+						<textarea id="replyContent" rows="19" class="form-control" ng-model="obj.replyContent" maxlength="250"></textarea>
+						<span id="replyContent-remainWord" class="float-textarea">0/250</span>
+					</div>
+					<div class="col-sm-1">
+						<button class="btn btn-primary" ng-click="reply($event)">回复</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

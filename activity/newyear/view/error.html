@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>橙医生提醒你</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <script>
+        (function() {
+            /*设计图为640 字体大小为40*/
+            function changefontsize(){
+                var _this=this;
+                var html=document.getElementsByTagName('html')[0];
+                var screenWitdh=_this.innerWidth;
+                var Fsize=(screenWitdh*0.125)/2;
+                if (Fsize>35){
+                    Fsize=35;
+                }
+                html.style.fontSize=Fsize+"px";
+            }
+            changefontsize();
+            window.onresize=function(){
+                changefontsize();
+            }
+        })();
+    </script>
+    <style>
+        html,body,div,p{
+            margin: 0;
+            padding: 0;
+        }
+        .error_titck{
+            margin-top: 5.125rem;
+        }
+        .error_titck p{
+            color: #000000;
+            font-size: 0.6rem;
+            line-height: 0.6rem;
+            text-align: center;
+            margin-bottom: 0.425rem;
+        }
+        .error_logo{
+            width: 100%;
+            position: relative;
+            margin-top: 1.2rem;
+        }
+        .error_body_wrap{
+            width: 3.15rem;
+            height: 4.725rem;
+            background: #ff9999;
+            border-radius: 0.25rem;
+            padding-top: 0.55rem;
+            margin: 0 auto;
+        }
+        .error_body{
+            width: 2.575rem;
+            height: 4.05rem;
+            margin: 0 auto;
+            background: #fff;
+            position: relative;
+        }
+        .eye_wrap{
+            width: 1.275rem;
+            height: 0.425rem;
+            position: absolute;
+            left: 50%;
+            margin-left: -0.6375rem;
+            top: 1.15rem;
+        }
+        .left_eye,.right_eye{
+            width: 0.425rem;
+            height: 0.425rem;
+            background: #ff9999;
+            border-radius: 100%;
+        }
+        .left_eye{
+            float: left;
+        }
+        .right_eye{
+            float: right;
+        }
+        .mouse_wrap{
+            position: absolute;
+            width: 1.875rem;
+            height: 1.55rem;
+            background: #ff9999;
+            top: 2.325rem;
+            left: 50%;
+            margin-left: -0.9375rem;
+            border-radius: 100%;
+        }
+        .mouse{
+            position: absolute;
+            width: 1.55rem;
+            height: 1.55rem;
+            background: #fff;
+            border-radius: 100%;
+            left: 50%;
+            top: 0.175rem;
+            margin-left: -0.775rem;
+            bottom: 0;
+        }
+
+        .mouse2{
+            position: absolute;
+            width: 1.875rem;
+            height: 1rem;
+            background: #fff;
+            top: 0.5rem;
+            left: 0;
+        }
+        .earor_decorate{
+            position: absolute;
+            top: 0.225rem;
+            width: 0.825rem;
+            height: 0.125rem;
+            background: #fff;
+            left: 50%;
+            margin-left: -0.4125rem;
+        }
+        .earor_decorate2{
+            width: 0.375rem;
+            height: 0.375rem;
+            position: absolute;
+            left: 50%;
+            margin-left: -0.1875rem;
+            background: #ffffff;
+            border-radius: 100%;
+            bottom: 0.125rem;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="error_titck">
+        <p>活动太火爆了，服务器过载</p>
+        <p>o(>﹏<)o</p>
+        <p>请亲们稍后重试~</p>
+    </div>
+
+    <div class="error_logo">
+        <div class="earor_decorate"></div>
+
+        <div class="error_body_wrap">
+            <div class="earor_decorate2"></div>
+            <div class="error_body">
+                <div class="eye_wrap">
+                    <div class="left_eye"></div><div class="right_eye"></div>
+                </div>
+                <div class="mouse_wrap">
+                    <div class="mouse"></div>
+                    <div class="mouse2"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

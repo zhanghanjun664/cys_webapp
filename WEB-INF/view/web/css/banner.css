@@ -1,0 +1,36 @@
+.banner_wrap{
+	position: relative;
+	width: 100%;
+	height: 550px;
+}
+
+.banner_move_wrap{
+	position: relative;
+	width: 100%;
+	height: 550px;
+	overflow: hidden;	
+}
+
+
+.banner_move{
+	width: 999999999999px;
+	height: 550px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	overflow: hidden;
+}
+
+
+.banner_sileder{
+	width: 100%;
+}
+
+.banner_sileder{
+	width: 1920px;
+	height: 550px;
+	float: left;
+	display: inline;
+}
+
+

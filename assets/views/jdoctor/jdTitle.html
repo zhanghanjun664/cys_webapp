@@ -1,0 +1,124 @@
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div ng-controller="JdTitleCtrl" class="col-md-12">
+        	<button ng-click="edit()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+				新增 <i class="fa fa-plus"></i>
+			</button>
+			<button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
+				编辑 <i class="fa fa-edit"></i>
+			</button>
+			<button ng-click="deleteAll()" type="button" class="btn btn-wide btn-danger" style="min-width: 30px;">
+				删除 <i class="fa fa-trash"></i>
+			</button>
+			<p style="margin-top:25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                	<thead>
+						<tr>
+							<th style="text-align:left;width:6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()"/>
+									<label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th>职称名称</th>
+							<th>普通券限定金额</th>
+							<th>邀请券限定限额</th>
+							<!--<th>39职称金额</th>-->
+							<th>操作</th>
+						</tr>
+					</thead>
+                    <tr ng-repeat="jdTitle in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                    	<td>
+                    		<div class="checkbox clip-check check-primary checkbox-inline">
+	                    		<input id="checkbox{{jdTitle.uuid}}" type="checkbox" ng-model="jdTitle.selected" ng-click="changeSelection($index)"/>
+	                    		<label for="checkbox{{jdTitle.uuid}}" style="vertical-align: middle;"></label>
+                    		</div>
+                    	</td>
+                    	<td class="center">{{jdTitle.name}}</td>
+						<td class="center">{{jdTitle.couponLimit}}</td>
+						<td class="center">{{jdTitle.couponCountLimit}}</td>
+						<!--<td class="center">{{jdTitle.otherPriceJson}}</td>-->
+                        <td class="center">
+                            <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                <a href="#" ng-click="edit(jdTitle)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="编辑"><i
+                                        class="fa fa-edit"></i></a>
+                                <a href="#" ng-click="deleteItem(jdTitle.uuid)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="删除"><i
+                                        class="fa fa-trash fa fa-white"></i></a>
+                            </div>
+                            <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                <div class="btn-group" dropdown is-open="status.isopen">
+                                    <button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle" dropdown-toggle>
+                                        <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right dropdown-light" role="menu">
+                                        <li>
+                                            <a href="#" ng-click="edit(jdTitle)">编辑</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" ng-click="deleteItem(jdTitle.uuid)">删除</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+				<p style="margin-top:25px;">
+					<strong>*说明:</strong>
+					<strong>普通券限定金额：用户使用普通券约诊医生时（见面咨询）,每次只能使用X元</strong>
+					<strong>邀请券限定金额：用户使用邀请券约诊医生时（见面咨询）,每次只能使用X元</strong>
+				</p>
+                <script type="text/ng-template" id="editJdTitle.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>职称信息</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-4 control-label" for="name">
+										职称名称
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="name" class="form-control" ng-model="jdTitleInfo.name">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label" for="couponLimit">
+										优惠券限额
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="couponLimit" class="form-control" ng-model="jdTitleInfo.couponLimit" maxlength="5">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label" for="couponCountLimit">
+										邀请券数量限额
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="couponCountLimit" class="form-control" ng-model="jdTitleInfo.couponCountLimit" maxlength="3">
+									</div>
+								</div>
+								<!--<div class="form-group">-->
+									<!--<label class="col-sm-4 control-label" for="otherPriceJson">-->
+										<!--39职称金额-->
+									<!--</label>-->
+									<!--<div class="col-sm-8">-->
+										<!--<input type="text" id="otherPriceJson" class="form-control" ng-model="jdTitleInfo.otherPriceJson" maxlength="3">-->
+									<!--</div>-->
+								<!--</div>-->
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+            </div>
+        </div>
+    </div>
+</div>

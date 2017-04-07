@@ -1,0 +1,983 @@
+/*layout*/
+.header {
+    width: 100%;
+    background: url(../images/header.jpg) center 22px no-repeat;
+    height: 99px;
+    top: 0;
+    left: 0;
+    z-index: 100000;
+}
+
+.header .center {
+    height: 77px;
+}
+
+.header h1 {
+    width: 271px;
+    margin: 7px 0 0 43px;
+}
+
+.nav li {
+    text-align: center;
+    width: 50px;
+    height: 77px;
+    line-height: 77px;
+    margin-right: 18px;
+}
+
+.nav li a {
+    color: #717071;
+    letter-spacing: 0.25em;
+    font-size: 14px;
+}
+
+.nav li a:hover {
+    color: #FF8101;
+}
+
+.nav .nav_active {
+    color: #FF8101;
+}
+
+.nav .nav_active span {
+    width: 50px;
+    height: 3px;
+    background: #FF8101;
+    left: -11px;
+    bottom: -11px;
+}
+
+.search {
+    width: 215px;
+    height: 30px;
+    background: url(../images/search.png) 0 center no-repeat;
+    overflow: hidden;
+    margin-top: 23.5px;
+}
+
+.search span {
+    width: 215px;
+    height: 30px;
+    line-height: 30px;
+    top: 0;
+    left: 0;
+    font-size: 14px;
+    padding-left: 13px;
+    color: #717071;
+    letter-spacing: 0.1em;
+    display: none;
+}
+
+.search_btn {
+    right: 4px;
+    top: 0;
+    width: 26px;
+    height: 30px;
+    background: url(../images/search.png) right center no-repeat;
+}
+
+.search_content {
+    background: url(../images/search.png) 0 center no-repeat;
+    color: #717071;
+    vertical-align: top;
+    width: 160px;
+    height: 30px;
+    overflow: hidden;
+    line-height: 30px;
+    padding-left: 13px;
+    font-size: 13px;
+}
+
+.login_bar {
+    width: 100%;
+    background: #5d5d5d;
+    height: 22px;
+}
+
+.login_bar li, .login_bar li a {
+    height: 22px;
+    line-height: 22px;
+    color: #B4B4B5;
+}
+
+.login_bar li {
+    padding-left: 17px;
+    margin-left: 20px;
+}
+
+.login_bar_li {
+    padding-right: 13px;
+}
+
+.login_bar small {
+    width: 13px;
+    height: 13px;
+    top: 50%;
+    left: 0;
+    margin-top: -7.5px;
+}
+
+.login_bar li b {
+}
+
+.phone_logo {
+    background: url(../images/indexlogo.png) 0 bottom no-repeat;
+}
+
+.login_logo {
+    background: url(../images/indexlogo.png) right bottom no-repeat;
+}
+
+.banner {
+    width: 100%;
+    height: 550px;
+    background: #f9f9f7;
+    margin-top: 100px;
+}
+
+.pagination {
+    width: 100%;
+    height: 50px;
+    padding: 21px 0;
+    text-align: center;
+}
+
+.pagination ul {
+    text-align: center;
+}
+
+.pagintion_left, .pagination ul li {
+    height: 48px;
+}
+
+.pagination ul li {
+    display: inline-block;
+    width: 210px;
+    margin-right: 53px;
+}
+
+.pagintion_left {
+    width: 48px;
+    border: 1px solid #D6D5D1;
+}
+
+.pagintion_right {
+    background: #fff;
+    width: 160px;
+    color: #888888;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+}
+
+.point_active .pagintion_right {
+    background: #F9F9F7;
+    color: #3E3A39;
+}
+
+.pagintion_left img {
+    max-width: 100%;
+}
+
+.content {
+    margin-bottom: 94px;
+}
+
+.center {
+    width: 1200px;
+    margin: 0 auto;
+}
+
+.main_left {
+    width: 890px;
+    min-height: 100px;
+}
+
+.main_right {
+    width: 300px;
+    min-height: 100px;
+    background: #f85;
+}
+
+.page {
+    height: 26px;
+    width: 100%;
+    text-align: center;
+}
+
+.page span {
+    line-height: 26px;
+    color: #878787;
+    margin-right: 19px;
+}
+
+.page_num {
+    margin-right: 2px;
+    border: 1px solid #DBDCDC;
+    width: 28px;
+    height: 24px;
+    line-height: 24px;
+    color: #DBDCDC;
+    display: inline-block;
+}
+
+.page_num_active {
+    color: #FF8101;
+    border: 1px solid #FF8101;
+}
+
+.column {
+    background: #f7f7f7;
+    padding-bottom: 10px;
+}
+
+.column_top {
+    width: 242px;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 10px 0 28px;
+    background: #f7f7f7;
+    color: #717171;
+}
+
+.column_top span {
+    width: 15px;
+    height: 15px;
+    background: #f85;
+    left: 10px;
+    top: 50%;
+    margin-top: -7.5px;
+}
+
+.column_content {
+    width: 280px;
+    padding: 12px 0;
+    margin: 0 auto;
+    background: #fff;
+}
+
+.column_content a {
+    display: block;
+}
+
+.hospital_area {
+    background: #f7f7f7;
+    width: 100%;
+    height: 40px;
+    margin-bottom: 7px;
+}
+
+.hospital_area ul li {
+    width: 104px;
+    height: 40px;
+    line-height: 40px;
+    color: #434240;
+    text-align: center;
+}
+
+.hospital_area ul .hospital_area_active {
+    color: #FF8101;
+}
+
+.hospital_area ul .hospital_area_active small {
+    width: 104px;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    background: #FF8101;
+}
+
+/*=================================index===================================*/
+.hospital_content ul {
+    margin-bottom: 42px;
+}
+
+.hospital_content ul li, .hospital_content ul li a {
+    width: 210px;
+    height: 210px;
+}
+
+.hospital_content ul li {
+    margin: 0 16px 16px 0;
+}
+
+.hospital_content ul .margin_none {
+    margin-right: 0;
+}
+
+.hospital_hover {
+    width: 210px;
+    height: 5px;
+    background: #fd8000;
+    bottom: 0;
+    left: 0;
+}
+
+.hospital_content ul li a {
+    display: block;
+}
+
+.hospital_content ul li a img {
+    max-width: 100%;
+}
+
+.hospital_message, .hospital_opacity {
+    height: 60px;
+    left: 0;
+    bottom: 0;
+}
+
+.hospital_opacity {
+    width: 210px;
+    background: rgb(0, 0, 0);
+    opacity: .4;
+    filter: alpha(opacity=40);
+}
+
+.hospital_message, .hospital_address {
+    width: 198px;
+}
+
+.hospital_message {
+    padding: 0 6px;
+    z-index: 999;
+    overflow: hidden;
+}
+
+.hospital_name {
+    line-height: 14px;
+    margin: 12px 0;
+}
+
+.hospital_showname {
+    width: 122px;
+    height: 14px;
+}
+
+.hospital_address {
+    line-height: 12px;
+    height: 12px;
+}
+
+.patient_review li {
+    padding: 0 5px;
+    color: #888;
+    line-height: 18px;
+}
+
+.doctor_name span {
+    color: #3e3a39;
+}
+
+.patient_review .doctor_review {
+    color: #595757;
+}
+
+.doctor_name {
+    line-height: 12px;
+    margin-bottom: 12px;
+}
+
+.recommend_doctor {
+    height: 45px;
+    margin-bottom: 36px;
+}
+
+.recommend_doctor dt {
+    width: 45px;
+    height: 45px;
+    border: 1px solid #D6D5D1;
+    background: #dbdbdc;
+    margin: 0 11px 0 5px;
+}
+
+.recommend_doctor dd {
+    width: 149px;
+    height: 14px;
+    line-height: 14px;
+}
+
+.recommend_doctor dd img {
+    max-width: 100%;
+}
+
+.recommend_name {
+    color: #717071;
+    margin: 4px 0 9px 0;
+}
+
+.recommend_address {
+    color: #B4B4B5;
+}
+
+.recommend_doctor .recommend_button {
+    width: 64px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    background: #50b950;
+    right: 5px;
+    border-radius: 3px;
+    top: 50%;
+    margin-top: -12px;
+}
+
+.recommend_doctor .recommend_add {
+    background: #5d9cec;
+}
+
+.recemmend_list {
+    height: 474px;
+    overflow: hidden;
+}
+
+.select_title, .select_wrap ul li {
+    height: 14px;
+    line-height: 14px;
+    padding: 4px 8px;
+    border: 1px solid #fff;
+    color: #888;
+}
+
+.select_wrap ul {
+    width: 802px;
+}
+
+.select_wrap ul li {
+    margin: 0 7px 10px 0;
+}
+
+.select_wrap ul .select_active {
+    border: 1px solid #fe8101;
+    color: #fe8101;
+    border-radius: 3px;
+}
+
+.title {
+    padding-left: 20px;
+    height: 15px;
+    line-height: 15px;
+    color: #595757;
+}
+
+.title small {
+    width: 15px;
+    height: 15px;
+    background: #ccc;
+    left: 0;
+    top: 0;
+}
+
+/*=================================doctorList===================================*/
+.hospital_base {
+    margin: 4px 0;
+}
+
+.hospital_base dt {
+    width: 162px;
+    height: 162px;
+    background: #f7f7f7;
+    overflow: hidden;
+    margin-right: 11px;
+}
+
+.hospital_base dt img {
+    max-width: 100%;
+}
+
+.hospital_base dd {
+    width: 717px;
+}
+
+.hospital_base_name {
+    font-size: 18px;
+    line-height: 18px;
+    color: #3e3a39;
+    margin: 38px 0 29px 0;
+}
+
+.hospital_base_address {
+    color: #888;
+    line-height: 14px;
+    margin-bottom: 21px;
+}
+
+.hospital_base_Introduction {
+    color: #888;
+}
+
+.hospital_base_Introduction i {
+    line-height: 20px;
+}
+
+.hospital_base_Introduction span {
+    width: 647px;
+    line-height: 20px;
+}
+
+.doctor_select {
+    margin-top: 25px;
+}
+
+.doctor_msgess {
+    margin-top: 13px;
+}
+
+.doctor_msgess li {
+    width: 839px;
+    height: 100px;
+    padding: 18px 35px 18px 14px;
+    border-top: 1px solid #f7f7f7;
+}
+
+.doctor_msgess .doctor_li_active {
+    border: 1px solid #fad9ba;
+}
+
+.doctor_message_img {
+    width: 100px;
+    height: 100px;
+    background: #ccc;
+    margin-right: 12px;
+}
+
+.doctor_message_img img {
+    max-width: 100%;
+}
+
+.doctor_msgess li p {
+    color: #888;
+    line-height: 14px;
+}
+
+.doctor_msgess li .doctor_message_name {
+    color: #3e3a39;
+    margin: 21px 0 11px 0;
+    vertical-align: top;
+}
+
+.doctor_message_name span {
+    right: 0;
+    top: 0;
+}
+
+.doctor_message_hospital {
+    margin-bottom: 11px;
+}
+
+.doctor_msgess li a {
+    right: 35px;
+    top: 75px;
+    color: #fff;
+    width: 64px;
+    height: 24px;
+    text-align: center;
+    line-height: 24px;
+    background: #50b955;
+    border-radius: 3px;
+}
+
+.doctor_message_list {
+    height: 400px;
+}
+
+.doctor_message_list .doctor_review {
+    padding-bottom: 26px;
+}
+
+.Rule p {
+    padding: 0 5px;
+    color: #888;
+    line-height: 18px;
+}
+
+/*=================================hospital===================================*/
+.doctor_msgess li .hospital_list_name {
+    margin: 28px 0 17px 0;
+}
+
+/*=================================doctordetails===================================*/
+.doctordetail_link {
+    margin: 19px 0 15px 0;
+}
+
+.doctordetail_link a:hover {
+    text-decoration: underline;
+}
+
+.doctordetail_link a, .doctordetail_link span {
+    margin-right: 8px;
+    color: #3E3A39;
+}
+
+.doctordetail_mssage {
+    width: 890px;
+}
+
+.doctordetail_mssage dt {
+    width: 162px;
+    height: 162px;
+    margin-right: 17px;
+}
+
+.popularity_wrap, .popularity {
+    width: 162px;
+    height: 26px;
+    left: 0;
+    bottom: 0;
+}
+
+.popularity_wrap {
+    background: rgb(0, 0, 0);
+    opacity: .4;
+    filter: alpha(opacity=40);
+}
+
+.popularity {
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
+    line-height: 26px;
+}
+
+.doctordetail_mssage dd {
+    width: 711px;
+    color: #888;
+}
+
+.doctordetails_name {
+    margin: 13px 0 11px 0;
+}
+
+.doctordetails_name span {
+    color: #3e3a39;
+    font-size: 18px;
+    margin-right: 21px;
+}
+
+.doctordetails_name i {
+    color: #888;
+}
+
+.doctordetails_address {
+    line-height: 14px;
+}
+
+.doctordetails_goodat {
+    margin-top: 19px;
+}
+
+.advisory_left, .goodat_left, .address_visits_left {
+    padding-left: 21px;
+    height: 18px;
+    line-height: 18px;
+}
+
+.goodat_left {
+    width: 42px;
+}
+
+.goodat_right {
+    width: 648px;
+}
+
+.goodat_left small, .advisory_left small, .address_visits_left small {
+    width: 15px;
+    height: 15px;
+    background: #ccc;
+    top: 50%;
+    left: 0;
+    margin-top: -7.5px;
+}
+
+.goodlabel {
+    margin: 0 5px 6px 0;
+    padding-left: 10px;
+}
+
+.goodlabel span {
+    display: block;
+    height: 16px;
+    line-height: 16px;
+    padding: 0 6px;
+    border-top: 1px solid #9e9e9e;
+    border-bottom: 1px solid #9e9e9e;
+    border-right: 1px solid #9e9e9e;
+}
+
+.goodlabel small {
+    width: 10px;
+    height: 19px;
+    top: 0;
+    left: 0;
+    background: url(../images/lefrarrow.png) right -2px no-repeat;
+}
+
+.advisory {
+    margin-top: 2px;
+}
+
+.advisory_left {
+    width: 56px;
+}
+
+.advisory_right small {
+    color: #50b950;
+    height: 18px;
+    line-height: 18px;
+    border-top: 1px solid #50b950;
+    border-bottom: 1px solid #50b950;
+    border-right: 1px solid #50b950;
+    padding: 0 5px;
+    margin: -1px 0 0 11px;
+}
+
+.advisory_right small i {
+    top: -1px;
+    left: -11px;
+    width: 11px;
+    height: 20px;
+    background: url(../images/lefrarrow.png) right -26px no-repeat;
+}
+
+.advisory_right span {
+    height: 19px;
+    line-height: 19px;
+    color: #ff9125;
+    margin-right: 10px;
+}
+
+.address_visits {
+    margin-top: 6px;
+}
+
+.address_visits_right {
+    width: 620px;
+    height: 19px;
+    line-height: 19px;
+}
+
+.attention_wrap {
+    margin: 7px 0 23px 0;
+}
+
+.attention_left {
+    width: 162px;
+    height: 24px;
+}
+
+.attention_left div {
+    margin: 0 auto;
+    border-radius: 3px;
+    text-align: center;
+    width: 64px;
+    height: 24px;
+    line-height: 24px;
+    color: #fff;
+    background: #50b855;
+}
+
+.attention_right {
+    margin-left: 11px;
+    width: 717px;
+    height: 24px;
+    line-height: 24px;
+    text-align: right;
+    color: #9e9ea0;
+}
+
+.date_select {
+    margin-top: 12px;
+}
+
+.date_arrow_left, .date_arrow_right {
+    width: 124px;
+    height: 40px;
+    background: #f7f7f7;
+}
+
+.date_arrow_left {
+    margin-right: 3px;
+}
+
+.date_arrow_right {
+    margin-left: 3px;
+}
+
+.date_top li{
+    width: 90px;
+    height: 40px;
+    background: #f7f7f7;
+    margin-right: 1px;
+    overflow: hidden;
+    text-align: center;
+}
+
+.date_top li p{
+	color: #717071;
+	font-size: 12px;
+	line-height: 12px;
+}
+
+.date_top{
+    margin:7px 0 3px 0;
+}
+
+.date_top .date_last {
+    margin-right: 0;
+}
+
+.date_content_list{
+	width: 540px;
+	margin: 28px auto 0 auto;
+	overflow: hidden;
+}
+
+.date_content_list li{
+	width: 60px;
+	height: 23px;
+	line-height: 23px;
+	border-radius: 3px;
+	border: 1px solid #ff8100;
+	margin: 0 28px 32px 0;
+	text-align: center;
+	color: #fe8301;
+}
+
+.date_now{
+	width: 100%;
+	height: 24px;
+}
+
+.now_appointment{
+    margin: 0 auto;
+    background: #50b855;
+    text-align: center;
+    width: 94px;
+    height: 24px;
+    line-height: 24px;
+    color: #fff;
+    border-radius: 3px;
+}
+
+.date_content{
+    margin-bottom: 32px;
+}
+
+.date_statu_left{
+    width: 52px;
+    padding-top: 2px;
+    height: 18px;
+    left: 130px;
+    top: -3px;
+    color: #7a7a7a;
+    background: #f7f7f7;
+    text-align: center;
+    line-height: 12px;
+}
+
+.date_statu_left  small{
+    width: 21px;
+    height: 4px;
+    left: 50%;
+    margin-left: -10.5px;
+    bottom: 0;
+    background: #fe8103;
+}
+
+.date_statu_right{
+    right: 72px;
+    top: -3px;
+}
+
+.date_statu_right span{
+    height: 18px;
+    line-height: 18px;
+    margin-right: 11px;
+    padding: 0 6px;
+    border: 1px solid #ff8003;
+    border-radius: 3px;
+}
+
+.date_statu_right .date_statu1{
+    color: #fff;
+    background: #fe8100;
+}
+
+.date_statu_right .date_statu2{
+    color: #fe8100;
+    background: #fff;
+}
+
+.date_statu_right .date_statu3{
+    color: #cccccc;
+    border: 1px solid #cccccc;
+}
+
+.comment li{
+    padding: 13px 0 20px 0;
+    border-bottom: 1px solid #F7F7F7;
+}
+
+.comment_doctor_img{
+    width: 30px;
+    height: 30px;
+    margin-left: 20px;
+    background: url(../images/start.png) 0 0 no-repeat;
+}
+
+.comment_doctor_img img{
+    max-width: 100%;
+}
+
+.comment_content{
+    width: 810px;
+    margin-left: 30px;
+
+}
+
+.comment_content p{
+    color: #3e3a39;
+}
+
+.comment_content p span{
+    color: #888;
+}
+
+.comment_center{
+    margin: 8px 0 11px 0;
+}
+
+.comment_fraction{
+    color: #888;
+    margin-right: 21px;
+}
+
+.comment_fraction small{
+    width: 12px;
+    height: 12px;
+    background: url(../images/start.png) -45px -9px no-repeat;
+    margin-right: 3px;
+}
+
+.click_more{
+    color: #93bef1;
+}
+
+.consultation li{
+    color: #888;
+    height: 18px;
+    line-height: 18px;
+    margin-bottom: 11px;
+}
+
+.consultation li span{
+    display: inline-block;
+    color: #fff;
+    height: 18px;
+    width: 80px;
+    background: #dcdcdc;
+    padding: 0 7px;
+    vertical-align: top;
+    margin-left: 4px;
+}

@@ -1,0 +1,201 @@
+{
+  "login": {
+      "username": {
+          "PLACEHOLDER": "请输入您的用户名"
+      },
+      "password": {
+          "PLACEHOLDER": "请输入您的密码"
+      },
+      "remember": {
+          "LABEL": "记住我"
+      },
+      "login": {
+          "LABEL": "登录"
+      },
+      "error": {
+        "TIP": "用户名或密码错误"
+      }
+  },
+  "dashboard": {
+    "WELCOME": "欢迎来到{{appName}}"
+  },
+  "topbar": {
+    "messages": {
+    	"MAIN": "消息",
+      	"HEADER": "未读消息",
+      	"SEEALL": "查看全部"
+    },
+    
+    "activities": {
+      "MAIN": "Activities",
+      "HEADER": "You have new notifications",
+      "SEEALL": "See All"
+    },
+    "user": {
+      "PASSWORD" : "修改密码",
+      "LOGOUT" : "退出系统"
+    }
+  },
+  "offsidebar": {
+    "chat": {
+      "ONLINE": "On-Line",
+      "OFFLINE": "Off-Line",
+      "BACK": "Back",
+      "SEND" : "Send",
+      "PLACEHOLDER": "Message"
+    },
+    "favorites": {
+      "MAIN": "Favorites"
+    },
+    "settings": {
+      "MAIN": "General Settings",
+      "NOTIFICATIONS": "Enable Notifications",
+      "SHOWEMAIL": "Show your E-mail",
+      "SHOWUSERS": "Show Offline Users",
+      "EMAILALERT": "E-mail Alerts",
+      "SMSALERT": "SMS Alerts",
+      "SAVE" : "Save Changes"     
+    }  
+  },
+  "sidebar": {
+    "heading": {
+      "NAVIGATION": "导航栏",
+      "FEATURES": "Core Features",
+      "DOCUMENTATION": "Documentation"
+    },
+    "search": {
+      "PLACEHOLDER": "菜单搜索...",
+      "CLEAR": "清空"
+    },
+    "nav": {
+      "system": {
+        "MAIN": "系统管理",
+        "MENU": "菜单管理",
+        "AUTHORITY": "权限管理",
+        "ROLE": "角色管理",
+        "USER": "用户管理",
+        "PARAMS": "参数管理",
+        "BUTTONPERMIT": "按钮权限管理"
+      },
+      "config": {
+        "MAIN": "系统配置",
+        "banner": "广告位配置",
+        "adItem": "广告素材配置",
+        "JDDISTRICT": "地区信息",
+        "JDDISTRICTAREA": "市辖区信息",
+        "JDHOSPITAL": "医院信息",
+        "JDDEPARTMENT": "科室信息",
+        "JDSICKCATEGARY": "疾病大类",
+        "JDSICK": "ICD疾病管理",
+        "JDORDERTIP": "预约须知",
+        "freqUsedSickCategory": "常见疾病"
+      },
+      "doctor": {
+        "MAIN": "医生模块",
+        "JDTITLE": "职称信息",
+        "JDDOCTOR": "医生信息",
+        "DOCTORTEAM": "医生团队",
+        "TIMEVIEW": "出诊安排",
+        "NOTIMEVIEW":"不允许出诊安排(废弃)",
+        "NOVISITEDTIME":"不允许出诊安排",
+        "JDBOOKING":"预约号信息",
+        "JDRECOMMENDDOCTOR": "推荐医生",
+        "JDPUSHARTICLE" : "文章推送",
+        "JDPUSHARTICLERESULT" : "文章推送记录"
+      },
+      "patient": {
+        "MAIN": "用户模块",
+        "JDPATIENT": "用户信息",
+        "JDOPERATION": "手术直通车",
+        "JDCOMMENT": "评论信息",
+        "HEALTHEXAMINATION": "健康测量",
+        "healthWarning": "健康测量告警管理",
+        "MEDICALRECORD": "病例查看",
+        "MEDICALAUDIT": "病例审核",
+        "LOGINLOG": "登录日志",
+        "EXAMINATIONSHARING": "健康数据邀请关注记录",
+        "PATIENTARCHIVE": "患者档案"
+      },
+      "order": {
+        "MAIN": "订单管理",
+        "OFFLINEORDER": "见面咨询订单",
+        "ORDERPLUS": "申请放号订单",
+        "PHONESEVICEORDER": "电话咨询订单",
+        "INSURANCEORDER":"保险订单"
+      },
+      "vip": {
+        "MAIN": "会员管理",
+        "PRIVATE_DOC_IM": "私人医生答题"
+      },
+      "coupon":{
+        "MAIN":"现金券模块",
+        "JDCOUPONCATEGORY": "现金券类型",
+        "JDCOUPON": "现金券",
+        "COUPONTRANSACTION": "现金券流水账"
+      },
+      "message":{
+        "MAIN":"消息模块",
+        "TEXTMESSAGE":"给医生发送消息",
+        "PATIENTTEXTMESSAGE":"给用户发送消息",
+        "ORDERPATIENTTEXTMESSAGE":"给患者发送消息",
+        "onlineDiagnoseReply":"给用户回复图像问诊结果"
+      },
+      "payment": {
+        "MAIN": "财务管理",
+        "thirdPartyPaymentAllHistory": "第三方订单流水",
+        "accountDetails": "平台收支统计",
+        "doctorWithdrawaling": "待转账（医生）",
+        "doctorWithdrawalHistory": "已转账（医生）",
+        "payment": "付款（医生）",
+        "patientPaymentHistory": "转账信息（患者）",
+        "patientRedpackPayment": "红包（患者）",
+        "patientPaymentAllHistory": "患者账户流水",
+        "patientBalance": "用户余额查询"
+      },
+      "statistics":{
+        "MAIN":"统计报表",
+        "userDataAnalysis":"用户数据分析"
+      },
+      "wechat":{
+        "MAIN":"微信模块",
+        "MENU":"公众号菜单",
+        "QRCODE":"渠道二维码信息",
+        "SPREAD":"渠道用户统计",
+        "KEYWORD":"自动回复配置"
+      },
+      "patientedu":{
+      	"MAIN":"医生工具维护",
+      	"article":"患教资料",
+      	"followup":"随访模板",
+      	"sickCategorySet":"订阅分类设置",
+      	"tag":"标签管理"
+      },
+      "insurance":{
+        "MAIN":"保险模块",
+        "order":"保险订单管理"
+      },
+      "devicemanage":{
+      	"MAIN":"设备管理",
+      	"device": "设备及二维码管理",
+        "deviceBound": "设备绑定记录"
+      },
+      "live":{
+      	"MAIN":"直播管理",
+      	"list":"直播列表"
+      }
+    }
+  },
+  "footer": {
+    "copyright": {
+    	"MAIN": "Copyright",
+      	"MESSAGE": "保留所有权利"
+    }
+  },
+  "setting": {
+  	"MAIN" : "Style Selector",
+    "FIXEDHEADER": "Fixed header",
+    "FIXEDSIDEBAR": "Fixed sidebar",
+    "CLOSEDSIDEBAR": "Closed sidebar",
+    "FIXEDFOOTER": "Fixed footer"
+  }
+}

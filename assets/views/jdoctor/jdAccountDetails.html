@@ -1,0 +1,33 @@
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div ng-controller="JdAccountDetailsCtrl" class="col-md-12">
+			<p style="margin-top:25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                	<thead>
+						<tr>
+							<th>日期</th>
+							<th>收入(元)</th>
+							<th>支出(元)</th>
+							<th>总额(元)</th>
+						</tr>
+					</thead>
+                    <tr ng-repeat="jdAccountDetails in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                    	<td class="center">{{jdAccountDetails.dateTime}}</td>
+						<td class="center">{{jdAccountDetails.accountIncome}}</td>
+						<td class="center">{{jdAccountDetails.accountExpand}}</td>
+						<td class="center">{{jdAccountDetails.accountIncome-jdAccountDetails.accountExpand}}</td>
+                    </tr>
+					<tr>
+						<th>总计</th>
+						<th>{{totalIncome}}</th>
+						<th>{{totalExpand}}</th>
+						<th>{{totalIncome-totalExpand}}</th>
+					</tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

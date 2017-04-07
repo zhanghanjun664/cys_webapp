@@ -1,0 +1,387 @@
+<div class="container-fluid container-fullw bg-white" ng-controller="PatientParentCtrl">
+    <div class="row">
+        <div ng-controller="JdPatientCtrl" class="col-md-12">
+			<button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
+				编辑 <i class="fa fa-edit"></i>
+			</button>
+			<button ng-click="deleteAll()" type="button" class="btn btn-wide btn-danger" style="min-width: 30px;">
+				删除 <i class="fa fa-trash"></i>
+			</button>
+			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<button ng-click="export()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;display: none;">
+				导出Excel <i class="fa fa-download"></i>
+			</button>
+			<p style="margin-top:25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                	<thead>
+						<tr>
+							<th style="text-align:left;width:6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()"/>
+									<label for="selectAllCheckbox" style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th>省份</th>
+							<th>城市</th>
+							<th>姓名</th>
+							<th>手机号码</th>
+							<th>注册时间</th>
+							<th>邀请人号码</th>
+							<th>来源渠道</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+                    <tr ng-repeat="jdPatient in $data" ng-class-odd="'odd'" ng-class-even="'even'" class="tr_patient" id="tr{{jdPatient.uuid}}" ng-click="loadOrderHistory(jdPatient.uuid)">
+                    	<td>
+                    		<div class="checkbox clip-check check-primary checkbox-inline">
+	                    		<input id="checkbox{{jdPatient.uuid}}" type="checkbox" ng-model="jdPatient.selected" ng-click="changeSelection($index)"/>
+	                    		<label for="checkbox{{jdPatient.uuid}}" style="vertical-align: middle;"></label>
+                    		</div>
+                    	</td>
+						<td class="center">{{jdPatient.province}}</td>
+						<td class="center">{{jdPatient.city}}</td>
+						<td class="center">{{jdPatient.name}}</td>
+						<td class="center">{{jdPatient.phoneNumber}}</td>
+						<td class="center">{{jdPatient.createDate}}</td>
+						<td class="center">{{jdPatient.parentPhone ? jdPatient.parentPhone : '无'}}</td>
+						<td class="center">{{jdPatient.sceneName ? jdPatient.sceneName : '无'}}</td>
+                        <td class="center">
+                            <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                <a href="#" ng-click="edit(jdPatient)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="编辑"><i
+                                        class="fa fa-edit"></i></a>
+                                <a href="#" ng-click="deleteItem(jdPatient.uuid)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="删除"><i
+                                        class="fa fa-trash fa fa-white"></i></a>
+                            </div>
+                            <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                <div class="btn-group" dropdown is-open="status.isopen">
+                                    <button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle" dropdown-toggle>
+                                        <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right dropdown-light" role="menu">
+                                        <li>
+                                            <a href="#" ng-click="edit(jdPatient)">编辑</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" ng-click="deleteItem(jdPatient.uuid)">删除</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+				<script type="text/ng-template" id="searchJdPatient.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>查询条件</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="districtId">
+										省份
+									</label>
+									<div class="col-sm-8">
+										<select id="districtId" class="col-sm-12" ng-model="searchInfos.districtId"
+												ng-change="changeDistrictAreas(searchInfos.districtId)"
+												ng-options="jdDistrict.uuid as jdDistrict.name for jdDistrict in jdDistricts ">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="districtAreaId">
+										城市
+									</label>
+									<div class="col-sm-8">
+										<select id="districtAreaId" class="col-sm-12" ng-model="searchInfos.districtAreaId"
+												ng-options="jdDistrictArea.uuid as jdDistrictArea.name for jdDistrictArea in jdDistrictAreas">
+											<option value="">全部</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="createTimeStart">
+										注册时间
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="createTimeStart" style="width: 130px;" ng-model="searchInfos.createTimeStart"
+											   onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'%y-%M-%d %H:%m\'}',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+										至
+										<input type="text" id="createTimeEnd" style="width: 130px;" ng-model="searchInfos.createTimeEnd"
+											   onFocus="WdatePicker({minDate:'#F{$dp.$D(\'createTimeStart\')}',maxDate:'%y-%M-%d %H:%m',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="scene">
+										渠道名称
+									</label>
+									<div class="col-sm-9">
+										<ui-select id="scene" multiple ng-model="searchInfos.qrcodeList" theme="bootstrap">
+											<ui-select-match placeholder="输入姓名查找渠道名称">
+												{{$item.name}} 
+											</ui-select-match>
+
+											<ui-select-choices repeat="jdQrcode in jdQrcodeList track by $index" refresh="refreshAddresses($select.search)" refresh-delay="0">
+												<div ng-bind-html="jdQrcode.name | highlight: $select.search"></div>
+											</ui-select-choices>
+										</ui-select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="s_name">
+										姓名
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="s_name" class="form-control" ng-model="searchInfos.name" maxlength="21">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="s_phoneNumber">
+										手机号码
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="s_phoneNumber" class="form-control" ng-model="searchInfos.phoneNumber" maxlength="11">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="s_parentPhone">
+										邀请人号码
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="s_parentPhone" class="form-control" ng-model="searchInfos.parentPhone" maxlength="11">
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+                <script type="text/ng-template" id="editJdPatient.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>患者信息</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="jdDistrictId">
+										地区
+									</label>
+									<div class="col-sm-8">
+										<select id="jdDistrictId" class="col-sm-12" ng-model="jdPatientInfo.jdDistrictId"
+												ng-options="jdDistrict.uuid as jdDistrict.name for jdDistrict in jdDistricts">
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="name">
+										姓名
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="name" class="form-control" ng-model="jdPatientInfo.name" maxlength="21">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="phoneNumber">
+										手机号码
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="phoneNumber" class="form-control" ng-model="jdPatientInfo.phoneNumber" maxlength="11" disabled>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="recommandCode">
+										邀请码
+									</label>
+									<div class="col-sm-8">
+										<input type="text" id="recommandCode" class="form-control" ng-model="jdPatientInfo.recommandCode" maxlength="15">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="recommandReward">
+										邀请奖励
+									</label>
+									<div class="col-sm-5">
+										<input id="recommandReward" type="text" value="0" class="form-control" ng-model="jdPatientInfo.recommandReward"
+											   maxlength="2" name="recommandReward" touchspin data-min="0" data-max="20" data-postfix_extraclass="btn btn-default">
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+            </div>
+        </div>
+    </div>
+	<tabset class="tabbable" style="margin-top:20px">
+		<tab heading="预约历史" ng-controller="PatientOrderHistoryCtrl">
+			<button id="btn_ALL" ng-click="statusChange('ALL')" type="button" class="btn btn-wide btn-primary active" style="min-width: 25px;">
+				全部
+			</button>
+			<button id="btn_WAITTO_PAY" ng-click="statusChange('WAITTO_PAY')" type="button" class="btn btn-wide btn-default active" style="min-width: 25px;">
+				待付款
+			</button>
+			<button id="btn_WAITTO_DIAGNOSE" ng-click="statusChange('WAITTO_DIAGNOSE')" type="button" class="btn btn-wide btn-default active" style="min-width: 25px;">
+				待就诊
+			</button>
+			<button id="btn_WAITTO_COMMENT" ng-click="statusChange('WAITTO_COMMENT')" type="button" class="btn btn-wide btn-default active" style="min-width: 25px;">
+				待评价
+			</button>
+			<button id="btn_WAITTO_SHARE" ng-click="statusChange('WAITTO_SHARE')" type="button" class="btn btn-wide btn-default active" style="min-width: 25px;">
+				待分享
+			</button>
+			<div class="table-responsive" style="margin-top:15px;">
+				<table ng-table="orderHistoryTableParams" class="table table-hover">
+					<thead>
+					<tr>
+						<th>订单号</th>
+						<th>时间</th>
+						<th>患者姓名</th>
+						<th>联系电话</th>
+						<th>年龄</th>
+						<th>订单状态</th>
+						<th>病情描述</th>
+					</tr>
+					</thead>
+					<tr ng-repeat="order in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+						<td class="center">{{order.orderNumber}}</td>
+						<td class="center">{{order.createDate}}</td>
+						<td class="center">{{order.name}}</td>
+						<td class="center">{{order.phoneNumber}}</td>
+						<td class="center">{{order.age}}</td>
+						<td class="center">
+							{{showOrderStatus(order.status)}}
+						</td>
+						<td class="center" ng-if="order.sickDescription.length>10" title="{{order.sickDescription}}">
+							{{order.sickDescription | limitTo:10}}...
+						</td>
+						<td class="center" ng-if="order.sickDescription.length<=10">
+							{{order.sickDescription}}
+						</td>
+					</tr>
+				</table>
+			</div>
+		</tab>
+		<tab heading="发展用户" ng-controller="PatientOfflineCtrl">
+			<button ng-click="exportOffline()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+				导出Excel <i class="fa fa-download"></i>
+			</button>
+			<p style="margin-top:5px;">
+				<strong>总记录数:</strong> {{offlineTableParams.total()}}
+			</p>
+			<div class="table-responsive">
+				<table ng-table="offlineTableParams" class="table table-hover">
+					<thead>
+					<tr>
+						<th>城市</th>
+						<th>手机号码</th>
+						<th>微信名</th>
+						<th>注册时间</th>
+					</tr>
+					</thead>
+					<tr ng-repeat="offline in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+						<td class="center">{{offline.location}}</td>
+						<td class="center">{{offline.phoneNumber}}</td>
+						<td class="center">{{offline.name}}</td>
+						<td class="center">{{offline.createDate}}</td>
+					</tr>
+				</table>
+			</div>
+		</tab>
+		<tab heading="联系人" ng-controller="PatientContactsCtrl">
+			<div class="table-responsive">
+				<table ng-table="contactsTableParams" class="table table-hover">
+					<thead>
+					<tr>
+						<th>姓名</th>
+						<th>性别</th>
+						<th>年龄</th>
+						<th>身份证号</th>
+						<th>手机号码</th>
+						<th>操作</th>
+					</tr>
+					</thead>
+					<tr ng-repeat="contacts in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+						<td class="center">{{contacts.name}}</td>
+						<td class="center">{{contacts.gender=='M'?'男':'女'}}</td>
+						<td class="center">{{contacts.age}}</td>
+						<td class="center">{{contacts.idCard}}</td>
+						<td class="center">{{contacts.phoneNumber}}</td>
+						<td class="center">
+							<div class="visible-md visible-lg hidden-sm hidden-xs">
+								<a href="#" ng-click="more(contacts)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="病史"><i
+										class="fa fa-search"></i></a>
+							</div>
+							<div class="visible-xs visible-sm hidden-md hidden-lg">
+								<div class="btn-group" dropdown is-open="status.isopen">
+									<button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle" dropdown-toggle>
+										<i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu pull-right dropdown-light" role="menu">
+										<li>
+											<a href="#" ng-click="more(contacts)">病史</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<script type="text/ng-template" id="moreContactsInfo.html">
+				<div class="modal-header">
+					<h5 class="modal-title"><b>病史详情</b></h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								既往病史：
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									{{contactsInfo.medicalHistory}}
+								</label>
+							</div>
+							<div class="form-group">
+								家族病史：
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									{{contactsInfo.familyHistory}}
+								</label>
+							</div>
+							<div class="form-group">
+								过敏病史：
+							</div>
+							<div class="form-group">
+								<label class="col-sm-12">
+									{{contactsInfo.allergyHistory}}
+								</label>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="cancel($event)">关闭</button>
+				</div>
+			</script>
+		</tab>
+	</tabset>
+</div>

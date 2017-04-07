@@ -1,0 +1,104 @@
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div ng-controller="JdQrcodeSpreadCtrl" class="col-md-12">
+			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<button ng-click="export()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+				导出Excel <i class="fa fa-download"></i>
+			</button>
+			<p style="margin-top:25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                	<thead>
+						<tr>
+							<th>微信昵称</th>
+							<th>关注时间</th>
+							<th>渠道名称</th>
+						</tr>
+					</thead>
+                    <tr ng-repeat="jdQrcodeSpread in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                    	<td class="center">{{jdQrcodeSpread.wechatName}}</td>
+						<td class="center">{{jdQrcodeSpread.createDate}}</td>
+						<td class="center">{{jdQrcodeSpread.sceneName?jdQrcodeSpread.sceneName:"无"}}</td>
+                    </tr>
+                </table>
+            </div>
+			<script type="text/ng-template" id="searchJdQrcodeSpread.html">
+				<div class="modal-header">
+					<h5 class="modal-title"><b>查询条件</b></h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="scene">
+									渠道名称：
+								</label>
+								<div class="col-sm-9">
+									<!--<ui-select id="scene" multiple ng-model="searchInfos.qrcodeList" theme="bootstrap">-->
+										<!--<ui-select-match>-->
+											<!--{{$item.name}}-->
+										<!--</ui-select-match>-->
+										<!---->
+										<!--<ui-select-choices repeat="jdQrcode in jdQrcodeList" refresh="refreshAddresses($select.search)" refresh-delay="0">-->
+											<!--<div ng-bind-html="jdQrcode.name | highlight: $select.search"></div>-->
+										<!--</ui-select-choices>-->
+									<!--</ui-select>-->
+
+									<!--<ui-select id="scene" multiple ng-model="searchInfos.qrcodeList" theme="bootstrap">-->
+										<!--<ui-select-match>-->
+											<!--{{$item.name}}-->
+										<!--</ui-select-match>-->
+										<!--<ui-select-choices repeat="jdQrcode in jdQrcodeList" refresh="refreshAddresses($select.search)" refresh-delay="0">-->
+											<!--<div ng-bind-html="jdQrcode.name | highlight: $select.search"></div>-->
+										<!--</ui-select-choices>-->
+									<!--</ui-select>-->
+
+									<ui-select  multiple ng-model="searchInfos.qrcodeList" theme="bootstrap">
+										<ui-select-match>
+											{{$item.name}}
+										</ui-select-match>
+										<!--<ui-select-choices repeat="jdQrcode in jdQrcodeList" refresh="refreshAddresses($select.search)" refresh-delay="0" append-to-body="true">-->
+											<!--<div ng-bind-html="jdQrcode.name | highlight: $select.search"></div>-->
+										<!--</ui-select-choices>-->
+
+										<ui-select-choices repeat="jdQrcode in jdQrcodeList" refresh="refreshAddresses($select.search)" refresh-delay="2" append-to-body="true">
+											<div ng-bind-html="jdQrcode.name | highlight: $select.search"></div>
+										</ui-select-choices>
+									</ui-select>
+
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="startTime">
+									开始时间：
+								</label>
+								<div class="col-sm-9">
+									<input type="text" id="startTime" class="form-control" ng-model="searchInfos.startTime"
+										   onClick="WdatePicker({maxDate:'%y-%M-%d %H:%m',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label" for="endTime">
+									结束时间：
+								</label>
+								<div class="col-sm-9">
+									<input type="text" id="endTime" class="form-control" ng-model="searchInfos.endTime"
+										   onClick="WdatePicker({maxDate:'%y-%M-%d %H:%m',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+				</div>
+			</script>
+        </div>
+    </div>
+</div>

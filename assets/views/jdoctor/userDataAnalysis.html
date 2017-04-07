@@ -1,0 +1,377 @@
+<div class="container-fluid container-fullw bg-white">
+    <tabset class="tabbable">
+        <tab heading="用户分析" ng-controller="UserAnalysisCtrl">
+            <div class="col-sm-12">
+                <div class="panel panel-white no-radius">
+                    <div class="panel-heading border-light" style="display: none;">
+                        <h4 class="panel-title">筛选条件</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-sm-12" style="display: none;">
+                            <div class="col-md-4" style="padding:0px;">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" style="padding: 0px" for="userType">
+                                        用户选择<br>(默认全部)
+                                    </label>
+                                    <div class="col-sm-8" style="padding: 0px">
+                                        <ui-select id="userType" multiple ng-model="condition.userType" theme="bootstrap">
+                                            <ui-select-match>
+                                                {{$item.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="userType in userTypeList | propsFilter: {name: $select.search}">
+                                                <div ng-bind-html="userType.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="padding: 0px">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" style="padding: 0px" for="qrcodeList">
+                                        渠道选择<br>(默认全部)
+                                    </label>
+                                    <div class="col-sm-8" style="padding: 0px">
+                                        <ui-select id="qrcodeList" multiple ng-model="condition.qrcodeList" theme="bootstrap">
+                                            <ui-select-match>
+                                                {{$item.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="jdQrcode in jdQrcodeList | propsFilter: {name: $select.search}">
+                                                <div ng-bind-html="jdQrcode.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="padding: 0px">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" style="padding: 0px" for="areaList">
+                                        地区选择<br>(默认全部)
+                                    </label>
+                                    <div class="col-sm-8" style="padding: 0px">
+                                        <ui-select id="areaList" multiple ng-model="condition.areaList" theme="bootstrap">
+                                            <ui-select-match>
+                                                {{$item.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="jdDistrict in jdDistricts | propsFilter: {name: $select.search}">
+                                                <div ng-bind-html="jdDistrict.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12" style="padding-top: 20px;">
+	                        <div class="row">
+	                            <div class="col-md-12">
+	                                <div class="input-group">
+	                                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="condition.startDate"  is-open="startOpened" ng-init="startOpened = false" min-date="'2015-11-01'" max-date="condition.endDate"  ng-click="startOpen($event)" show-week="false"/>
+	                                    <span class="input-group-addon">至</span>
+	                                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="condition.endDate" is-open="endOpened" ng-init="endOpened = false" min-date="condition.startDate" max-date="today" ng-click="endOpen($event)" />
+	                                </div>
+	                            </div>
+	                         </div>
+	                        <div class="row" style="padding-top:0.6em">
+	                            <div class="col-md-12">
+	                                <button ng-click="ok()" type="button" class="btn btn-wide btn-success active center-block">
+	                                    确定条件，查看报表
+	                                </button>
+	                            </div>
+	                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <highchart id="chart1" config="chartConfig"></highchart>
+                <div class="col-sm-6 padding-left-30">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover center">
+                            <tr>
+                                <td>日期</td>
+                                <td>PV</td>
+                                <td>登录UV</td>
+                                <td>登录IP</td>
+                                <!--<td>新增用户</td>-->
+                            </tr>
+                            <tr ng-repeat="data in resultData">
+                                <td>{{data.dateStr}}</td>
+                                <td>{{data.pv}}</td>
+                                <td>{{data.uv}}</td>
+                                <td>{{data.ip}}</td>
+                                <!--<td>{{data.count}}</td>-->
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </tab>
+        <tab heading="活跃用户分析" ng-controller="ActiveUserAnalysisCtrl">
+            <div class="col-sm-12">
+                <div class="panel panel-white no-radius">
+                    <div class="panel-heading border-light" style="display: none;">
+                        <h4 class="panel-title">筛选条件</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-sm-12" style="display: none;">
+                            <div class="col-md-4" style="padding:0px;">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" style="padding: 0px" for="userType">
+                                        用户选择<br>(默认全部)
+                                    </label>
+                                    <div class="col-sm-8" style="padding: 0px">
+                                        <ui-select id="userType" multiple ng-model="condition.userType" theme="bootstrap">
+                                            <ui-select-match>
+                                                {{$item.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="userType in userTypeList | propsFilter: {name: $select.search}">
+                                                <div ng-bind-html="userType.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="padding: 0px">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" style="padding: 0px" for="qrcodeList">
+                                        渠道选择<br>(默认全部)
+                                    </label>
+                                    <div class="col-sm-8" style="padding: 0px">
+                                        <ui-select id="qrcodeList" multiple ng-model="condition.qrcodeList" theme="bootstrap">
+                                            <ui-select-match>
+                                                {{$item.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="jdQrcode in jdQrcodeList | propsFilter: {name: $select.search}">
+                                                <div ng-bind-html="jdQrcode.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="padding: 0px">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" style="padding: 0px" for="areaList">
+                                        地区选择<br>(默认全部)
+                                    </label>
+                                    <div class="col-sm-8" style="padding: 0px">
+                                        <ui-select id="areaList" multiple ng-model="condition.areaList" theme="bootstrap">
+                                            <ui-select-match>
+                                                {{$item.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="jdDistrict in jdDistricts | propsFilter: {name: $select.search}">
+                                                <div ng-bind-html="jdDistrict.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12" style="padding-top: 20px;">
+                            <div class="col-md-5">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="condition.startDate"  is-open="startOpened" ng-init="startOpened = false" min-date="'2015-06-01'" max-date="condition.endDate"  ng-click="startOpen($event)" show-week="false"/>
+                                </div>
+                                <div class="center">
+                                    <button ng-click="ok()" type="button" class="btn btn-wide btn-success active">
+                                        确定条件，查看报表
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row center">
+                <div class="col-sm-6 padding-left-30">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <tr>
+                                <td width="60%">7天活跃用户数</td>
+                                <td width="40%">{{resultData.ip}}</td>
+                            </tr>
+                            <tr>
+                                <td>30天活跃用户数</td>
+                                <td>{{resultData.uv}}</td>
+                            </tr>
+                            <!--<tr>-->
+                                <!--<td>90天活跃用户数</td>-->
+                                <!--<td>{{resultData.pv}}</td>-->
+                            <!--</tr>-->
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </tab>
+        <tab heading="订单分析" ng-controller="OrderAnalysisCtrl" style="display: none;">
+            <div class="col-sm-12">
+                <div class="panel panel-white no-radius">
+                    <div class="panel-heading border-light">
+                        <h4 class="panel-title">筛选条件</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-sm-12">
+                            <div class="col-md-3" style="padding:0px;">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" style="padding: 0px" for="userType">
+                                        用户选择<br>(默认全部)
+                                    </label>
+                                    <div class="col-sm-8" style="padding: 0px">
+                                        <ui-select id="userType" multiple ng-model="condition.userType" theme="bootstrap">
+                                            <ui-select-match>
+                                                {{$item.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="userType in userTypeList | propsFilter: {name: $select.search}">
+                                                <div ng-bind-html="userType.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="padding: 0px">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" style="padding: 0px" for="qrcodeList">
+                                        渠道选择<br>(默认全部)
+                                    </label>
+                                    <div class="col-sm-8" style="padding: 0px">
+                                        <ui-select id="qrcodeList" multiple ng-model="condition.qrcodeList" theme="bootstrap">
+                                            <ui-select-match>
+                                                {{$item.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="jdQrcode in jdQrcodeList | propsFilter: {name: $select.search}">
+                                                <div ng-bind-html="jdQrcode.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="padding: 0px">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" style="padding: 0px" for="areaList">
+                                        地区选择<br>(默认全部)
+                                    </label>
+                                    <div class="col-sm-8" style="padding: 0px">
+                                        <ui-select id="areaList" multiple ng-model="condition.areaList" theme="bootstrap">
+                                            <ui-select-match>
+                                                {{$item.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="jdDistrict in jdDistricts | propsFilter: {name: $select.search}">
+                                                <div ng-bind-html="jdDistrict.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="padding: 0px">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" style="padding: 0px" for="statusList">
+                                        订单状态<br>(默认全部)
+                                    </label>
+                                    <div class="col-sm-8" style="padding: 0px">
+                                        <ui-select id="statusList" multiple ng-model="condition.statusList" theme="bootstrap">
+                                            <ui-select-match>
+                                                {{$item.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="status in orderStatus | propsFilter: {name: $select.search}">
+                                                <div ng-bind-html="status.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12" style="padding-top: 20px;">
+                            <div class="col-md-5">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="condition.startDate"  is-open="startOpened" ng-init="startOpened = false" min-date="'2015-06-01'" max-date="condition.endDate"  ng-click="startOpen($event)" show-week="false"/>
+                                    <span class="input-group-addon">至</span>
+                                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="condition.endDate" is-open="endOpened" ng-init="endOpened = false" min-date="condition.startDate" max-date="today"  ng-click="endOpen($event)" />
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <button ng-click="ok()" type="button" class="btn btn-wide btn-success active">
+                                    确定条件，查看报表
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <highchart id="chart2" config="chartConfig"></highchart>
+                <div class="col-sm-6 padding-left-30">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover center">
+                            <tr>
+                                <td>日期</td>
+                                <td>订单数</td>
+                            </tr>
+                            <tr ng-repeat="data in resultData">
+                                <td>{{data.dateStr}}</td>
+                                <td>{{data.count}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </tab>
+        <tab heading="页面分析" ng-controller="PageAnalysisCtrl" style="display: none;">
+            <div class="col-sm-12">
+                <div class="panel panel-white no-radius">
+                    <div class="panel-heading border-light">
+                        <h4 class="panel-title">筛选条件</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-sm-12">
+                            <div class="col-md-4" style="padding: 0px">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" style="padding: 0px" for="visitPage">
+                                        受访页面
+                                    </label>
+                                    <div class="col-sm-8" style="padding: 0px">
+                                        <select id="visitPage" class="col-sm-12" ng-model="condition.visitPage"
+                                                ng-options="surveyedPage.value as surveyedPage.name for surveyedPage in surveyedPages">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="condition.startDate"  is-open="startOpened" ng-init="startOpened = false" min-date="'2015-11-01'" max-date="condition.endDate"  ng-click="startOpen($event)" show-week="false"/>
+                                    <span class="input-group-addon">至</span>
+                                    <input type="text" class="form-control" datepicker-popup="yyyy-MM-dd" ng-model="condition.endDate" is-open="endOpened" ng-init="endOpened = false" min-date="condition.startDate" max-date="today"  ng-click="endOpen($event)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12" style="padding-top: 20px;">
+                            <div class="center">
+                                <button ng-click="ok()" type="button" class="btn btn-wide btn-success active">
+                                    确定条件，查看报表
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <highchart id="chart3" config="chartConfig"></highchart>
+                <div class="col-sm-6 padding-left-30">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover center">
+                            <tr>
+                                <td>日期</td>
+                                <td>PV</td>
+                                <td>UV</td>
+                                <td>IP</td>
+                            </tr>
+                            <tr ng-repeat="data in resultData">
+                                <td>{{data.dateStr}}</td>
+                                <td>{{data.pv}}</td>
+                                <td>{{data.uv}}</td>
+                                <td>{{data.ip}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </tab>
+    </tabset>
+</div>

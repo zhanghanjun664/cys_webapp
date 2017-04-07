@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>谢谢您 橙医生</title>
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<script src="../static/js/app/rem.js"></script>
+	<link rel="stylesheet" href="../static/css/base.css">
+	<link rel="stylesheet" href="../static/css/style.css">
+
+	<script type="text/javascript" src="../static/js/libs/requirejs/require.js"></script>
+	<script type="text/javascript" src="../static/js/app.js"></script>
+	<script>
+		require(['received'],function(s){
+			s.getCardNumber();
+			s.goToDoctorReceived();
+		});
+	</script>
+
+</head>
+<body>
+<div class="monkey_bg2">
+
+		<h1 class="logo"><img src="http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/logo.png" alt=""></h1>
+		<h2 class="title2"><img src="http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/thank.png" alt=""></h2>
+		<h3 class="title3"><img src="http://cys-static-img.oss-cn-shenzhen.aliyuncs.com/greeting_card_img/thank2.png" alt=""></h3>
+		<div class="cardnumber pr">
+		<span class="pa" id="cardnumber">1</span>
+		</div>
+
+		<div class="btn_ground clearfix">
+			<a class="fl look" id="doctorReceived"></a>
+			<a href="popularlist2.html" class="fr popularity"></a>
+		</div>
+
+		</div>
+		</body>
+</html>

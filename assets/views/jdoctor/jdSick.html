@@ -1,0 +1,144 @@
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div ng-controller="jdSickCtrl" class="col-md-12">
+			<button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
+				编辑 <i class="fa fa-edit"></i>
+			</button>
+			<button ng-click="export()" type="button" class="btn btn-wide btn-info" style="min-width: 30px;">
+				导出 <i class="fa fa-download"></i>
+			</button>
+			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<p style="margin-top: 25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+			<div class="table-responsive" style="margin-top: 25px;">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+						<tr>
+							<th style="text-align: left; width: 6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()" /> <label for="selectAllCheckbox"
+										style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th>疾病编码</th>
+							<th>标准疾病编码分类名称</th>
+							<th>标注疾病编码</th>
+							<th>ICD疾病名称</th>
+							<th>所属疾病大类</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tr ng-repeat="obj in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+						<td>
+							<div class="checkbox clip-check check-primary checkbox-inline">
+								<input id="checkbox{{obj.uuid}}" type="checkbox" ng-model="obj.selected" ng-click="changeSelection($index)" />
+								<label for="checkbox{{obj.uuid}}" style="vertical-align: middle;"></label>
+							</div>
+						</td>
+						<td class="center">{{obj.code}}</td>
+						<td class="center">{{obj.codeName}}</td>
+						<td class="center">{{obj.standardCode}}</td>
+						<td class="center">{{obj.name}}</td>
+						<td class="center">{{obj.categaryName}}</td>
+						<td class="center">
+							<div class="visible-md visible-lg hidden-sm hidden-xs">
+								<a href="#" ng-click="edit(obj)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="编辑"><i
+									class="fa fa-edit"></i></a>
+							</div>
+						</td>
+					</tr>
+				</table>
+
+				<script type="text/ng-template" id="searchJdSick.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>查询条件</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label" >
+										ICD疾病名称
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="s_name" class="form-control" ng-model="searchInfos.name" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" >
+										所属疾病大类
+									</label>
+									<div class="col-sm-9">
+										<ui-select multiple ng-model="searchInfos.jdSickCategaryId" theme="bootstrap" ng-disabled="disabled" on-select="sickCategorysSelect(this,$toaster)">
+											<ui-select-match >
+												{{$item.name}}
+											</ui-select-match>
+											<ui-select-choices repeat="item.value as item in sickCategoryList | propsFilter: {name: $select.search} ">
+												<small><span ng-bind-html="''+item.name | highlight: $select.search"></span> </small>
+											</ui-select-choices>
+										</ui-select>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+
+				<script type="text/ng-template" id="editJdSick.html">
+					<div class="modal-header">
+						<h5 class="modal-title"><b>疾病信息</b></h5>
+					</div>
+					<div class="modal-body">
+						<div class="panel-body">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="jdSickCategaryId">
+										疾病编码
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="name" class="form-control" ng-model="obj.code" disabled>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" for="name">
+										疾病名称
+									</label>
+									<div class="col-sm-9">
+										<input type="text" id="name" class="form-control" ng-model="obj.name" disabled>
+									</div>
+								</div>
+								<div class="form-group" >
+									<label class="col-sm-3 control-label" for="sickCategoryids">
+										疾病大类
+									</label>
+									<div class="col-sm-9">
+										<ui-select multiple ng-model="obj.jdSickCategaryId" theme="bootstrap" ng-disabled="disabled"  on-select="sickCategorysSelect(this,toaster)">
+											<ui-select-match >
+												{{$item.name}}
+											</ui-select-match>
+											<ui-select-choices repeat="item.value as item in sickCategoryList | propsFilter: {name: $select.search} ">
+												<small><span ng-bind-html="''+item.name | highlight: $select.search"></span> </small>
+											</ui-select-choices>
+										</ui-select>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+						<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+					</div>
+				</script>
+			</div>
+		</div>
+	</div>
+</div>

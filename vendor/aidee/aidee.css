@@ -1,0 +1,45 @@
+.edit-doc-image {
+  padding-left: 32%;
+}
+.doctor-image img {
+  max-width: 120px;
+}
+@media (max-width: 768px) {
+  .edit-doc-image {
+    padding-left: 0;
+  }
+}
+.row .col-sm-3{
+  padding-right: 0px;
+  padding-left: 0px;
+}
+.row .col-xs-3{
+  padding-right: 0px;
+  padding-left: 0px;
+}
+.col-sm-2-margin-2{
+  margin: 4px 0;
+}
+
+input.checkbox_vertical {
+	vertical-align: -2px;
+	margin-right: 2px;
+	margin-left: 5px;
+}
+
+.tags {
+	margin: 0;
+}
+
+.tag-item {
+	color: #31708f !important;
+	background: #d9edf7 !important;
+}
+
+.check-tag-item {
+	width: 125px;
+	display: inline-block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}

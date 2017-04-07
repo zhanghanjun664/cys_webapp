@@ -1,0 +1,145 @@
+<div class="container-fluid container-fullw bg-white">
+    <div class="row">
+        <div ng-controller="thirdPartyPaymentHistoryCtrl" class="col-md-12">
+            <button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+                查询 <i class="fa fa-search"></i>
+            </button>
+            <button ng-click="exportPaymentHistory()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+                导出流水 <i class="fa fa-download"></i>
+            </button>
+            <p style="margin-top:25px;">
+                <strong>总记录数:</strong> {{tableParams.total()}}
+            </p>
+            <div class="table-responsive">
+                <table ng-table="tableParams" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>流水类型</th>
+                        <th>时间</th>
+                        <th>订单单号</th>
+                        <th>订单来源</th>
+                        <th>订单支付金额</th>
+                        <th>订单退款金额</th>
+                        <th>用户姓名</th>
+                        <th>用户手机</th>
+                        <th>描述</th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="payment in $data" ng-class-odd="'odd'" ng-class-even="'even'">
+                        <!--订单类型--><td class="center">{{payment.type}}</td>
+                        <!--时间--><td class="center">{{payment.createDate}}</td>
+                        <!--订单单号--><td class="center">
+                                      <span ng-if="payment.serviceOrderId!=null">
+                                          {{payment.serviceOrderId}}
+                                      </span>
+                                      <span ng-if="payment.serviceOrderId==null">
+                                          {{payment.orderNumber}}
+                                      </span>
+                                      </td>
+                                    <td class="center">{{showOrderSource(payment.source)}}</td>  
+                        <!--账户收入--><td class="center">{{payment.expense}}</td>
+                        <!--账户支出--><td class="center">{{payment.deposit}}</td>
+                        <!--用户名字--><td class="center">{{payment.name}}</td>
+                        <!--手机号码--><td class="center">{{payment.phoneNumber}}</td>
+                        <!--描述--><td class="center" ng-if="payment.description.length>10" title="{{payment.description}}">
+                                    {{payment.description | limitTo:25}}...
+                                </td>
+                                <td class="center" ng-if="payment.description==null || payment.description.length<=10">
+                                    {{payment.description}}
+                                </td>
+                    </tr>
+                </table>
+                <script type="text/ng-template" id="searchPatientAllPayment.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>查询条件</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+							   <div class="form-group">
+								<label class="col-sm-3 control-label" for="orderPlus_source">
+									订单来源
+								</label>
+								<div class="col-sm-8">
+									<select id="orderPlus_source" class="form-control" ng-model="searchInfos.source"
+											ng-options="source.value as source.name for source in orderSourceType">
+										<option value="">全部</option>
+									</select>
+								</div>
+							   </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_phoneNumber">
+                                        用户电话
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="s_phoneNumber" class="form-control" ng-model="searchInfos.phoneNumber" maxlength="11">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_name">
+                                        用户姓名
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="s_name" class="form-control" ng-model="searchInfos.userName" maxlength="11">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="createTimeStart">
+                                      时间
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="createTimeStart" style="width: 130px;" ng-model="searchInfos.createTimeStart"
+                                               onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'%y-%M-%d %H:%m\'}',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+                                        至
+                                        <input type="text" id="createTimeEnd" style="width: 130px;" ng-model="searchInfos.createTimeEnd"
+                                               onFocus="WdatePicker({minDate:'#F{$dp.$D(\'createTimeStart\')}',maxDate:'%y-%M-%d %H:%m',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="order_types">
+                                        流水类型：
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select id="order_types" class="form-control" ng-model="searchInfos.type"
+                                                ng-options="type.value as type.name for type in paymentTypes">
+                                            <option value="">全部</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="clear()">清空条件</button>
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+                <script type="text/ng-template" id="editPayment.html">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>付款信息</b></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                            <form role="form" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="name">
+                                        名称
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="name" class="form-control" ng-model="jdTitleInfo.name">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+                        <button class="btn btn-primary" ng-click="ok($event)">确定</button>
+                    </div>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
