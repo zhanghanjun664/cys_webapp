@@ -1,0 +1,14 @@
+.idea
+.idea/
+node_modules/
+dist/
+target/
+npm-debug.log
+node/
+.DS_Store
+.classpath
+.project
+.settings/
+release.properties
+*.releaseBackup
+/release.properties
