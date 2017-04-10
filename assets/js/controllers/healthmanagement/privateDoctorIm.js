@@ -130,5 +130,8 @@
 //});
 
 app.controller("privateDoctorImCtrl",function($scope){
-	$scope.name = "zhj";
+	$scope.ShowSearch = false;
+	$scope.openSearch = function(){
+	  $scope.ShowSearch = !$scope.ShowSearch
+	}
 })

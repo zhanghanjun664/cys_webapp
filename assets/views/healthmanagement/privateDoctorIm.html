@@ -8,9 +8,9 @@
 			<div class="pdiBottom_chatlistTop">
 				
 				<div class="pdiBottom_chatlistTitle">
-					<span class="glyphicon glyphicon-search pdiBottom_searchBtn"></span>
+					<span class="glyphicon glyphicon-search pdiBottom_searchBtn" ng-click="openSearch()"></span>
 					<div class="pdiBottom_chatlistTitleName">患者对话列表</div>
-					<div class="pdiBottom_searchCont">
+					<div class="pdiBottom_searchCont" ng-show="ShowSearch">
 						<div>
 							<label for="pdiBottom_searchContTell">手机号：<input type="text" id="pdiBottom_searchContTell"/></label>
 						</div>
@@ -18,8 +18,8 @@
 							<label for="pdiBottom_searchContNickname">昵称：<input type="text" id="pdiBottom_searchContNickname"/></label>
 						</div>
 						<div class="pdiBottom_searchContBtnBox">
-							<button>取消</button>
-							<button>查询</button>
+							<button ng-click="openSearch()">取消</button>
+							<button ng-click="openSearch()">查询</button>
 						</div>
 					</div>
 				</div>

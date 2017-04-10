@@ -65,9 +65,11 @@
 	cursor: pointer;
 }
 .pdiBottom_searchCont{
-	background-color: #fff;
+	background-color: #f0f0f0;
 	padding: 10px;
-	display: none;
+	position: absolute;
+	top: 100%;
+	z-index: 1;
 }
 .pdiBottom_chatlistTitleName{
 	text-align: center;
