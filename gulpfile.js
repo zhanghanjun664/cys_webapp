@@ -40,10 +40,19 @@ gulp.task('js',function(){
     .pipe(connect.reload())
 })
 
+//检测css文件变化
+var cssSrc='assets/css/**/*.css';
+gulp.task('css',function(){
+    gulp.src([cssSrc])
+    .pipe(connect.reload())
+})
+
+
 
 gulp.task('watch',function(){
   gulp.watch([htmlSrc],['html']);
   gulp.watch([jsSrc],['js']);
+  gulp.watch([cssSrc],['css']);
 })
 
 gulp.task("default",['connect',"watch"]);
