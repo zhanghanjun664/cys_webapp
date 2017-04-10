@@ -137,7 +137,7 @@ app.constant('JS_REQUIRES', {
         'adItemCtrl': 'assets/js/controllers/adItem.js',
         'tagCtrl': 'assets/js/controllers/tag.js',
         'healthWarningCtrl': 'assets/js/controllers/healthWarning.js',
-        'privateDoctorIm': 'assets/js/controllers/healthmanagement/privateDoctorIm.js'
+        'privateDoctorImCtrl': 'assets/js/controllers/healthmanagement/privateDoctorIm.js'
     },
     //*** angularJS Modules
     modules: [{
