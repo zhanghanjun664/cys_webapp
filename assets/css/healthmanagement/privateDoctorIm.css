@@ -70,6 +70,8 @@
 	position: absolute;
 	top: 100%;
 	z-index: 1;
+	width: 100%;
+	border-bottom: 1px solid;
 }
 .pdiBottom_chatlistTitleName{
 	text-align: center;
@@ -79,6 +81,9 @@
 .pdiBottom_chatlistCont{
 	overflow: auto;
 	height: 520px;
+}
+.pdiBottom_chatlistCont .active{
+	background-color: #ffffcc;
 }
 .pdiBottom_chatlistContBox{
 	padding: 10px;
@@ -90,6 +95,9 @@
 }
 .pdiBottom_chatlistContBox div{
 	position: relative;
+	max-height: 36px;
+	overflow-y: hidden;
+	text-overflow: ellipsis;
 }
 .pdi_circle{
 	background-color: red;
@@ -119,6 +127,7 @@
 	top: 10px;
 	left: 10px;
 	z-index: 1;
+	color: #000;
 }
 .pdiBottom_chatRecord{
 	width: 92%;

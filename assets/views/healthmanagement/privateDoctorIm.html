@@ -1,4 +1,5 @@
 <div ng-controller="privateDoctorImCtrl" class="pdiBox">
+	<script src="assets/js/controllers/healthmanagement/RongIMLib-2.2.5.min.js" type="text/javascript" charset="utf-8"></script>
 	<div class="pdiTop">
 		<img src="assets/images/logo.jpg" class="pdiTop_img"/>
 	</div>
@@ -26,25 +27,15 @@
 				
 				<div class="pdiBottom_chatlistCont">
 					<!--单个对话列表-->
-					<div class="pdiBottom_chatlistContBox">
+					<div class={{hadClicked==item.name?"active":""}} ng-class="{'pdiBottom_chatlistContBox':1}" ng-repeat="item in userList" ng-click="handleClick(item)">
 						<div>
-							<span class="pdi_circle"></span>
-							<span class="pdiBottom_chatlistCont_name">小白</span>
-							<span class="pdiBottom_chatlistCont_tel">13755553333</span>
-							<span class="pdiBottom_chatlistCont_tag">365服务包，高血压</span>
+							<span class={{item.hadRead?"":"pdi_circle"}}></span>
+							<span class="pdiBottom_chatlistCont_name">{{item.name}}</span>
+							<span class="pdiBottom_chatlistCont_tel">{{item.tel}}</span>
+							<!--<span class="pdiBottom_chatlistCont_tag" ng-repeat="items in item.tags">{{items}}</span>-->
 						</div>
-						<div class="pdiBottom_chatlistContBox2">你是风儿我是沙，你会唱吗？</div>
-						<div class="text-right">今天 15:52:22</div>
-					</div>
-					<div class="pdiBottom_chatlistContBox">
-						<div>
-							<span class="pdi_circle"></span>
-							<span class="pdiBottom_chatlistCont_name">小X</span>
-							<span class="pdiBottom_chatlistCont_tel">13755553333</span>
-							<span class="pdiBottom_chatlistCont_tag">365服务包，高血压</span>
-						</div>
-						<div class="pdiBottom_chatlistContBox2">你是风儿我是沙，你会唱吗？</div>
-						<div class="text-right">2016-12-12 15:52:22</div>
+						<div class="pdiBottom_chatlistContBox2">{{item.content}}</div>
+						<div class="text-right">{{item.time}}</div>
 					</div>
 					
 				</div>
@@ -82,7 +73,7 @@
 					<div class="pdiBottom_patientBox clearfix">
 						<img src="assets/images/avatar-7.jpg" class="pdiBottom_headingImg"/>
 						<div class="pdiBottom_chatRecordCont">你好
-							<img src="assets/images/logo3.png" class="pdiBottom_chatRecordContImg"/>
+							<img src="assets/images/logo3.png" class="pdiBottom_chatRecordContImg" ng-click="showImg('assets/images/logo3.png')"/>
 						</div>
 					</div>
 					
@@ -118,4 +109,9 @@
 			</div>
 		</div>
 	</div>
+	<script type="text/ng-template" id="pdiShowImage.html">
+		<div class="text-center padding-10">
+			<img src={{showImgUrl}} />
+		</div>
+	</script>
 </div>
