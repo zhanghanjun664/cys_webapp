@@ -132,6 +132,7 @@ app.controller("privateDoctorImCtrl",function($scope,$modal){
         repeat: false
     };
 	
+	$scope.historyMsg = [];
 	//获取聊天记录(type ===1 ,表示第一次获取聊天记录);
     var getHistory = function (type, number) {
         var conversationtype = RongIMLib.ConversationType.PRIVATE;
@@ -146,14 +147,17 @@ app.controller("privateDoctorImCtrl",function($scope,$modal){
             console.log("服务器配置出错")
             return false;
         }
-		console.log(conversationtype,config.targetId);
+		    //拉历史消息
         RongIMClient.getInstance().getHistoryMessages(conversationtype, config.targetId, null, number, {
             onSuccess: function (list, hasMsg) {
-            	console.log(list);
+            	console.log(list,hasMsg);
+            	
                 if (type === 1) {
-                	console.log("第一次获取聊天记录")
+                	console.log("第一次获取聊天记录");
+                	$scope.historyMsg = list;
                 } else if (type === 2) {
-                	console.log("不是第一次获取聊天记录")
+                	console.log("不是第一次获取聊天记录");
+                	$scope.historyMsg = list.concat($scope.historyMsg);
                 } else {
                     console("请设置是否第一次进入聊天记录");
                 }
@@ -357,6 +361,9 @@ app.controller("privateDoctorImCtrl",function($scope,$modal){
 	connect();
 	$scope.send = function(){
 		var msg = new RongIMLib.TextMessage({content:$scope.sendContent,extra:"附加信息"});
+		console.log(msg)
+		$scope.historyMsg.push(msg);
+		console.log($scope.historyMsg);
 		$scope.sendContent = "";
 		 var conversationtype = RongIMLib.ConversationType.PRIVATE; // 私聊
 		 RongIMClient.getInstance().sendMessage(conversationtype, config.targetId, msg, {
