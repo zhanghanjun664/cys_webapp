@@ -19,6 +19,10 @@ gulp.task('connect', function() {
                 proxy('/j_spring_security_logout',{
                     target: 'https://staging.chengyisheng.com.cn/',
                     changeOrigin:true
+                }),
+                proxy('/jdHealthExamination',{
+                    target: 'https://staging.chengyisheng.com.cn/',
+                    changeOrigin:true
                 })
             ]
         }

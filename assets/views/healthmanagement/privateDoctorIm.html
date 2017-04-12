@@ -98,13 +98,13 @@
 			
 			
 			<div class="pdiBottom_chatcontBottom">
-				<textarea class="pdiBottom_chatcontBottomValue"></textarea>
+				<textarea class="pdiBottom_chatcontBottomValue" ng-model="sendContent" ng-keydown="shouldSend($event)">{{sendContent}}</textarea>
 				<div class="pdiBottom_chatcontBottomBtn">
 					<button>
 						<span>插入图片</span>
 						<input type="file" class="pdiBottom_uploadImg"/>
 					</button>
-					<button>发送</button>
+					<button ng-click="send()">发送</button>
 				</div>
 			</div>
 		</div>
