@@ -52,17 +52,12 @@
 				<div class="pdiBottom_chatRecord">
 					<!--聊天记录 -->
 					<div class="pdiBottom_chatRecord_history">
-						<span class="glyphicon glyphicon-time"> 查看更多消息</span>
+						<span class="glyphicon glyphicon-time" ng-click="getMoreHistoryMsg()" ng-init="getMoreHistoryMsgBtn='查看更多消息'" ng-modal="getMoreHistoryMsgBtn"> {{getMoreHistoryMsgBtn}}</span>
 					</div>
 					
 					<!--时间-->
-					<div class="pdiBottom_chatRecord_time">
+					<!--<div class="pdiBottom_chatRecord_time">
 						<span>07月18日 15:52</span>
-					</div>
-					
-					<div class="pdiBottom_patientBox clearfix">
-						<img src="assets/images/avatar-7.jpg" class="pdiBottom_headingImg"/>
-						<div class="pdiBottom_chatRecordCont">医生你好，我来报到了。有效期至2018年2月4日。</div>
 					</div>
 					
 					<div class="pdiBottom_patientBox clearfix">
@@ -84,20 +79,27 @@
 						</div>
 					</div>
 					
-					<div class="pdiBottom_doctorBox clearfix">
-						<img src="assets/images/avatar-7.jpg" class="pdiBottom_headingImg"/>
-						<div class="pdiBottom_chatRecordCont">我是医生
-							<img src="assets/images/logo3.png" class="pdiBottom_chatRecordContImg"/>
+					<div class="pdiBottom_chatRecord_time">
+						<span>07月18日 15:52</span>
+					</div>-->
+					
+					<div ng-repeat="item in historyMsg" ng-init="lastTime=historyMsg[$index-1].sentTime;nowTime=item.sentTime;handleDay(lastTime,nowTime,$index)">
+						
+						<!--超过一分钟显示时间-->
+						<div class="pdiBottom_chatRecord_time" ng-show="nowTime-lastTime>60000?true:false">
+							<span>{{ nowTime|date:"HH:mm:ss" }}</span>
 						</div>
+						<!--不在同一天显示日期-->
+						<div class="pdiBottom_chatRecord_time" ng-show="item.showDetailDate">
+							<span>{{ nowTime|date:"MM-dd HH:mm:ss" }}</span>
+						</div>
+						
+						
+						<div class={{item.senderUserId==config.doctorId?"pdiBottom_doctorBox":"pdiBottom_patientBox"}} ng-class="{'clearfix':1}">
+				            <img src="assets/images/avatar-7.jpg" class="pdiBottom_headingImg"/>
+				            <div class="pdiBottom_chatRecordCont">{{item.content.content}}</div>
+				        </div>
 					</div>
-					
-					
-					<div class="pdiBottom_doctorBox clearfix" ng-repeat="item in historyMsg">
-            <img src="assets/images/avatar-7.jpg" class="pdiBottom_headingImg"/>
-            <div class="pdiBottom_chatRecordCont">
-              {{item.content.content}}
-            </div>
-          </div>
 					
 					
 					
@@ -106,7 +108,7 @@
 			
 			
 			<div class="pdiBottom_chatcontBottom">
-				<textarea class="pdiBottom_chatcontBottomValue" ng-model="sendContent" ng-keydown="shouldSend($event)">{{sendContent}}</textarea>
+				<textarea class="pdiBottom_chatcontBottomValue" ng-model="sendContent" ng-keyup="shouldSend($event)">{{sendContent}}</textarea>
 				<div class="pdiBottom_chatcontBottomBtn">
 					<button>
 						<span>插入图片</span>

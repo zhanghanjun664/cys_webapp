@@ -1,4 +1,4 @@
-app.controller("privateDoctorImCtrl",function($scope,$modal){
+app.controller("privateDoctorImCtrl",function($scope,$modal,$element){
 //	RongIMClient.init("kj7swf8o70pf2");
 //	// 设置连接监听状态 （ status 标识当前连接状态 ）// 连接状态监听器
 //	RongIMClient.setConnectionStatusListener({
@@ -115,18 +115,18 @@ app.controller("privateDoctorImCtrl",function($scope,$modal){
 //			alert(errorCode);
 //		}
 //	});
+	
 
-	
+
 	RongIMClient.init("kj7swf8o70pf2");
-	
-	var config = {
+	$scope.config = {
         testAppKey: 'kj7swf8o70pf2',
         appKey: 'qf3d5gbj3mzgh',
         weixinKey: 'c9kqb3rdkdbfj',
         token: "doC38rom5UcpE7sNAXfWvxHEr6hXhR4NaJZD55HvbR9aTpIyQPjjjW0jHQczR3NtVPeILr9MNhasAId4HDw48gPhk+bNslkk",
         targetId: "d:647858843",
         type: 'PRIVATE',
-        doctorId: null,
+        doctorId: "test_user_id",
         teamId: null,
         quota: null,
         repeat: false
@@ -135,32 +135,48 @@ app.controller("privateDoctorImCtrl",function($scope,$modal){
 	$scope.historyMsg = [];
 	//获取聊天记录(type ===1 ,表示第一次获取聊天记录);
     var getHistory = function (type, number) {
+    	$scope.getMoreHistoryMsgBtn = "消息拉取中...";
         var conversationtype = RongIMLib.ConversationType.PRIVATE;
-
-        if (config.type === "PRIVATE") {
-            conversationtype = RongIMLib.ConversationType.PRIVATE;
-        } else if (config.type === "GROUP") {
-            conversationtype = RongIMLib.ConversationType.GROUP;
-        }
-
-        if (conversationtype === null) {
-            console.log("服务器配置出错")
-            return false;
-        }
-		    //拉历史消息
-        RongIMClient.getInstance().getHistoryMessages(conversationtype, config.targetId, null, number, {
+//
+//      if ($scope.config.type === "PRIVATE") {
+//          conversationtype = RongIMLib.ConversationType.PRIVATE;
+//      } else if ($scope.config.type === "GROUP") {
+//          conversationtype = RongIMLib.ConversationType.GROUP;
+//      }
+//
+//      if (conversationtype === null) {
+//          console.log("服务器配置出错")
+//          return false;
+//      }
+		//拉历史消息
+        RongIMClient.getInstance().getHistoryMessages(conversationtype, $scope.config.targetId, null, number, {
             onSuccess: function (list, hasMsg) {
             	console.log(list,hasMsg);
-            	
-                if (type === 1) {
-                	console.log("第一次获取聊天记录");
-                	$scope.historyMsg = list;
-                } else if (type === 2) {
-                	console.log("不是第一次获取聊天记录");
-                	$scope.historyMsg = list.concat($scope.historyMsg);
-                } else {
-                    console("请设置是否第一次进入聊天记录");
-                }
+            	if(!hasMsg&&!list.length){
+            		console.log("不能再拉了");
+            		$scope.$apply(function(){
+            			$scope.getMoreHistoryMsgBtn = "已经没有更多消息";
+            			$scope.getMoreHistoryMsg = null;
+            		})
+            		
+            		return
+            	}
+            	$scope.$apply(function(){
+            		if (type === 1) {
+	                	console.log("第一次获取聊天记录");
+	                	$scope.getMoreHistoryMsgBtn = "查看更多消息";
+	                	$scope.historyMsg = list;
+	                	$scope.scrollBar();
+	                } else if (type === 2) {
+	                	console.log("不是第一次获取聊天记录");
+	                	$scope.getMoreHistoryMsgBtn = "查看更多消息";
+	                	$scope.historyMsg = list.concat($scope.historyMsg);
+	                } else {
+	                    console("请设置是否第一次进入聊天记录");
+	                }
+	                
+            	})
+                
             },
             onError: function (error) {
                 console.log("失败了")
@@ -173,15 +189,19 @@ app.controller("privateDoctorImCtrl",function($scope,$modal){
         getHistory(2, 20);
     };
 	
+	$scope.scrollBar = function () {
+        setTimeout(function () {
+			$(".pdiBottom_chatcontTop").scrollTop($(".pdiBottom_chatRecord").height());
+        }, 0);
+    };
+	
 	
 	//服务器链接
     var connect = function () {
-        RongIMClient.connect(config.token, {
+        RongIMClient.connect($scope.config.token, {
             onSuccess: function (userId) {
                 console.log("Login successfully." + userId);
-                getHistory(1, 3);
-                getMoreHistory();
-
+                getHistory(1, 10);
             },
             onTokenIncorrect: function () {
                 console.log('token无效');
@@ -248,8 +268,8 @@ app.controller("privateDoctorImCtrl",function($scope,$modal){
                 switch (message.messageType) {
                     case RongIMClient.MessageType.TextMessage:
                     	if (message.conversationType === 1) {
-                            if (config.type === "PRIVATE") {
-                                if (message.senderUserId === config.targetId) {
+                            if ($scope.config.type === "PRIVATE") {
+                                if (message.senderUserId === $scope.config.targetId) {
                                     setItem(message);
                                     messageUtil.goToBottom();
                                 }
@@ -263,17 +283,17 @@ app.controller("privateDoctorImCtrl",function($scope,$modal){
                         break;
                     case RongIMClient.MessageType.ImageMessage:
 						console.log("图片消息")
-                        if (config.repeat === false) {
+                        if ($scope.config.repeat === false) {
                             if (message.conversationType === 3) {
-                                if (config.type === "GROUP") {
-                                    if (message.targetId === config.targetId) {
+                                if ($scope.config.type === "GROUP") {
+                                    if (message.targetId === $scope.config.targetId) {
                                         setItem(message);
                                         messageUtil.goToBottom();
                                     }
                                 }
                             } else if (message.conversationType === 1) {
-                                if (config.type === "PRIVATE") {
-                                    if (message.senderUserId === config.targetId) {
+                                if ($scope.config.type === "PRIVATE") {
+                                    if (message.senderUserId === $scope.config.targetId) {
                                         setItem(message);
                                         messageUtil.goToBottom();
                                     }
@@ -292,17 +312,17 @@ app.controller("privateDoctorImCtrl",function($scope,$modal){
                         break;
                     case RongIMClient.MessageType.RichContentMessage:
                         // do something...
-                        if (config.repeat === false) {
+                        if ($scope.config.repeat === false) {
                             if (message.conversationType === 3) {
-                                if (config.type === "GROUP") {
-                                    if (message.targetId === config.targetId) {
+                                if ($scope.config.type === "GROUP") {
+                                    if (message.targetId === $scope.config.targetId) {
                                         setItem(message);
                                         messageUtil.goToBottom();
                                     }
                                 }
                             } else if (message.conversationType === 1) {
-                                if (config.type === "PRIVATE") {
-                                    if (message.senderUserId === config.targetId) {
+                                if ($scope.config.type === "PRIVATE") {
+                                    if (message.senderUserId === $scope.config.targetId) {
                                         setItem(message);
                                         messageUtil.goToBottom();
                                     }
@@ -327,14 +347,14 @@ app.controller("privateDoctorImCtrl",function($scope,$modal){
                         break;
                     case RongIMClient.MessageType.CommandNotificationMessage:
 
-                        if (config.repeat === false) {
-                            if (config.type === "PRIVATE") {
-                                if (message.senderUserId === config.targetId) {
+                        if ($scope.config.repeat === false) {
+                            if ($scope.config.type === "PRIVATE") {
+                                if (message.senderUserId === $scope.config.targetId) {
                                     if (message.content.name === 'stop_im') {
                                         chatStatus(2);
                                     } else if (message.content.name === 'resume_im') {
                                         //条数
-                                        if (config.token) {
+                                        if ($scope.config.token) {
                                             chatStatus(4);
                                             sendMessageUtil.sendMessage();
                                         } else {
@@ -360,55 +380,61 @@ app.controller("privateDoctorImCtrl",function($scope,$modal){
     };
 	connect();
 	$scope.send = function(){
+		if($scope.sendContent==undefined||$scope.sendContent.length==0){
+			console.log("不能发送消息");
+			return
+		}
 		var msg = new RongIMLib.TextMessage({content:$scope.sendContent,extra:"附加信息"});
-		console.log(msg)
-		$scope.historyMsg.push(msg);
-		console.log($scope.historyMsg);
-		$scope.sendContent = "";
-		 var conversationtype = RongIMLib.ConversationType.PRIVATE; // 私聊
-		 RongIMClient.getInstance().sendMessage(conversationtype, config.targetId, msg, {
-                // 发送消息成功
-                onSuccess: function (message) {
-                    //message 为发送的消息对象并且包含服务器返回的消息唯一Id和发送消息时间戳
-                    console.log(message);
-                    getHistory(2,10);
-                },
-                onError: function (errorCode,message) {
-                    var info = '';
-                    switch (errorCode) {
-                        case RongIMLib.ErrorCode.TIMEOUT:
-                            info = '超时';
-                            break;
-                        case RongIMLib.ErrorCode.UNKNOWN_ERROR:
-                            info = '未知错误';
-                            break;
-                        case RongIMLib.ErrorCode.REJECTED_BY_BLACKLIST:
-                            info = '在黑名单中，无法向对方发送消息';
-                            break;
-                        case RongIMLib.ErrorCode.NOT_IN_DISCUSSION:
-                            info = '不在讨论组中';
-                            break;
-                        case RongIMLib.ErrorCode.NOT_IN_GROUP:
-                            info = '不在群组中';
-                            break;
-                        case RongIMLib.ErrorCode.NOT_IN_CHATROOM:
-                            info = '不在聊天室中';
-                            break;
-                        default :
-                            info = x;
-                            break;
-                    }
-                    console.log('发送失败:' + info);
+		var conversationtype = RongIMLib.ConversationType.PRIVATE; // 私聊
+		RongIMClient.getInstance().sendMessage(conversationtype, $scope.config.targetId, msg, {
+            // 发送消息成功
+            onSuccess: function (message) {
+                //message 为发送的消息对象并且包含服务器返回的消息唯一Id和发送消息时间戳
+                console.log(message);
+                $scope.$apply(function(){
+                	$scope.historyMsg.push(message);
+                	$scope.scrollBar();
+                	$scope.sendContent = "";
+                })
+            },
+            onError: function (errorCode,message) {
+                var info = '';
+                switch (errorCode) {
+                    case RongIMLib.ErrorCode.TIMEOUT:
+                        info = '超时';
+                        break;
+                    case RongIMLib.ErrorCode.UNKNOWN_ERROR:
+                        info = '未知错误';
+                        break;
+                    case RongIMLib.ErrorCode.REJECTED_BY_BLACKLIST:
+                        info = '在黑名单中，无法向对方发送消息';
+                        break;
+                    case RongIMLib.ErrorCode.NOT_IN_DISCUSSION:
+                        info = '不在讨论组中';
+                        break;
+                    case RongIMLib.ErrorCode.NOT_IN_GROUP:
+                        info = '不在群组中';
+                        break;
+                    case RongIMLib.ErrorCode.NOT_IN_CHATROOM:
+                        info = '不在聊天室中';
+                        break;
+                    default :
+                        info = x;
+                        break;
                 }
+                console.log('发送失败:' + info);
             }
-        );
+        });
 	}
 	$scope.shouldSend = function(e){
 		if(e.keyCode == 13){
 			$scope.send();
 		}
+		e.preventDefault();
 	}
-	
+	$scope.getMoreHistoryMsg = function(){
+		getHistory(2,20);
+	}
 	
 	
 	
@@ -470,7 +496,16 @@ app.controller("privateDoctorImCtrl",function($scope,$modal){
 		}
 	]
 	
-	
+	//判断是否在同一天
+	$scope.handleDay = function(last,now,index){
+		lastDay=parseInt((last+8*60*60*1000)/(24*60*60*1000));
+		nowDay=parseInt((now+8*60*60*1000)/(24*60*60*1000));
+		if(nowDay - lastDay >0){
+			$scope.historyMsg[index].showDetailDate = true;
+		}else{
+			$scope.historyMsg[index].showDetailDate = false;
+		}
+	}
 	//看大图
 	$scope.showImg = function(imgUrl){
 		$modal.open({

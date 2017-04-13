@@ -121,6 +121,7 @@
 	border: 1px solid;
 	position: relative;
 	background-color: #fff;
+	overflow: auto;
 }
 .pdiBottom_chatcontTopFile{
 	position: absolute;
@@ -131,9 +132,7 @@
 }
 .pdiBottom_chatRecord{
 	width: 92%;
-	height: 100%;
 	margin: 0 auto;
-	overflow-y: auto;
 }
 .pdiBottom_chatRecord div{
 	margin: 10px 0;
