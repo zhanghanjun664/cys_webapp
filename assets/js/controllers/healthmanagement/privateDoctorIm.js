@@ -184,10 +184,6 @@ app.controller("privateDoctorImCtrl",function($scope,$modal,$element){
         });
     };
     
-    //得到更多历史消息
-    var getMoreHistory = function () {
-        getHistory(2, 20);
-    };
 	
 	$scope.scrollBar = function () {
         setTimeout(function () {
@@ -202,6 +198,16 @@ app.controller("privateDoctorImCtrl",function($scope,$modal,$element){
             onSuccess: function (userId) {
                 console.log("Login successfully." + userId);
                 getHistory(1, 10);
+                //获取会话列表
+                RongIMClient.getInstance().getConversationList({
+                  onSuccess: function(list) {
+                    console.log(list);
+                  },
+                  onError: function(error) {
+                    console.log("出错")
+                     // do something...
+                  }
+                },null);
             },
             onTokenIncorrect: function () {
                 console.log('token无效');
@@ -229,7 +235,7 @@ app.controller("privateDoctorImCtrl",function($scope,$modal,$element){
             }
         });
 
-        //连接服务器
+        //连接状态监听器
         RongIMClient.setConnectionStatusListener({
             onChanged: function (status) {
                 switch (status) {
@@ -430,11 +436,13 @@ app.controller("privateDoctorImCtrl",function($scope,$modal,$element){
 		if(e.keyCode == 13){
 			$scope.send();
 		}
-		e.preventDefault();
 	}
 	$scope.getMoreHistoryMsg = function(){
 		getHistory(2,20);
 	}
+	
+	
+	
 	
 	
 	
