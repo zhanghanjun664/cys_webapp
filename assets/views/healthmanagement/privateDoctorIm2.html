@@ -1,0 +1,100 @@
+<div ng-controller="privateDoctorImCtrl" class="pdiBox">
+	<script src="assets/js/controllers/healthmanagement/RongIMLib-2.2.5.min.js" type="text/javascript" charset="utf-8"></script>
+	<div class="pdiTop">
+		<img src="assets/images/logo.jpg" class="pdiTop_img"/>
+	</div>
+	<div class="pdiBottom clearfix">
+		<!--左边-->
+		<div class="pdiBottom_chatlist">
+			<div class="pdiBottom_chatlistTop">
+				
+				<div class="pdiBottom_chatlistTitle">
+					<span class="glyphicon glyphicon-search pdiBottom_searchBtn" ng-click="openSearch()"></span>
+					<div class="pdiBottom_chatlistTitleName">患者对话列表</div>
+					<div class="pdiBottom_searchCont" ng-show="ShowSearch">
+						<div>
+							<label for="pdiBottom_searchContTell">手机号：<input type="text" id="pdiBottom_searchContTell"/></label>
+						</div>
+						<div class="pdiBottom_searchCont2">
+							<label for="pdiBottom_searchContNickname">昵称：<input type="text" id="pdiBottom_searchContNickname"/></label>
+						</div>
+						<div class="pdiBottom_searchContBtnBox">
+							<button ng-click="openSearch()">取消</button>
+							<button ng-click="openSearch()">查询</button>
+						</div>
+					</div>
+				</div>
+				
+				<div class="pdiBottom_chatlistCont">
+					<!--单个对话列表-->
+					<div class={{hadClicked==item.name?"active":""}} ng-class="{'pdiBottom_chatlistContBox':1}" ng-repeat="item in userList" ng-click="handleClick(item)">
+						<div>
+							<span class={{item.hadRead?"":"pdi_circle"}}></span>
+							<span class="pdiBottom_chatlistCont_name">{{item.name}}</span>
+							<span class="pdiBottom_chatlistCont_tel">{{item.tel}}</span>
+							<!--<span class="pdiBottom_chatlistCont_tag" ng-repeat="items in item.tags">{{items}}</span>-->
+						</div>
+						<div class="pdiBottom_chatlistContBox2">{{item.content}}</div>
+						<div class="text-right">{{item.time}}</div>
+					</div>
+					
+				</div>
+			</div>
+			<div class="pdiBottom_chatlistBottom">共9个患者</div>
+		</div>
+		
+		
+		<!--右边-->
+		<div class="pdiBottom_chatcont">
+			<div class="pdiBottom_chatcontTop">
+				<button class="pdiBottom_chatcontTopFile">2个患者档案</button>
+				<!--聊天内容-->
+				<div class="pdiBottom_chatRecord">
+					<!--聊天记录 -->
+					<div class="pdiBottom_chatRecord_history">
+						<span class="glyphicon glyphicon-time" ng-click="getMoreHistoryMsg()" ng-init="getMoreHistoryMsgBtn='查看更多消息'" ng-modal="getMoreHistoryMsgBtn"> {{getMoreHistoryMsgBtn}}</span>
+					</div>
+					
+					
+					<div ng-repeat="item in historyMsg" ng-init="nextTime=historyMsg[$index+1].sentTime;nowTime=item.sentTime;handleDay(nextTime,nowTime,$index)">
+						
+						<!--超过一分钟显示时间-->
+						<div class="pdiBottom_chatRecord_time" ng-show="(nextTime-nowTime>60000&&(!item.showDetailDate))?true:false">
+							<span>{{ nowTime|date:"HH:mm:ss" }}</span>
+						</div>
+						<!--不在同一天显示日期-->
+						<div class="pdiBottom_chatRecord_time" ng-show="item.showDetailDate">
+							<span>{{ nowTime|date:"MM-dd HH:mm:ss" }}</span>
+						</div>
+						
+						
+						<div class={{item.senderUserId==config.doctorId?"pdiBottom_doctorBox":"pdiBottom_patientBox"}} ng-class="{'clearfix':1}">
+				            <img src="assets/images/avatar-7.jpg" class="pdiBottom_headingImg"/>
+				            <div class="pdiBottom_chatRecordCont">{{item.content.content}}</div>
+				        </div>
+					</div>
+					
+					
+					
+				</div>
+			</div>
+			
+			
+			<div class="pdiBottom_chatcontBottom">
+				<textarea class="pdiBottom_chatcontBottomValue" ng-model="sendContent" ng-keyup="shouldSend($event)">{{sendContent}}</textarea>
+				<div class="pdiBottom_chatcontBottomBtn">
+					<button>
+						<span>插入图片</span>
+						<input type="file" class="pdiBottom_uploadImg"/>
+					</button>
+					<button ng-click="send()">发送</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/ng-template" id="pdiShowImage.html">
+		<div class="text-center padding-10">
+			<img src={{showImgUrl}} />
+		</div>
+	</script>
+</div>

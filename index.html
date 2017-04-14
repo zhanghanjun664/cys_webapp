@@ -29,6 +29,9 @@
 		<!-- Aidee-Module Theme -->
 		<link rel="stylesheet" data-ng-href="assets/css/themes/{{ app.layout.theme }}.css" />
 		<link rel="stylesheet" href="vendor/aidee/aidee.css">
+		<!--RongIMWidget-->
+		<link rel="stylesheet" type="text/css" href="assets/css/util/jquery-rebox-0.1.0.css"/>
+		<link rel="stylesheet" type="text/css" href="assets/css/util/RongIMWidget.css"/>
 	</head>
 	<body ng-controller="AppCtrl">
 		<div ui-view id="app" ng-class="{'app-mobile' : app.isMobile, 'app-navbar-fixed' : app.layout.isNavbarFixed, 'app-sidebar-fixed' : app.layout.isSidebarFixed, 'app-sidebar-closed':app.layout.isSidebarClosed, 'app-footer-fixed':app.layout.isFooterFixed}"></div>
@@ -103,6 +106,14 @@
  		<script type="text/javascript" charset="utf-8" src="vendor/ueditor1_4_3_2/dialogs/av/audio.js"></script>
 		<script type="text/javascript" charset="utf-8" src="vendor/ueditor1_4_3_2/dialogs/av/video.js"></script>
 		<script type="text/javascript" charset="utf-8" src="vendor/ng-tags-input/ng-tags-input.min.js"></script>
-		
+		<!--RongIM依赖资源-->
+		<script src="assets/js/util/RongIMLib-2.2.5.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://cdn.ronghub.com/RongEmoji-2.2.4.min.js"></script>
+   		<script src="http://cdn.ronghub.com/RongIMVoice-2.2.4.min.js"></script>
+   		
+   		<script src="assets/js/util/plupload.full.min-2.1.1.js" type="text/javascript" charset="utf-8"></script>
+   		<script src="assets/js/util/qiniu-1.0.17.js" type="text/javascript" charset="utf-8"></script>
+   		
+   		<script src="assets/js/util/RongIMWidget.js" type="text/javascript" charset="utf-8"></script>
 	</body>
 </html>

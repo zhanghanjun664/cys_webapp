@@ -1,4 +1,4 @@
-var app = angular.module('clipApp', ['aidee-module']);
+var app = angular.module('clipApp', ['aidee-module','RongWebIMWidget']);
 app.run(['$rootScope', '$state', '$stateParams', '$http',
 function ($rootScope, $state, $stateParams, $http) {
 
