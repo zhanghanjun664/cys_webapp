@@ -17,12 +17,23 @@ app.controller("privateDoctorImCtrl", ["$scope", "WebIMWidget", function($scope,
 		onSuccess: function() {
 			//初始化完成
 			console.log("初始化完成")
+			WebIMWidget.setConversation(1,"d:498848967");
 		},
 		onError: function() {
 			//初始化错误
 			console.log('连接失败：' + error);
 		}
 	});
+	
+	
+	WebIMWidget.setUserInfoProvider(function(targetId, obj) {
+        obj.onSuccess({
+            name: "用户：" + targetId
+        });
+    });
+
+	
 	WebIMWidget.show();
+	
 
 }]);
