@@ -1,16 +1,17 @@
-app.controller("privateDoctorImCtrl", ["$scope", "WebIMWidget", function($scope, WebIMWidget) {
+app.controller("privateDoctorImCtrl", ["$rootScope","$scope", "WebIMWidget", function($rootScope,$scope,WebIMWidget) {
 	console.log("进来了")
 	//  WebIMWidget.init({
 	//    appkey:"kj7swf8o70pf2",
 	//    token:"doC38rom5UcpE7sNAXfWvxHEr6hXhR4NaJZD55HvbR9aTpIyQPjjjW0jHQczR3NtVPeILr9MNhasAId4HDw48gPhk+bNslkk"
 	//  });
+	$rootScope.sex = "女的啊";
 	WebIMWidget.init({
 		appkey: "kj7swf8o70pf2",
 		token: "doC38rom5UcpE7sNAXfWvxHEr6hXhR4NaJZD55HvbR9aTpIyQPjjjW0jHQczR3NtVPeILr9MNhasAId4HDw48gPhk+bNslkk",
 		style: {
 			left: 5,
 			top: 5,
-			width: 630,
+			width: 580,
 			height:600
 		},
 		displayConversationList: true,

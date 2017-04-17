@@ -91,7 +91,10 @@
 .pdiBottom_chatlistCont .active{
 	background-color: #ffffcc;
 }
-.pdiBottom_chatlistContBox{
+.activeType1{
+	background-color: #FFFFCC;
+}
+.rongcloud-container .pdiBottom_chatlistContBox{
 	padding: 10px;
 	border-bottom: 1px dotted;
 	color: #000;
@@ -102,6 +105,7 @@
 .pdiBottom_chatlistContBox div{
 	position: relative;
 	max-height: 36px;
+	overflow-x: hidden;
 	overflow-y: hidden;
 	text-overflow: ellipsis;
 }
@@ -113,7 +117,7 @@
 	border-radius: 50%;
 	position: absolute;
 }
-.pdiBottom_chatlistCont_name{
+.rongcloud-container .pdiBottom_chatlistCont_name{
 	margin: 0 5px 0 20px;
 }
 .pdiBottom_chatlistCont_tel,.pdiBottom_chatlistCont_tag{
