@@ -20,20 +20,35 @@
 					<div class=rongcloud-sys-tips ng-switch-when=2><span ng-bind-html=item.content.content|trustHtml></span></div>
 					<div class=rongcloud-Message ng-switch-when=1>
 						<div class=rongcloud-Messages-unreadLine></div>
+						
+						
 						<div>
-							<div class=rongcloud-Message-header><img class="rongcloud-img rongcloud-u-isActionable rongcloud-Message-avatar rongcloud-avatar" ng-src={{item.content.userInfo.portraitUri||item.content.userInfo.icon}} err-src=http://7xo1cb.com1.z0.glb.clouddn.com/rongcloudkefu2.png errsrcserasdfasdfasdfa alt="">
+							<div class=rongcloud-Message-header>
+								<img class="rongcloud-img rongcloud-u-isActionable rongcloud-Message-avatar rongcloud-avatar" ng-src={{item.content.userInfo.portraitUri||item.content.userInfo.icon}} err-src=http://7xo1cb.com1.z0.glb.clouddn.com/rongcloudkefu2.png errsrcserasdfasdfasdfa alt="">
 								<div class="rongcloud-Message-author rongcloud-clearfix">
 									<a class="rongcloud-author rongcloud-u-isActionable">{{item.content.userInfo.name}}</a>
 								</div>
 							</div>
 						</div>
-						<div class=rongcloud-Message-body ng-switch=item.messageType>
-							<textmessage ng-switch-when=TextMessage msg=item.content></textmessage>
-							<imagemessage ng-switch-when=ImageMessage msg=item.content></imagemessage>
-							<voicemessage ng-switch-when=VoiceMessage msg=item.content></voicemessage>
-							<locationmessage ng-switch-when=LocationMessage msg=item.content></locationmessage>
-							<richcontentmessage ng-switch-when=RichContentMessage msg=item.content></richcontentmessage>
+						
+						<!--自定义-->
+						<div class={{item.senderUserId==config.doctorId?"pdiBottom_doctorBox":"pdiBottom_patientBox"}} ng-class="{'clearfix':1}">
+				            <img src="assets/images/avatar-7.jpg" class="pdiBottom_headingImg"/>
+				            <div class="pdiBottom_chatRecordCont">
+				        
+						
+						
+						
+								<div class=rongcloud-Message-body ng-switch=item.messageType>
+									<textmessage ng-switch-when=TextMessage msg=item.content></textmessage>
+									<imagemessage ng-switch-when=ImageMessage msg=item.content></imagemessage>
+									<voicemessage ng-switch-when=VoiceMessage msg=item.content></voicemessage>
+									<locationmessage ng-switch-when=LocationMessage msg=item.content></locationmessage>
+									<richcontentmessage ng-switch-when=RichContentMessage msg=item.content></richcontentmessage>
+								</div>
+							</div>
 						</div>
+						
 					</div>
 				</div>
 			</div>

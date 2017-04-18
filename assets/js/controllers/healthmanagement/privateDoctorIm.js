@@ -4,7 +4,7 @@ app.controller("privateDoctorImCtrl", ["$rootScope","$scope", "WebIMWidget", fun
 	//    appkey:"kj7swf8o70pf2",
 	//    token:"doC38rom5UcpE7sNAXfWvxHEr6hXhR4NaJZD55HvbR9aTpIyQPjjjW0jHQczR3NtVPeILr9MNhasAId4HDw48gPhk+bNslkk"
 	//  });
-	$rootScope.sex = "女的啊";
+	$rootScope.doctorId = "test_user_id";
 	WebIMWidget.init({
 		appkey: "kj7swf8o70pf2",
 		token: "doC38rom5UcpE7sNAXfWvxHEr6hXhR4NaJZD55HvbR9aTpIyQPjjjW0jHQczR3NtVPeILr9MNhasAId4HDw48gPhk+bNslkk",
@@ -18,7 +18,7 @@ app.controller("privateDoctorImCtrl", ["$rootScope","$scope", "WebIMWidget", fun
 		onSuccess: function() {
 			//初始化完成
 			console.log("初始化完成")
-			WebIMWidget.setConversation(1,"d:498848967");
+//			WebIMWidget.setConversation(1,"d:498848967");
 		},
 		onError: function() {
 			//初始化错误

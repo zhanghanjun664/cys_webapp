@@ -419,7 +419,7 @@ var RongWebIMWidget;
                 if (time.toDateString() === today.toDateString()) {
                     return $filter("date")(time, "HH:mm");
                 }
-                else if (time.toDateString() === new Date(today.setTime(today.getTime() - 1)).toDateString()) {
+                else if (time.toDateString() === new Date(today.setDate(today.getDate() - 1)).toDateString()) {
                     return "昨天" + $filter("date")(time, "HH:mm");
                 }
                 else {
@@ -433,7 +433,7 @@ var RongWebIMWidget;
                 if (time.toDateString() === today.toDateString()) {
                     return "今天 " + $filter("date")(time, "HH:mm");
                 }
-                else if (time.toDateString() === new Date(today.setTime(today.getTime() - 1)).toDateString()) {
+                else if (time.toDateString() === new Date(today.setDate(today.getDate() - 1)).toDateString()) {
                     return "昨天" + $filter("date")(time, "HH:mm");
                 }
                 else {
@@ -448,8 +448,9 @@ var RongWebIMWidget;
     (function (conversation) {
         var UploadImageDomain = "http://7xogjk.com1.z0.glb.clouddn.com/";
         var ConversationController = (function () {
-            function ConversationController($scope, conversationServer, WebIMWidget, conversationListServer, widgetConfig, providerdata, RongIMSDKServer) {
+            function ConversationController($scope,$rootScope, conversationServer, WebIMWidget, conversationListServer, widgetConfig, providerdata, RongIMSDKServer) {
                 this.$scope = $scope;
+                this.$rootScope =  $rootScope;
                 this.conversationServer = conversationServer;
                 this.WebIMWidget = WebIMWidget;
                 this.conversationListServer = conversationListServer;
@@ -574,7 +575,6 @@ var RongWebIMWidget;
                     });
                 };
                 $scope.send = function () {
-                	console.log("点了发送")
                     if (!$scope.conversation.targetId || !$scope.conversation.targetType) {
                         alert("请先选择一个会话目标。");
                         return;
@@ -600,6 +600,7 @@ var RongWebIMWidget;
                     }
                     var content = _this.packDisplaySendMessage(msg, RongWebIMWidget.MessageType.TextMessage);
                     var cmsg = RongWebIMWidget.Message.convert(content);
+                    console.log(cmsg);
                     conversationServer._addHistoryMessages(cmsg);
                     $scope.scrollBar();
                     $scope.conversation.messageContent = "";
@@ -744,6 +745,7 @@ var RongWebIMWidget;
             };
             ConversationController.prototype.changeConversation = function (obj) {
                 var _this = this;
+                _this.$rootScope.hadSelected = obj.targetId;
                 if (_this.widgetConfig.displayConversationList) {
                     _this.$scope.showSelf = true;
                 }
@@ -770,9 +772,12 @@ var RongWebIMWidget;
                 _this.$scope.conversation = obj;
                 _this.$scope.conversation.messageContent = RongIMLib.RongIMClient.getInstance().getTextMessageDraft(obj.targetType, obj.targetId) || "";
                 _this.$scope.messageList = _this.conversationServer._cacheHistory[key] = _this.conversationServer._cacheHistory[key] || [];
+                console.log(_this.$scope.messageList);
                 if (_this.$scope.messageList.length == 0 && _this.conversationServer.current.targetType !== RongWebIMWidget.EnumConversationType.CUSTOMER_SERVICE) {
                     _this.conversationServer._getHistoryMessages(obj.targetType, obj.targetId, 3)
                         .then(function (data) {
+                        	console.log(_this.$scope.messageList);
+                        	console.log(data);
                         if (_this.$scope.messageList.length > 0) {
                             _this.$scope.messageList.unshift(new RongWebIMWidget.TimePanl(_this.$scope.messageList[0].sentTime));
                             if (data.has) {
@@ -791,6 +796,7 @@ var RongWebIMWidget;
                     });
                     _this.$scope.scrollBar();
                 }
+                
             };
             ConversationController.prototype.handleMessage = function (msg) {
                 var _this = this;
@@ -960,6 +966,7 @@ var RongWebIMWidget;
                 return ret;
             };
             ConversationController.$inject = ["$scope",
+            	"$rootScope",
                 "ConversationServer",
                 "WebIMWidget",
                 "ConversationListServer",
@@ -1222,6 +1229,7 @@ var RongWebIMWidget;
                         var msglen = data.length;
                         while (msglen--) {
                             var msg = RongWebIMWidget.Message.convert(data[msglen]);
+//                          console.log(msg);
                             switch (msg.messageType) {
                                 case RongWebIMWidget.MessageType.TextMessage:
                                 case RongWebIMWidget.MessageType.ImageMessage:
@@ -1269,6 +1277,8 @@ var RongWebIMWidget;
                         arr.push(new RongWebIMWidget.TimePanl(item.sentTime));
                     }
                 }
+                    console.log(item);
+                    console.log(arr);
                 arr.push(item);
             };
             conversationServer.prototype.updateUploadToken = function () {
@@ -1318,7 +1328,7 @@ var RongWebIMWidget;
     var conversationlist;
     (function (conversationlist) {
         var conversationListController = (function () {
-            function conversationListController($scope, conversationListServer, WebIMWidget) {
+            function conversationListController($scope, conversationListServer, WebIMWidget,$rootScope) {
                 this.$scope = $scope;
                 this.conversationListServer = conversationListServer;
                 this.WebIMWidget = WebIMWidget;
@@ -1326,11 +1336,14 @@ var RongWebIMWidget;
                     WebIMWidget.display = false;
                 };
                 $scope.conversationListServer = conversationListServer;
+                this.$rootScope = $rootScope;
+                console.log($rootScope);
             }
             conversationListController.$inject = [
                 "$scope",
                 "ConversationListServer",
-                "WebIMWidget"
+                "WebIMWidget",
+                "$rootScope"
             ];
             return conversationListController;
         })();
@@ -1344,10 +1357,9 @@ var RongWebIMWidget;
     var conversationlist;
     (function (conversationlist) {
         var factory = RongWebIMWidget.DirectiveFactory.GetFactoryFor;
-        console.log(factory)
         var conversationItem = (function () {
-            function conversationItem(conversationServer, conversationListServer, RongIMSDKServer) {
-            	console.log(conversationServer);
+            function conversationItem(conversationServer, conversationListServer, RongIMSDKServer,$rootScope) {
+//          	console.log(conversationServer,conversationListServer,RongIMSDKServer,$rootScope);
                 this.conversationServer = conversationServer;
                 this.conversationListServer = conversationListServer;
                 this.RongIMSDKServer = RongIMSDKServer;
@@ -1355,6 +1367,7 @@ var RongWebIMWidget;
                 this.scope = { 
                 	item: "="
                 };
+                this.$rootScope = $rootScope
 //              this.template = '<div class="rongcloud-chatList">' +
 //                  '<div class="rongcloud-chat_item " ng-class="{\'rongcloud-online\':item.onLine}">' +
 //                  
@@ -1367,7 +1380,7 @@ var RongWebIMWidget;
 //                  '</div>' +
 //                  '</div>' +
 //                  '</div>';
-				this.template = '<div class={{hadSelected==item.targetId?"activeType1":""}} ng-class="{\'pdiBottom_chatlistContBox\':1}">'+
+				this.template = '<div class={{$root.hadSelected==item.targetId?"activeType1":""}} ng-class="{\'pdiBottom_chatlistContBox\':1}">'+
 						'<div>'+
 							'<span ng-class=\'{"pdi_circle":item.unreadMessageCount>0}\'></span>'+
 							'<span class="pdiBottom_chatlistCont_name">{{item.title}}</span>'+
@@ -1377,14 +1390,9 @@ var RongWebIMWidget;
 						'<div class="text-right">{{item.sentTime|conversationListTime}}</div>'+
 					'</div>';
                     
-                    
                     //通过函数原型链上link方法进行双向绑定
-                conversationItem.prototype["link"] = function (scope, ele, attr,rootScope) {
-                	console.log(rootScope);
+                conversationItem.prototype["link"] = function (scope, ele, attr) {
                     ele.on("click", function (e) {
-                    	console.log(scope.item.targetId)
-                    	scope.hadSelected = scope.item.targetId;
-                    	console.log(scope);
                         conversationServer
                             .changeConversation(new RongWebIMWidget.Conversation(scope.item.targetType, scope.item.targetId, scope.item.title));
                         if (scope.item.unreadMessageCount > 0) {
@@ -1408,24 +1416,25 @@ var RongWebIMWidget;
             }
             conversationItem.$inject = ["ConversationServer",
                 "ConversationListServer",
-                "RongIMSDKServer"];
+                "RongIMSDKServer",
+                "$rootScope"
+                ];
             return conversationItem;
         })();
         angular.module("RongWebIMWidget.conversationlist")
             .directive("rongConversationList", ['WebIMWidget',"$rootScope",
             function (WebIMWidget,$rootScope) {
-            	console.log($rootScope);
                 return {
                     restrict: "E",
                     templateUrl: "./src/ts/conversationlist/conversationList.tpl.html",
                     controller: "conversationListController",
+                    $rootScope:$rootScope,
                     link: function () {
                         WebIMWidget.isReady = true;
                         if (WebIMWidget.onReady) {
                             WebIMWidget.onReady();
                         }
                     },
-                    $rootScope:$rootScope
                 };
             }])
             .directive("conversationItem", factory(conversationItem));
@@ -1446,7 +1455,6 @@ var RongWebIMWidget;
                 this._onlineStatus = [];
                 this.hiddenConversations = [];
                 this._hiddenConversationObject = {};
-                this.hadSelected = null;
             }
             ConversationListServer.prototype.setHiddenConversations = function (list) {
                 if (angular.isArray(list)) {
@@ -1463,10 +1471,8 @@ var RongWebIMWidget;
                     	console.log(data);
                         var totalUnreadCount = 0;
                         _this._conversationList.splice(0, _this._conversationList.length);
-                        console.log(_this._conversationList, _this._conversationList.length);
                         for (var i = 0, len = data.length; i < len; i++) {
                             var con = RongWebIMWidget.Conversation.onvert(data[i]);
-                            console.log(data[i]);
                             console.log(con);
                             if (_this._hiddenConversationObject[con.targetType + "_" + con.targetId]) {
                                 continue;
@@ -1477,7 +1483,6 @@ var RongWebIMWidget;
                                         (function (a, b) {
                                             _this.providerdata.getUserInfo(a.targetId, {
                                                 onSuccess: function (data) {
-                                                	console.log(data);
                                                     a.title = data.name;
                                                     a.portraitUri = data.portraitUri;
                                                     b.conversationTitle = data.name;
@@ -1599,7 +1604,7 @@ var RongWebIMWidget;
             this.widgetConfig = widgetConfig;
             this.RongIMSDKServer = RongIMSDKServer;
             this.$log = $log;
-            this.display = false;
+            this.display = true;
             this.connected = false;
             this.isReady = false;
             this.isInit = false;
@@ -1607,6 +1612,7 @@ var RongWebIMWidget;
             this.EnumConversationListPosition = RongWebIMWidget.EnumConversationListPosition;
         }
         WebIMWidget.prototype.initStyle = function (defaultStyle) {
+        	console.log(defaultStyle);
             var _this = this;
             var eleconversation = document.getElementById("rong-conversation");
             var eleconversationlist = document.getElementById("rong-conversation-list");
@@ -2143,7 +2149,7 @@ var RongWebIMWidget;
             $scope.main = WebIMWidget;
             $scope.config = WidgetConfig;
             $scope.data = providerdata;
-            $scope.sex = "男的";
+            //$scope.sex = "男的";
             var voicecookie = RongWebIMWidget.Helper.CookieHelper.getCookie("rongcloud.voiceSound");
             providerdata.voiceSound = voicecookie ? (voicecookie == "true") : true;
             $scope.$watch("data.voiceSound", function (newVal, oldVal) {
@@ -3032,12 +3038,12 @@ angular.module('RongWebIMWidget').run(['$templateCache', function($templateCache
   'use strict';
 
   $templateCache.put('./src/ts/conversation/conversation.tpl.html',
-    "<div id=rong-conversation class=\"rongcloud-kefuChatBox rongcloud-both rongcloud-am-fade-and-slide-top\" ng-class=\"{'rongcloud-fullScreen':resoures.fullScreen}\"><evaluatedir type=evaluate.type display=evaluate.showSelf confirm=evaluate.onConfirm(data) cancle=evaluate.onCancle()></evaluatedir><div class=rongcloud-kefuChat><div class=rongcloud-outlineBox ng-hide=data.connectionState><div class=rongcloud-sprite></div><span>连接断开,请刷新重连</span></div><div id=Messages><button class=\"pdiBottom_chatcontTopFile\">2个患者档案</button><div class=rongcloud-emptyBox>暂时没有新消息</div><div class=rongcloud-MessagesInner><div ng-repeat=\"item in messageList\" ng-switch=item.panelType><div class=rongcloud-Messages-date ng-switch-when=104><b>{{item.sentTime|historyTime}}</b></div><div class=rongcloud-Messages-history ng-switch-when=105><b ng-click=getHistory()>查看历史消息</b></div><div class=rongcloud-Messages-history ng-switch-when=106><b ng-click=getMoreMessage()>获取更多消息</b></div><div class=rongcloud-sys-tips ng-switch-when=2><span ng-bind-html=item.content.content|trustHtml></span></div><div class=rongcloud-Message ng-switch-when=1><div class=rongcloud-Messages-unreadLine></div><div><div class=rongcloud-Message-header><img class=\"rongcloud-img rongcloud-u-isActionable rongcloud-Message-avatar rongcloud-avatar\" ng-src={{item.content.userInfo.portraitUri||item.content.userInfo.icon}} err-src=http://7xo1cb.com1.z0.glb.clouddn.com/rongcloudkefu2.png errsrcserasdfasdfasdfa alt=\"\"><div class=\"rongcloud-Message-author rongcloud-clearfix\"><a class=\"rongcloud-author rongcloud-u-isActionable\">{{item.content.userInfo.name}}</a></div></div></div><div class=rongcloud-Message-body ng-switch=item.messageType><textmessage ng-switch-when=TextMessage msg=item.content></textmessage><imagemessage ng-switch-when=ImageMessage msg=item.content></imagemessage><voicemessage ng-switch-when=VoiceMessage msg=item.content></voicemessage><locationmessage ng-switch-when=LocationMessage msg=item.content></locationmessage><richcontentmessage ng-switch-when=RichContentMessage msg=item.content></richcontentmessage></div></div></div></div></div><div id=footer class=rongcloud-rong-footer style=\"display: block\"><div class=rongcloud-footer-con><div class=rongcloud-text-layout><div id=funcPanel class=\"rongcloud-funcPanel rongcloud-robotMode hidden\"><div class=rongcloud-mode1 ng-show=\"_inputPanelState==0\"><div class=rongcloud-MessageForm-tool id=expressionWrap><i class=\"rongcloud-sprite rongcloud-iconfont-smile\" ng-click=\"showemoji=!showemoji\"></i><div class=rongcloud-expressionWrap ng-show=showemoji><i class=rongcloud-arrow></i><emoji ng-repeat=\"item in emojiList\" item=item content=conversation></emoji></div></div></div><div class=rongcloud-mode2 ng-show=\"_inputPanelState==2\"><a ng-click=switchPerson() id=chatSwitch class=rongcloud-chatSwitch>转人工服务</a></div></div><pre id=inputMsg class=\"rongcloud-text rongcloud-grey\" contenteditable contenteditable-dire ng-focus=\"showemoji=fase\" style=\"background-color: rgba(0,0,0,0);color:black\" ctrl-enter-keys fun=send() ctrlenter=false placeholder=请输入文字... ondrop=\"return false\" ng-model=conversation.messageContent></pre></div><div class=rongcloud-powBox><button type=button style=\"background-color: #0099ff\" class=\"rongcloud-rong-btn rongcloud-rong-send-btn\" id=rong-sendBtn ng-click=send()>发送</button><div  style=\"background-color: #0099ff;right:94px;text-align:center\" class=\"rongcloud-rong-btn rongcloud-rong-send-btn\" id=upload-file>插入图片</div></div></div></div></div>"
+    "<div id=rong-conversation class=\"rongcloud-kefuChatBox rongcloud-both rongcloud-am-fade-and-slide-top\" ng-class=\"{'rongcloud-fullScreen':resoures.fullScreen}\"><evaluatedir type=evaluate.type display=evaluate.showSelf confirm=evaluate.onConfirm(data) cancle=evaluate.onCancle()></evaluatedir><div class=rongcloud-kefuChat><div class=rongcloud-outlineBox ng-hide=data.connectionState><div class=rongcloud-sprite></div><span>连接断开,请刷新重连</span></div><button class=\"pdiBottom_chatcontTopFile\">2个患者档案</button><div id=Messages><div class=rongcloud-emptyBox>暂时没有新消息</div><div class=rongcloud-MessagesInner><div ng-repeat=\"item in messageList\" ng-switch=item.panelType><div class=rongcloud-Messages-date ng-switch-when=104><b>{{item.sentTime|historyTime}}</b></div><div class=rongcloud-Messages-history ng-switch-when=105><b ng-click=getHistory()>查看历史消息</b></div><div class=rongcloud-Messages-history ng-switch-when=106><b ng-click=getMoreMessage()>获取更多消息</b></div><div class=rongcloud-sys-tips ng-switch-when=2><span ng-bind-html=item.content.content|trustHtml></span></div><div class=rongcloud-Message ng-switch-when=1><div class=rongcloud-Messages-unreadLine></div><div class={{(item.senderUserId==doctorId||item.senderUserId==undefined)?\"pdiBottom_doctorBox\":\"pdiBottom_patientBox\"}} ng-class=\"{'clearfix':1}\"><img src=\"assets/images/avatar-7.jpg\" class=\"pdiBottom_headingImg\"/><div class=\"pdiBottom_chatRecordCont\"><div class=rongcloud-Message-body ng-switch=item.messageType><textmessage ng-switch-when=TextMessage msg=item.content></textmessage><imagemessage ng-switch-when=ImageMessage msg=item.content></imagemessage><voicemessage ng-switch-when=VoiceMessage msg=item.content></voicemessage><locationmessage ng-switch-when=LocationMessage msg=item.content></locationmessage><richcontentmessage ng-switch-when=RichContentMessage msg=item.content></richcontentmessage></div></div></div></div></div></div></div><div id=footer class=rongcloud-rong-footer style=\"display: block\"><div class=rongcloud-footer-con><div class=rongcloud-text-layout><div id=funcPanel class=\"rongcloud-funcPanel rongcloud-robotMode hidden\"><div class=rongcloud-mode1 ng-show=\"_inputPanelState==0\"><div class=rongcloud-MessageForm-tool id=expressionWrap><i class=\"rongcloud-sprite rongcloud-iconfont-smile\" ng-click=\"showemoji=!showemoji\"></i><div class=rongcloud-expressionWrap ng-show=showemoji><i class=rongcloud-arrow></i><emoji ng-repeat=\"item in emojiList\" item=item content=conversation></emoji></div></div></div><div class=rongcloud-mode2 ng-show=\"_inputPanelState==2\"><a ng-click=switchPerson() id=chatSwitch class=rongcloud-chatSwitch>转人工服务</a></div></div><pre id=inputMsg class=\"rongcloud-text rongcloud-grey\" contenteditable contenteditable-dire ng-focus=\"showemoji=fase\" style=\"background-color: rgba(0,0,0,0);color:black\" ctrl-enter-keys fun=send() ctrlenter=false placeholder=请输入文字... ondrop=\"return false\" ng-model=conversation.messageContent></pre></div><div class=rongcloud-powBox><button type=button style=\"background-color: #0099ff\" class=\"rongcloud-rong-btn rongcloud-rong-send-btn\" id=rong-sendBtn ng-click=send()>发送</button><div  style=\"background-color: #0099ff;right:94px;text-align:center\" class=\"rongcloud-rong-btn rongcloud-rong-send-btn\" id=upload-file>插入图片</div></div></div></div></div>"
   );
 
 
   $templateCache.put('./src/ts/conversationlist/conversationList.tpl.html',
-    "<div id=rong-conversation-list class=\"rongcloud-kefuListBox rongcloud-both\"><div class=rongcloud-kefuList><div class=\"rongcloud-rong-header rongcloud-blueBg\"><div class=\"rongcloud-toolBar rongcloud-headBtn\"><span class=\"glyphicon glyphicon-search pdiBottom_searchBtn\"></span><div ng-show=config.voiceNotification class=rongcloud-voice ng-class=\"{'rongcloud-voice-mute':!data.voiceSound,'rongcloud-voice-sound':data.voiceSound}\" ng-click=\"data.voiceSound=!data.voiceSound\"></div><span class=rongcloud-recent>患者对话列表</span></div></div><div class=rongcloud-content><div class=rongcloud-netStatus ng-hide=data.connectionState><div class=rongcloud-sprite></div><span>连接断开,请刷新重连</span></div><div><conversation-item ng-init=\"zhj='hahaha'\" ng-repeat=\"item in conversationListServer._conversationList\" item=item></conversation-item></div></div></div></div>"
+    "<div id=rong-conversation-list class=\"rongcloud-kefuListBox rongcloud-both\"><div class=\"pdiBottom_chatlistBottom\">共9个患者</div><div class=rongcloud-kefuList><div class=\"rongcloud-rong-header rongcloud-blueBg\"><div class=\"rongcloud-toolBar rongcloud-headBtn\"><span class=\"glyphicon glyphicon-search pdiBottom_searchBtn\"></span><div ng-show=config.voiceNotification class=rongcloud-voice ng-class=\"{'rongcloud-voice-mute':!data.voiceSound,'rongcloud-voice-sound':data.voiceSound}\" ng-click=\"data.voiceSound=!data.voiceSound\"></div><span class=rongcloud-recent>患者对话列表({{conversationListServer._conversationList.length}})</span></div></div><div class=rongcloud-content><div class=rongcloud-netStatus ng-hide=data.connectionState ng-click=\"refresh()\"><div class=rongcloud-sprite></div><span>连接断开,请刷新重连</span></div><div><conversation-item ng-repeat=\"item in conversationListServer._conversationList\" item=item></conversation-item></div></div></div></div>"
   );
 
 

@@ -8,7 +8,7 @@
 	display: inline-block;
 	border-radius: 5px;
 	position: relative;
-	max-width: 400px;
+	max-width: 380px;
 	padding: 8px;
 }
 
@@ -49,8 +49,14 @@
 	border: 1px solid;
 	border-right: none;
 }
-.pdiBottom_chatlistBottom{
-	line-height: 35px;
+.rongcloud-container .pdiBottom_chatlistBottom{
+	line-height: 40px;
+	position: absolute;
+	padding-left: 8px;
+	bottom: 0;
+	left: 0;
+	border-top: 1px dotted;
+	width: 100%;
 }
 .pdiBottom_chatlistTitle{
 	position: relative;
@@ -224,6 +230,7 @@
 }
 .pdiBottom_patientBox .pdiBottom_chatRecordCont{
 	margin-left: 40px;
+	padding: 6px 6px 5px;
 }
 .pdiBottom_patientBox .pdiBottom_chatRecordCont:after{
 	content: "";
@@ -245,6 +252,7 @@
 }
 .pdiBottom_doctorBox .pdiBottom_chatRecordCont{
 	margin-right: 40px;
+	padding: 6px 6px 5px;
 }
 .pdiBottom_doctorBox .pdiBottom_chatRecordCont:after{
 	content: "";
