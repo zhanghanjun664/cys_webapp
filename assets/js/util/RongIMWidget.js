@@ -585,6 +585,8 @@ var RongWebIMWidget;
                     var con = RongIMLib.RongIMEmoji.symbolToEmoji($scope.conversation.messageContent);
                     var msg = RongIMLib.TextMessage.obtain(con);
                     var userinfo = new RongIMLib.UserInfo(providerdata.currentUserInfo.userId, providerdata.currentUserInfo.name, providerdata.currentUserInfo.portraitUri);
+                    userinfo.tel = providerdata.currentUserInfo.tel;
+                    console.log(userinfo)
                     msg.user = userinfo;
                     try {
                         RongIMLib.RongIMClient.getInstance().sendMessage(+$scope.conversation.targetType, $scope.conversation.targetId, msg, {
@@ -599,6 +601,7 @@ var RongWebIMWidget;
                     catch (e) {
                     }
                     var content = _this.packDisplaySendMessage(msg, RongWebIMWidget.MessageType.TextMessage);
+                    console.log(content)
                     var cmsg = RongWebIMWidget.Message.convert(content);
                     console.log(cmsg);
                     conversationServer._addHistoryMessages(cmsg);
@@ -726,6 +729,11 @@ var RongWebIMWidget;
                 $scope.minimize = function () {
                     WebIMWidget.display = false;
                 };
+                $scope.goPatientFile = function(id){
+                	console.log("跳转到id是:"+id)
+                	var url = "/assets/views/patient-archive/patientArchiveEditor.html?id="+411354859;
+                	window.open(url,"_blank");
+                }
             }
             ConversationController.prototype.closeState = function () {
                 var _this = this;
@@ -746,6 +754,9 @@ var RongWebIMWidget;
             ConversationController.prototype.changeConversation = function (obj) {
                 var _this = this;
                 _this.$rootScope.hadSelected = obj.targetId;
+                console.log(obj)
+                //判断当前用户是否过期
+                _this.$scope.isExpires = false;
                 if (_this.widgetConfig.displayConversationList) {
                     _this.$scope.showSelf = true;
                 }
@@ -942,11 +953,15 @@ var RongWebIMWidget;
             ConversationController.prototype.packDisplaySendMessage = function (msg, messageType) {
                 var ret = new RongIMLib.Message();
                 var userinfo = new RongIMLib.UserInfo(this.providerdata.currentUserInfo.userId, this.providerdata.currentUserInfo.name || "我", this.providerdata.currentUserInfo.portraitUri);
+                userinfo.tel = this.providerdata.currentUserInfo.tel;
+                console.log(userinfo)
                 msg.user = userinfo;
                 ret.content = msg;
                 ret.conversationType = this.$scope.conversation.targetType;
                 ret.targetId = this.$scope.conversation.targetId;
                 ret.senderUserId = this.providerdata.currentUserInfo.userId;
+                console.log(this.providerdata.currentUserInfo);
+//              ret.tel = this.providerdata.currentUserInfo.tel;
                 ret.messageDirection = RongIMLib.MessageDirection.SEND;
                 ret.sentTime = (new Date()).getTime() - (RongIMLib.RongIMClient.getInstance().getDeltaTime() || 0);
                 ret.messageType = messageType;
@@ -1393,8 +1408,10 @@ var RongWebIMWidget;
                     //通过函数原型链上link方法进行双向绑定
                 conversationItem.prototype["link"] = function (scope, ele, attr) {
                     ele.on("click", function (e) {
+                    	console.log(scope.item);
                         conversationServer
-                            .changeConversation(new RongWebIMWidget.Conversation(scope.item.targetType, scope.item.targetId, scope.item.title));
+                            .changeConversation(new RongWebIMWidget.Conversation(scope.item.targetType, scope.item.targetId, scope.item.title,scope.item.userId));
+                            
                         if (scope.item.unreadMessageCount > 0) {
                             RongIMSDKServer.clearUnreadCount(scope.item.targetType, scope.item.targetId);
                             RongIMSDKServer.sendReadReceiptMessage(scope.item.targetId, Number(scope.item.targetType));
@@ -1455,6 +1472,9 @@ var RongWebIMWidget;
                 this._onlineStatus = [];
                 this.hiddenConversations = [];
                 this._hiddenConversationObject = {};
+                this.refresh = function(){
+                	location.reload();
+                }
             }
             ConversationListServer.prototype.setHiddenConversations = function (list) {
                 if (angular.isArray(list)) {
@@ -1621,6 +1641,10 @@ var RongWebIMWidget;
                 eleminbtn = document.getElementById("rong-widget-minbtn-kefu");
             }
             if (defaultStyle) {
+            	if(!eleconversation){
+            		console.log("出错了")
+            		return
+            	}
                 eleconversation.style["height"] = defaultStyle.height + "px";
                 eleconversation.style["width"] = defaultStyle.width + "px";
                 eleconversationlist.style["height"] = defaultStyle.height + "px";
@@ -1742,10 +1766,12 @@ var RongWebIMWidget;
                     _this.widgetConfig.onSuccess(userId);
                 }
                 if (RongWebIMWidget.Helper.checkType(_this.providerdata.getUserInfo) == "function") {
+                	//设置自定义属性添加到providerdata.currentUserInfo对象上
                     _this.providerdata.getUserInfo(userId, {
                         onSuccess: function (data) {
+                        	console.log(data);
                             _this.providerdata.currentUserInfo =
-                                new RongWebIMWidget.UserInfo(data.userId, data.name, data.portraitUri);
+                                new RongWebIMWidget.UserInfo(data.userId, data.name, data.portraitUri,data.tel);
                         }
                     });
                 }
@@ -1790,6 +1816,7 @@ var RongWebIMWidget;
             _this.RongIMSDKServer.setOnReceiveMessageListener({
                 onReceived: function (data) {
                     _this.$log.debug(data);
+                    console.log(data);
                     var msg = RongWebIMWidget.Message.convert(data);
                     if (RongWebIMWidget.Helper.checkType(_this.providerdata.getUserInfo) == "function" && msg.content) {
                         _this.providerdata.getUserInfo(msg.senderUserId, {
@@ -2386,6 +2413,8 @@ var RongWebIMWidget;
             msg.sentTime = new Date(SDKmsg.sentTime);
             msg.targetId = SDKmsg.targetId;
             msg.messageType = SDKmsg.messageType;
+            console.log(msg)
+            console.log(SDKmsg)
             switch (msg.messageType) {
                 case RongWebIMWidget.MessageType.TextMessage:
                     var texmsg = new TextMessage();
@@ -2536,10 +2565,11 @@ var RongWebIMWidget;
     })(ChatPanel);
     RongWebIMWidget.Message = Message;
     var UserInfo = (function () {
-        function UserInfo(userId, name, portraitUri) {
+        function UserInfo(userId, name, portraitUri,tel) {
             this.userId = userId;
             this.name = name;
             this.portraitUri = portraitUri;
+            this.tel = tel;
         }
         return UserInfo;
     })();
@@ -2645,10 +2675,12 @@ var RongWebIMWidget;
         return newStr
     };
     var Conversation = (function () {
-        function Conversation(targetType, targetId, title) {
+    	//会话对象的属性
+        function Conversation(targetType, targetId, title,userId) {
             this.targetType = targetType;
             this.targetId = targetId;
             this.title = title || "";
+            this.userId = userId||"";
         }
         //为会话列表添加自定义属性
         Conversation.onvert = function (item) {
@@ -2657,7 +2689,8 @@ var RongWebIMWidget;
             conver.targetId = item.targetId;
             conver.targetType = item.conversationType;
             conver.title = item.conversationTitle;
-            conver.portraitUri = item.senderPortraitUri;
+            conver.tel = item.latestMessage.content.user.tel;
+//          conver.portraitUri = item.senderPortraitUri;
             conver.unreadMessageCount = item.unreadMessageCount;
             
             switch (item.latestMessage.messageType){
@@ -3038,12 +3071,12 @@ angular.module('RongWebIMWidget').run(['$templateCache', function($templateCache
   'use strict';
 
   $templateCache.put('./src/ts/conversation/conversation.tpl.html',
-    "<div id=rong-conversation class=\"rongcloud-kefuChatBox rongcloud-both rongcloud-am-fade-and-slide-top\" ng-class=\"{'rongcloud-fullScreen':resoures.fullScreen}\"><evaluatedir type=evaluate.type display=evaluate.showSelf confirm=evaluate.onConfirm(data) cancle=evaluate.onCancle()></evaluatedir><div class=rongcloud-kefuChat><div class=rongcloud-outlineBox ng-hide=data.connectionState><div class=rongcloud-sprite></div><span>连接断开,请刷新重连</span></div><button class=\"pdiBottom_chatcontTopFile\">2个患者档案</button><div id=Messages><div class=rongcloud-emptyBox>暂时没有新消息</div><div class=rongcloud-MessagesInner><div ng-repeat=\"item in messageList\" ng-switch=item.panelType><div class=rongcloud-Messages-date ng-switch-when=104><b>{{item.sentTime|historyTime}}</b></div><div class=rongcloud-Messages-history ng-switch-when=105><b ng-click=getHistory()>查看历史消息</b></div><div class=rongcloud-Messages-history ng-switch-when=106><b ng-click=getMoreMessage()>获取更多消息</b></div><div class=rongcloud-sys-tips ng-switch-when=2><span ng-bind-html=item.content.content|trustHtml></span></div><div class=rongcloud-Message ng-switch-when=1><div class=rongcloud-Messages-unreadLine></div><div class={{(item.senderUserId==doctorId||item.senderUserId==undefined)?\"pdiBottom_doctorBox\":\"pdiBottom_patientBox\"}} ng-class=\"{'clearfix':1}\"><img src=\"assets/images/avatar-7.jpg\" class=\"pdiBottom_headingImg\"/><div class=\"pdiBottom_chatRecordCont\"><div class=rongcloud-Message-body ng-switch=item.messageType><textmessage ng-switch-when=TextMessage msg=item.content></textmessage><imagemessage ng-switch-when=ImageMessage msg=item.content></imagemessage><voicemessage ng-switch-when=VoiceMessage msg=item.content></voicemessage><locationmessage ng-switch-when=LocationMessage msg=item.content></locationmessage><richcontentmessage ng-switch-when=RichContentMessage msg=item.content></richcontentmessage></div></div></div></div></div></div></div><div id=footer class=rongcloud-rong-footer style=\"display: block\"><div class=rongcloud-footer-con><div class=rongcloud-text-layout><div id=funcPanel class=\"rongcloud-funcPanel rongcloud-robotMode hidden\"><div class=rongcloud-mode1 ng-show=\"_inputPanelState==0\"><div class=rongcloud-MessageForm-tool id=expressionWrap><i class=\"rongcloud-sprite rongcloud-iconfont-smile\" ng-click=\"showemoji=!showemoji\"></i><div class=rongcloud-expressionWrap ng-show=showemoji><i class=rongcloud-arrow></i><emoji ng-repeat=\"item in emojiList\" item=item content=conversation></emoji></div></div></div><div class=rongcloud-mode2 ng-show=\"_inputPanelState==2\"><a ng-click=switchPerson() id=chatSwitch class=rongcloud-chatSwitch>转人工服务</a></div></div><pre id=inputMsg class=\"rongcloud-text rongcloud-grey\" contenteditable contenteditable-dire ng-focus=\"showemoji=fase\" style=\"background-color: rgba(0,0,0,0);color:black\" ctrl-enter-keys fun=send() ctrlenter=false placeholder=请输入文字... ondrop=\"return false\" ng-model=conversation.messageContent></pre></div><div class=rongcloud-powBox><button type=button style=\"background-color: #0099ff\" class=\"rongcloud-rong-btn rongcloud-rong-send-btn\" id=rong-sendBtn ng-click=send()>发送</button><div  style=\"background-color: #0099ff;right:94px;text-align:center\" class=\"rongcloud-rong-btn rongcloud-rong-send-btn\" id=upload-file>插入图片</div></div></div></div></div>"
+    "<div id=rong-conversation class=\"rongcloud-kefuChatBox rongcloud-both rongcloud-am-fade-and-slide-top\" ng-class=\"{'rongcloud-fullScreen':resoures.fullScreen}\"><evaluatedir type=evaluate.type display=evaluate.showSelf confirm=evaluate.onConfirm(data) cancle=evaluate.onCancle()></evaluatedir><div class=rongcloud-kefuChat><button class=\"pdiBottom_chatcontTopFile\" ng-click=goPatientFile(000) >2个患者档案</button><div id=Messages><div class=rongcloud-emptyBox>暂时没有新消息</div><div class=rongcloud-MessagesInner><div ng-repeat=\"item in messageList\" ng-switch=item.panelType><div class=rongcloud-Messages-date ng-switch-when=104><b>{{item.sentTime|historyTime}}</b></div><div class=rongcloud-Messages-history ng-switch-when=105><b ng-click=getHistory()>查看历史消息</b></div><div class=rongcloud-Messages-history ng-switch-when=106><b ng-click=getMoreMessage()>获取更多消息</b></div><div class=rongcloud-sys-tips ng-switch-when=2><span ng-bind-html=item.content.content|trustHtml></span></div><div class=rongcloud-Message ng-switch-when=1><div class=rongcloud-Messages-unreadLine></div><div class={{(item.senderUserId==doctorId||item.senderUserId==undefined)?\"pdiBottom_doctorBox\":\"pdiBottom_patientBox\"}} ng-class=\"{'clearfix':1}\"><img src=\"assets/images/avatar-7.jpg\" class=\"pdiBottom_headingImg\"/><div class=\"pdiBottom_chatRecordCont\"><div class=rongcloud-Message-body ng-switch=item.messageType><textmessage ng-switch-when=TextMessage msg=item.content></textmessage><imagemessage ng-switch-when=ImageMessage msg=item.content></imagemessage><voicemessage ng-switch-when=VoiceMessage msg=item.content></voicemessage><locationmessage ng-switch-when=LocationMessage msg=item.content></locationmessage><richcontentmessage ng-switch-when=RichContentMessage msg=item.content></richcontentmessage></div></div></div></div></div></div></div><div id=footer class=rongcloud-rong-footer style=\"display: block\"><div class=\"expireStatus\" ng-show=isExpires ></div><div class=rongcloud-footer-con><div class=rongcloud-text-layout><div id=funcPanel class=\"rongcloud-funcPanel rongcloud-robotMode hidden\"><div class=rongcloud-mode1 ng-show=\"_inputPanelState==0\"><div class=rongcloud-MessageForm-tool id=expressionWrap><i class=\"rongcloud-sprite rongcloud-iconfont-smile\" ng-click=\"showemoji=!showemoji\"></i><div class=rongcloud-expressionWrap ng-show=showemoji><i class=rongcloud-arrow></i><emoji ng-repeat=\"item in emojiList\" item=item content=conversation></emoji></div></div></div><div class=rongcloud-mode2 ng-show=\"_inputPanelState==2\"><a ng-click=switchPerson() id=chatSwitch class=rongcloud-chatSwitch>转人工服务</a></div></div><pre id=inputMsg class=\"rongcloud-text rongcloud-grey\" contenteditable contenteditable-dire ng-focus=\"showemoji=fase\" style=\"background-color: rgba(0,0,0,0);color:black\" ctrl-enter-keys fun=send() ctrlenter=false placeholder=请输入文字... ondrop=\"return false\" ng-model=conversation.messageContent></pre></div><div class=rongcloud-powBox><button type=button style=\"background-color: #0099ff\" class=\"rongcloud-rong-btn rongcloud-rong-send-btn\" id=rong-sendBtn ng-click=send()>发送</button><div  style=\"background-color: #0099ff;right:94px;text-align:center\" class=\"rongcloud-rong-btn rongcloud-rong-send-btn\" id=upload-file>插入图片</div></div></div></div></div>"
   );
 
 
   $templateCache.put('./src/ts/conversationlist/conversationList.tpl.html',
-    "<div id=rong-conversation-list class=\"rongcloud-kefuListBox rongcloud-both\"><div class=\"pdiBottom_chatlistBottom\">共9个患者</div><div class=rongcloud-kefuList><div class=\"rongcloud-rong-header rongcloud-blueBg\"><div class=\"rongcloud-toolBar rongcloud-headBtn\"><span class=\"glyphicon glyphicon-search pdiBottom_searchBtn\"></span><div ng-show=config.voiceNotification class=rongcloud-voice ng-class=\"{'rongcloud-voice-mute':!data.voiceSound,'rongcloud-voice-sound':data.voiceSound}\" ng-click=\"data.voiceSound=!data.voiceSound\"></div><span class=rongcloud-recent>患者对话列表({{conversationListServer._conversationList.length}})</span></div></div><div class=rongcloud-content><div class=rongcloud-netStatus ng-hide=data.connectionState ng-click=\"refresh()\"><div class=rongcloud-sprite></div><span>连接断开,请刷新重连</span></div><div><conversation-item ng-repeat=\"item in conversationListServer._conversationList\" item=item></conversation-item></div></div></div></div>"
+    "<div id=rong-conversation-list class=\"rongcloud-kefuListBox rongcloud-both\"><div class=\"pdiBottom_chatlistBottom\">共9个患者</div><div class=rongcloud-kefuList><div class=\"rongcloud-rong-header rongcloud-blueBg\"><div class=\"rongcloud-toolBar rongcloud-headBtn\"><span class=\"glyphicon glyphicon-search pdiBottom_searchBtn\"></span><div ng-show=config.voiceNotification class=rongcloud-voice ng-class=\"{'rongcloud-voice-mute':!data.voiceSound,'rongcloud-voice-sound':data.voiceSound}\" ng-click=\"data.voiceSound=!data.voiceSound\"></div><span class=rongcloud-recent>患者对话列表({{conversationListServer._conversationList.length}})</span></div></div><div class=rongcloud-content><div class=rongcloud-netStatus ng-hide=data.connectionState ng-click=\"conversationListServer.refresh()\"><div class=rongcloud-sprite></div><span>连接断开,请点击重连</span></div><div><conversation-item ng-repeat=\"item in conversationListServer._conversationList\" item=item></conversation-item></div></div></div></div>"
   );
 
 

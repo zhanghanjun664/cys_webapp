@@ -1,16 +1,11 @@
 app.controller("privateDoctorImCtrl", ["$rootScope","$scope", "WebIMWidget", function($rootScope,$scope,WebIMWidget) {
-	console.log("进来了")
-	//  WebIMWidget.init({
-	//    appkey:"kj7swf8o70pf2",
-	//    token:"doC38rom5UcpE7sNAXfWvxHEr6hXhR4NaJZD55HvbR9aTpIyQPjjjW0jHQczR3NtVPeILr9MNhasAId4HDw48gPhk+bNslkk"
-	//  });
 	$rootScope.doctorId = "test_user_id";
 	WebIMWidget.init({
 		appkey: "kj7swf8o70pf2",
 		token: "doC38rom5UcpE7sNAXfWvxHEr6hXhR4NaJZD55HvbR9aTpIyQPjjjW0jHQczR3NtVPeILr9MNhasAId4HDw48gPhk+bNslkk",
 		style: {
 			left: 5,
-			top: 5,
+			top: 2,
 			width: 580,
 			height:600
 		},
@@ -29,12 +24,15 @@ app.controller("privateDoctorImCtrl", ["$rootScope","$scope", "WebIMWidget", fun
 	
 	WebIMWidget.setUserInfoProvider(function(targetId, obj) {
         obj.onSuccess({
-            name: "用户：" + targetId
+            name: "name：" + targetId,
+            portraitUri:"头像url",
+            tel:110,
+            userId:targetId
         });
     });
 
 	
-	WebIMWidget.show();
+//	WebIMWidget.show();
 	
 
 }]);
