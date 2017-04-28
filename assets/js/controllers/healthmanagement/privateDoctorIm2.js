@@ -1,4 +1,4 @@
-app.controller("privateDoctorImCtrl",function($scope,$modal,$element){
+app.controller("privateDoctorImCtrl2",function($scope,$modal,$element){
 	RongIMClient.init("kj7swf8o70pf2");
 	$scope.config = {
         testAppKey: 'kj7swf8o70pf2',

@@ -26,13 +26,13 @@ app.controller("privateDoctorImCtrl", ["$rootScope","$scope", "WebIMWidget", fun
         obj.onSuccess({
             name: "name：" + targetId,
             portraitUri:"头像url",
-            tel:110,
+            tel:119,
             userId:targetId
         });
     });
-
 	
-//	WebIMWidget.show();
+	
+	WebIMWidget.show();
 	
 
 }]);

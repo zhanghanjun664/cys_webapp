@@ -1,0 +1,200 @@
+<style>
+.with-90 {
+ width:90%;
+}
+.with-95 {
+ width:95%;
+}
+.float-left {
+float:left;
+}
+.line-height-35 {
+line-height: 35px
+}
+.padding-left-10{
+ padding-left: 10px;
+}
+   
+</style>
+<script src="../../../assets/js/controllers/healthmanage/healthServiceApis.js"></script>
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<h4>
+			<b></b>
+		</h4>
+		<div ng-controller="healthServicePackCtrl" class="col-md-12">
+			<button ng-click="edit()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+				新增 <i class="fa fa-plus"></i>
+			</button>
+			<button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
+				编辑 <i class="fa fa-edit"></i>
+			</button>
+			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<p style="margin-top: 25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+			<div class="table-responsive">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+						<tr>
+							<th style="text-align: left; width: 6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()" /> <label for="selectAllCheckbox"
+										style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th>服务包名称</th>
+							<th>兑换码</th>
+							<th>兑换码创建时间</th>
+							<th>兑换码有效期</th>
+							<th>是否给用户</th>
+							<th>是否被激活</th>
+							<th>最后修改人</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+
+					<tr ng-repeat="obj in $data" ng-class-odd="'odd'" ng-class-even="'even'" id="tr{{obj.id}}">
+						<td>
+							<div class="checkbox clip-check check-primary checkbox-inline">
+								<input id="checkbox{{obj.id}}" type="checkbox" ng-model="obj.selected"
+									ng-click="changeSelection($index)" /> <label for="checkbox{{obj.id}}" style="vertical-align: middle;"></label>
+							</div>
+						</td>
+						<td class="center">{{obj.healthServicePackDefName}}</td>
+						<td class="center">{{obj.code}}</td>
+						<td class="center">{{obj.auditable.dateCreated}}</td>
+						<td class="center">{{obj.exchangeExpiredDate}}</td>
+						<td class="center">{{obj.isDelivered?"是":"否"}}</td>
+						<td class="center">{{obj.isActivated?"是":"否"}}</td>
+						<td class="center">{{obj.modifyBy}}</td>
+						<td class="center">
+							<div class="visible-md visible-lg hidden-sm hidden-xs">
+								<a href="#" ng-click="edit(obj)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top"
+									tooltip="查看"><i class="fa fa-edit"></i></a>
+									</ul>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<script type="text/ng-template" id="searchHealthServicePack.html">
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<b>查询条件</b>
+					</h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 服务包名称</label>
+								<div class="col-sm-9">
+										<select id="healthServicePackDefId" class="col-sm-12" ng-model="searchInfos.healthServicePackDefId"
+												ng-options="healthServicePackDef.id as healthServicePackDef.detailName for healthServicePackDef in healthServicePackDefList">
+											<option value="">全部</option>
+										</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 兑换码</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" ng-model="searchInfos.code" placeholder="">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 兑换码是否过期</label>
+								<div class="col-sm-9">
+										<select id="healthServicePackDefId" class="col-sm-12" ng-model="searchInfos.isExpired"
+												ng-options="boolStatus.value as boolStatus.name for boolStatus in cysBoolStatus">
+											<option value="">全部</option>
+										</select>								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 是否给用户</label>
+								<div class="col-sm-9">
+										<select id="healthServicePackDefId" class="col-sm-12" ng-model="searchInfos.isDelivered"
+												ng-options="boolStatus.value as boolStatus.name for boolStatus in cysBoolStatus">
+											<option value="">全部</option>
+										</select>								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 是否激活</label>
+								<div class="col-sm-9">
+										<select id="applyPlus" class="col-sm-12" ng-model="searchInfos.isActivated"
+												ng-options="boolStatus.value as boolStatus.name for boolStatus in cysBoolStatus">
+											<option value="">全部</option>
+										</select>							</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+				</div>
+								</script>
+				
+
+				<script type="text/ng-template" id="editHealthServicePack.html">
+						<div class="modal-header">
+							<h5 class="modal-title">
+								<b>生成兑换码</b>
+							</h5>
+						</div>
+						<div class="modal-body">
+						 <div class="panel-body">
+							<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 服务包名称</label>
+								<div class="col-sm-9">
+										<select id="healthServicePackDefId" class="col-sm-12" ng-model="obj.healthServicePackDefId" ng-disabled="{{obj.healthServicePackDefId!=null}}"
+												ng-options="healthServicePackDef.id as healthServicePackDef.detailName for healthServicePackDef in healthServicePackDefList">
+											<option value="">全部</option>
+										</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 兑换码</label>
+								<div class="col-sm-9">
+									<input type="text" id="code" class="form-control" ng-model="obj.code" placeholder="建议6位" ng-disabled="{{obj.code!=null}}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 兑换码有效期</label>
+								<div class="col-sm-9">
+									<input type="text" id="dateBeginShowStr" style="width:100%" ng-model="obj.exchangeExpiredDate"
+										onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" onchange="" />
+ 						        </div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 是否给用户</label>
+								<div class="col-sm-9">
+										<select id="healthServicePackDefId" class="col-sm-12" ng-model="obj.isDelivered" ng-disabled="{{obj.isDelivered}}"
+												ng-options="boolStatus.value as boolStatus.name for boolStatus in cysBoolStatus">
+											<option value="">全部</option>
+										</select>								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 是否激活</label>
+								<div class="col-sm-9">
+										<select id="applyPlus" class="col-sm-12" ng-model="obj.isActivated" ng-disabled="{{obj.isActivated}}"
+												ng-options="boolStatus.value as boolStatus.name for boolStatus in cysBoolStatus">
+											<option value="">全部</option>
+										</select>							</div>
+							</div>
+								</form>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+							<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+						</div>
+										 		</script>
+
+				
+		</div>
+	</div>
+</div>

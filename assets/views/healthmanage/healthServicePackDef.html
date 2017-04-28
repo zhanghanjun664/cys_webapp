@@ -1,0 +1,167 @@
+<style>
+.with-90 {
+ width:90%;
+}
+.with-95 {
+ width:95%;
+}
+.float-left {
+float:left;
+}
+.line-height-35 {
+line-height: 35px
+}
+.padding-left-10{
+ padding-left: 10px;
+}
+.modal-dialog {
+    width: 58%; 
+}
+</style>
+
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<h4>
+			<b></b>
+		</h4>
+		<div ng-controller="healthServicePackDefCtrl" class="col-md-12">
+			<button ng-click="edit()" type="button" class="btn btn-wide btn-primary" style="min-width: 30px;">
+				新增 <i class="fa fa-plus"></i>
+			</button>
+			<button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
+				编辑 <i class="fa fa-edit"></i>
+			</button>
+			<button ng-click="deleteAll()" type="button" class="btn btn-wide btn-danger" style="min-width: 30px;">
+				删除 <i class="fa fa-trash"></i>
+			</button>
+			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<p style="margin-top: 25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+			<div class="table-responsive">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+						<tr>
+							<th style="text-align: left; width: 6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox" ng-click="selectAll()" /> <label for="selectAllCheckbox"
+										style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th>服务包id</th>
+							<th>服务包名称</th>
+							<th>定价</th>
+							<th>服务时长</th>
+							<th>服务内容</th>
+							<th>备注</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+
+					<tr ng-repeat="obj in $data" ng-class-odd="'odd'" ng-class-even="'even'" id="tr{{obj.id}}">
+						<td>
+							<div class="checkbox clip-check check-primary checkbox-inline">
+								<input id="checkbox{{obj.id}}" type="checkbox" ng-model="obj.selected"
+									ng-click="changeSelection($index)" /> <label for="checkbox{{obj.id}}" style="vertical-align: middle;"></label>
+							</div>
+						</td>
+						<td class="center">{{obj.id}}</td>
+						<td class="center">{{obj.name}}</td>
+						<td class="center">{{obj.price}}</td>
+						<td class="center">{{obj.periodOfValidity}}</td>
+						<td class="center">{{showServiceContent(obj.healServices)}}</td>
+						<td class="center">{{obj.remark}}</td>
+						<td class="center">
+							<div class="visible-md visible-lg hidden-sm hidden-xs">
+								<a href="#" ng-click="edit(obj)" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top"
+									tooltip="编辑"><i class="fa fa-edit"></i></a>
+							   <!--  <a href="#" ng-click="deleteItem(obj.id)">删除</a>
+									</ul> -->
+							</div>
+						</td>
+					</tr>
+				</table>
+				<script type="text/ng-template" id="searchHealthServicePackDef.html">
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<b>服务包查询</b>
+					</h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 服务包名称</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" ng-model="searchInfos.name">
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+				</div>
+								</script>
+				
+
+				<script type="text/ng-template" id="editHealthServicePackDef.html">
+						<div class="modal-header">
+							<h5 class="modal-title">
+								<b>健康服务包</b>
+							</h5>
+						</div>
+						<div class="modal-body">
+							<div class="panel-body">
+								<form role="form" class="form-horizontal">
+									<div class="form-group">
+										<label class="col-sm-2 control-label"> 服务包名称</label>
+										<div class="col-sm-6">
+											<input type="text" placeholder="" class="form-control with-95 float-left" ng-model="obj.name"><span style="color:red;" class="padding-left-10 line-height-35 ">*<span>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label"> 服务包定价 </label>
+										<div class="col-sm-6 ">
+											<input type="text" placeholder="数字" class="form-control with-90 float-left" ng-model="obj.price"><label class="line-height-35 padding-left-10">元<span style="color:red;" class="padding-left-10"><span></label>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label"> 服务时长 </label>
+										<div class="col-sm-6">
+											<input type="text" placeholder="正整数" class="form-control with-90 float-left"  ng-model="obj.periodOfValidity"><label class="line-height-35 padding-left-10">天</label>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label"> 服务内容 </label>
+										<div class="col-sm-6">
+                                          <div class="checkbox clip-check check-primary checkbox-inline" ng-repeat="healthService in healthServiceList" >
+                                              <input id="checkbox_{{healthService.id}}" type="checkbox"  class="healthService-id" value="{{healthService.id}}" 
+                                                   ng-click="updateSelection($event,healthService.id)" ng-checked="isCheck(healthService.id)" ng-disabled="{{healthService.name=='免费听直播'}}"/>
+								              <label for="checkbox_{{healthService.id}}" style="vertical-align: middle;">{{healthService.name}}</label>
+                                           </div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label"> 备注 </label>
+										<div class="col-sm-6 ng-pristine ng-valid ng-touched">
+											<textarea type="text" class="form-control" ng-model="obj.remark"></textarea>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+							<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+						</div>
+										 		</script>
+
+				
+		</div>
+	</div>
+</div>

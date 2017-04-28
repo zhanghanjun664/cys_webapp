@@ -1,0 +1,100 @@
+<style>
+
+/*
+    解决新建文章对话框因为translate漂移过多导致对话框顶部显示不全(文章信息lable不可见)的问题
+    */
+.modal-dialog {
+	transform: translate(0, -16%) !important;
+}
+</style>
+
+<div class="modal-header">
+	<h5 class="modal-title">
+		<b>兑换码选择</b>
+	</h5>
+</div>
+<div class="modal-body">
+	<div class="panel-body">
+		<form role="form" class="form-horizontal">
+			<div class="col-md-12">
+				<div class="form-group col-sm-6">
+					<label class="col-sm-3 control-label"> 服务包名称</label>
+					<div class="col-sm-9">
+						<select id="healthServicePackDefId" class="col-sm-12"
+							ng-model="searchInfos.healthServicePackDefId"
+							ng-disabled="{{obj.healthServicePackDefId!=null}}"
+							ng-options="healthServicePackDef.id as healthServicePackDef.name for healthServicePackDef in healthServicePackDefList">
+							<option value="">全部</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group col-sm-6">
+					<label class="col-sm-3 control-label">手机号</label>
+					<div class="col-sm-9">
+						<input class="col-sm-12" type="text"
+							ng-model="searchInfos.phoneNumber" placeholder="输入手机号搜索">
+						</input>
+					</div>
+				</div>
+				<div style="clear: both" />
+				<div class="table-responsive" style="margin-top: 25px;">
+					<table ng-table="tableParams" class="table table-hover">
+						<thead>
+							<tr>
+								<th style="text-align: left; width: 6%;">
+									<div class="checkbox clip-check check-primary checkbox-inline">
+										<input id="selectAllCheckbox" type="checkbox"
+											ng-click="selectAll()" /> <label for="selectAllCheckbox"
+											style="vertical-align: middle;"></label>
+									</div>
+								</th>
+								<th>服务包名称</th>
+								<th>兑换码</th>
+								<th>兑换码创建时间</th>
+								<th>兑换码有效期</th>
+								<th>是否给用户</th>
+								<th>是否被激活</th>
+								<th>最后修改人</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+
+						<tr ng-repeat="obj in $data" ng-class-odd="'odd'"
+							ng-class-even="'even'" id="tr{{obj.id}}">
+							<td>
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="checkbox_health{{obj.id}}" type="checkbox"
+										ng-model="obj.selected" ng-click="changeSelection($index)" />
+									<label for="checkbox_health{{obj.id}}"
+										style="vertical-align: middle;"></label>
+								</div>
+							</td>
+							<td class="center">{{obj.healthServicePackDefName}}</td>
+							<td class="center">{{obj.code}}</td>
+							<td class="center">{{obj.auditable.dateCreated}}</td>
+							<td class="center">{{obj.exchangeExpiredDate}}</td>
+							<td class="center">{{obj.isDelivered?"是":"否"}}</td>
+							<td class="center">{{obj.isActivated?"是":"否"}}</td>
+							<td class="center">{{obj.modifyBy}}</td>
+							<td class="center">
+								<div class="visible-md visible-lg hidden-sm hidden-xs">
+									<a href="#" ng-click="edit(obj)"
+										class="btn btn-transparent btn-xs tooltips"
+										tooltip-placement="top" tooltip="查看"><i class="fa fa-edit"></i></a>
+									</ul>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div style="clear: both" />
+			</div>
+		</form>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="clear($event)">清除</button>
+	<button class="btn btn-primary" ng-click="query()">查询</button>
+	<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+	<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+</div>

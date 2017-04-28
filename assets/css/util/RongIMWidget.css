@@ -13,7 +13,9 @@
     font-size: 14px;
     font-weight: 400;
 }
-
+#rong-widget-box{
+	height: 605px;
+}
 /*body,h1,h2,h3,h4,html,img,li,p,pre,ul {
     margin: 0;
     padding: 0;
@@ -215,12 +217,12 @@ ul {
      /*border-radius: 0px 5px 0px 0px;*/
 }
 .rongcloud-kefuListBox .rongcloud-kefuList .rongcloud-rong-header{
-    height: 50px;
+    height: 40px;
 }
 .rongcloud-kefuListBox .rongcloud-kefuList .rongcloud-toolBar{
     text-align: center;
-    line-height: 50px;
     position: relative;
+    background-color: #ffcc00;
 }
 .rongcloud-kefuListBox .rongcloud-kefuList .rongcloud-people {
      vertical-align: middle;
@@ -273,7 +275,9 @@ ul {
     font-size: 14px;
     margin: 0;
     padding: 0;
+    line-height: 40px;
     cursor:default;
+    font-weight: bold;
 }
 .rongcloud-kefuListBox .rongcloud-kefuList .rongcloud-count{
     color: #d0d4d7;
@@ -283,7 +287,7 @@ ul {
 }
 .rongcloud-kefuListBox .rongcloud-kefuList .rongcloud-content{
     position: absolute;
-    top:50px;
+    top:40px;
     bottom: 0px;
     left: 0px;
     right: 0px;
@@ -605,7 +609,7 @@ ul {
     border-radius: 0;
     opacity: 1;
     overflow: hidden;
-    z-index: 99999;
+    z-index: 1;
     box-shadow: rgba(0, 0, 0, 0.0980392) 0px 0px 5px 2px;
 }
 .rongcloud-kefuChatBox.rongcloud-fullScreen{
@@ -683,7 +687,7 @@ ul {
     overflow: auto;
     padding: 8px 16px;
     position: absolute;
-    top:50px;
+    top:40px;
     bottom: 150px;
     background-color: white;
 }

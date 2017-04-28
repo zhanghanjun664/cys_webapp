@@ -123,10 +123,6 @@
         "PHONESEVICEORDER": "电话咨询订单",
         "INSURANCEORDER":"保险订单"
       },
-      "vip": {
-        "MAIN": "会员管理",
-        "PRIVATE_DOC_IM": "私人医生答题"
-      },
       "coupon":{
         "MAIN":"现金券模块",
         "JDCOUPONCATEGORY": "现金券类型",
@@ -182,6 +178,13 @@
       "live":{
       	"MAIN":"直播管理",
       	"list":"直播列表"
+      },
+      "memberManage":{
+      	"MAIN":"会员管理",
+      	"healthServicePackDef":"健康服务包管理",
+      	"healthServicePack":"生成会员激活码",
+      	"memberManage":"会员管理",
+      	"PRIVATE_DOC_IM": "私人医生答题"
       }
     }
   },

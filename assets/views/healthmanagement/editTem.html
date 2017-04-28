@@ -71,9 +71,7 @@
 						</div>
 					</div><pre id=inputMsg class="rongcloud-text rongcloud-grey" contenteditable contenteditable-dire ng-focus="showemoji=fase" style="background-color: rgba(0,0,0,0);color:black" ctrl-enter-keys fun=send() ctrlenter=false placeholder=请输入文字... ondrop="return false" ng-model=conversation.messageContent></pre></div>
 				<div class=rongcloud-powBox><button type=button style="background-color: #0099ff" class="rongcloud-rong-btn rongcloud-rong-send-btn" id=rong-sendBtn ng-click=send()>发送</button>
-					<div  style="background-color: #0099ff;right:94px;text-align:center" class="rongcloud-rong-btn rongcloud-rong-send-btn">插入图片
-						<input type="file" style="font-size: 999px; opacity: 0; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;" accept="image/jpeg,image/gif,image/png,image/bmp"/>
-					</div>
+					<div  style="background-color: #0099ff;right:94px;text-align:center" class="rongcloud-rong-btn rongcloud-rong-send-btn" flow-btn >插入图片</div>
 			</div>
 		</div>
 	</div>
@@ -89,6 +87,18 @@
 		<div class="rongcloud-rong-header rongcloud-blueBg">
 			<div class="rongcloud-toolBar rongcloud-headBtn">
 				<span class=glyphicon glyphicon-search pdiBottom_searchBtn></span>
+				<div class="pdiBottom_searchCont" ng-show="ShowSearch">
+					<div>
+						<label for="pdiBottom_searchContTell">手机号：<input type="text" id="pdiBottom_searchContTell"/></label>
+					</div>
+					<div class="pdiBottom_searchCont2">
+						<label for="pdiBottom_searchContNickname">昵称：<input type="text" id="pdiBottom_searchContNickname"/></label>
+					</div>
+					<div class="pdiBottom_searchContBtnBox">
+						<button ng-click="openSearch()">取消</button>
+						<button ng-click="openSearch()">查询</button>
+					</div>
+				</div>
 				<div ng-show=config.voiceNotification class=rongcloud-voice ng-class="{'rongcloud-voice-mute':!data.voiceSound,'rongcloud-voice-sound':data.voiceSound}" ng-click="data.voiceSound=!data.voiceSound"></div>
 				<span class=rongcloud-recent>患者对话列表</span>
 			</div>

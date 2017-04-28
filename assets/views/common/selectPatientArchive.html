@@ -1,0 +1,132 @@
+<style>
+.app-modal-window .modal-dialog {
+	width: 1000px;
+}
+
+.tags {
+	margin: 0;
+}
+
+input.checkbox_vertical {
+	vertical-align: -2px;
+	margin-right: 2px;
+	margin-left: 5px;
+}
+/*
+    解决新建文章对话框因为translate漂移过多导致对话框顶部显示不全(文章信息lable不可见)的问题
+    */
+.modal-dialog {
+	transform: translate(0, -5%) !important;
+	width:90%;
+}
+
+.float-textarea {
+	position: relative;
+	top: -22px;
+	right: 10px;
+	float: right;
+}
+
+.tag-item {
+	color: #31708f !important;
+	background: #d9edf7 !important;
+}
+
+.sickCategory-item {
+	width: 125px;
+	display: inline-block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+</style>
+<div class="modal-header">
+	<h5 class="modal-title">
+		<b>患者档案</b>
+	</h5>
+</div>
+<div class="modal-body">
+	<div class="panel-body">
+		<div class="table-responsive">
+			<table ng-table="tableParams" class="table table-hover">
+				<thead>
+					<tr>
+						<th style="text-align: left; width: 6%;">
+							<div class="checkbox clip-check check-primary checkbox-inline">
+								<input id="selectAllCheckbox" type="checkbox"
+									ng-click="selectAll()" /> <label for="selectAllCheckbox"
+									style="vertical-align: middle;"></label>
+							</div>
+						</th>
+						<th>档案ID</th>
+						<th>主账号手机号</th>
+						<th>用户来源</th>
+						<th>患者手机号</th>
+						<th>患者姓名</th>
+						<th>性别</th>
+						<th>年龄</th>
+						<th>是否下单</th>
+						<th>疾病大类（订单）</th>
+						<th>疾病大类（随访）</th>
+						<th>档案来源</th>
+						<th>与主账号关系</th>
+						<th>档案创建时间</th>
+						<th>最后修改人</th>
+						<th>最后修改时间</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tr ng-repeat="obj in $data" ng-class-odd="'odd'"
+					ng-class-even="'even'" class="tr_doctor" id="tr{{obj.id}}"">
+					<td>
+						<div class="checkbox clip-check check-primary checkbox-inline">
+							<input id="checkbox{{obj.id}}" type="checkbox"
+								ng-model="obj.selected" ng-click="changeSelection($index)" /> <label
+								for="checkbox{{obj.id}}" style="vertical-align: middle;"></label>
+						</div>
+					</td>
+					<td class="center">{{obj.id}}</td>
+					<td class="center">{{obj.masterPhoneNumber}}</td>
+					<td class="center">{{obj.userSource}}</td>
+					<td class="center">{{obj.phoneNumber}}</td>
+					<td class="center">{{obj.name}}</td>
+					<td class="center">{{showGender(obj.gender)}}</td>
+					<td class="center">{{obj.age}}</td>
+					<td class="center">{{showBooleanInChinese(obj.hasOrder)}}</td>
+					<td class="center">{{obj.sickCategoryInOrder}}</td>
+					<td class="center">{{obj.diseaseCategory}}</td>
+					<td class="center">{{obj.source}}</td>
+					<td class="center">{{obj.relationToMe}}</td>
+					<td class="center">{{obj.auditable.dateCreated}}</td>
+					<td class="center">{{obj.auditable.updatedBy}}</td>
+					<td class="center">{{obj.auditable.dateUpdated}}</td>
+					<td class="center">
+						<div class="visible-md visible-lg hidden-sm hidden-xs">
+							<a href="#" ng-click="edit(obj)"
+								class="btn btn-transparent btn-xs" tooltip-placement="top"
+								tooltip="编辑"> <i class="fa fa-edit"></i></a>
+						</div>
+						<div class="visible-xs visible-sm hidden-md hidden-lg">
+							<div class="btn-group" dropdown is-open="status.isopen">
+								<button type="button"
+									class="btn btn-primary btn-o btn-sm dropdown-toggle"
+									dropdown-toggle>
+									<i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu pull-right dropdown-light" role="menu">
+									<li><a href="#" ng-click="edit(obj)">编辑</a></li>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="query()">查询</button>
+	<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+	<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+</div>

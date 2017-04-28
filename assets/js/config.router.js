@@ -347,22 +347,6 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
             ncyBreadcrumb: {
                 label: 'Patient'
             }
-        }).state('app.vip', {
-            url: '/vip',
-            template: '<div ui-view class="fade-in-up"></div>',
-            title: '会员管理',
-            ncyBreadcrumb: {
-                label: 'Patient'
-            }
-        }).state('app.vip.privateDoctorIm', {
-            url: '/privateDoctorIm',
-            templateUrl: "assets/views/healthmanagement/privateDoctorIm.html",
-            title: '私人医生答题',
-            ncyBreadcrumb: {
-                label: 'PrivateDoctorIm'
-            },
-            authentication: true,
-            resolve: loadSequence('ngTable', 'privateDoctorImCtrl')
         }).state('app.order.jdOrder', {
             url: '/jdOrder',
             templateUrl: "assets/views/jdoctor/jdOrder.html",
@@ -758,6 +742,49 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
         }).state('error.403', {
             url: '/403',
             templateUrl: "assets/views/utility_403.html"
+        }).state('app.memberManage', {
+            url: '/memberManage',
+            template: '<div ui-view class="fade-in-up"></div>',
+            title: '会员管理',
+            ncyBreadcrumb: {
+                label: 'memberManage'
+            }
+        }).state('app.memberManage.healthServicePackDef', {
+            url: '/healthServicePackDef',
+            templateUrl: "assets/views/healthmanage/healthServicePackDef.html",
+            title: '健康服务包管理',
+            ncyBreadcrumb: {
+                label: 'healthServicePackDef'
+            },
+            authentication: true,
+            resolve: loadSequence('flow','touchspin-plugin', 'angular-bootstrap-touchspin', 'ngTable', 'healthServicePackDefCtrl')
+        }).state('app.memberManage.healthServicePack', {
+            url: '/healthServicePack',
+            templateUrl: "assets/views/healthmanage/healthServicePack.html",
+            title: '生成会员激活码',
+            ncyBreadcrumb: {
+                label: 'healthSericePack'
+            },
+            authentication: true,
+            resolve: loadSequence('flow','touchspin-plugin', 'angular-bootstrap-touchspin', 'ngTable', 'healthServicePackCtrl')
+        }).state('app.memberManage.memberManage', {
+            url: '/memberManage',
+            templateUrl: "assets/views/healthmanage/memberManage.html",
+            title: '会员管理',
+            ncyBreadcrumb: {
+                label: 'memberManage'
+            },
+            authentication: true,
+            resolve: loadSequence('flow','touchspin-plugin', 'angular-bootstrap-touchspin', 'ngTable', 'memberManageCtrl')
+        }).state('app.memberManage.privateDoctorIm', {
+            url: '/privateDoctorIm',
+            templateUrl: "assets/views/healthmanage/privateDoctorIm.html",
+            title: '私人医生答题',
+            ncyBreadcrumb: {
+                label: 'PrivateDoctorIm'
+            },
+            authentication: true,
+            resolve: loadSequence('touchspin-plugin', 'angular-bootstrap-touchspin','ngTable', 'privateDoctorImCtrl')
         });
 
         // Generates a resolve object previously configured in constant.JS_REQUIRES (config.constant.js)

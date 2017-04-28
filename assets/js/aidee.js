@@ -189,7 +189,7 @@ function validateFiledNullMax(toaster, value, name, notNull, maxLength) {
 
 /**
  * 验证多个表单控件不为空
- *
+ * 
  * @param toaster
  * @param value
  * @param name
@@ -482,7 +482,7 @@ var parseJSON = function (obj) {
 /**
  * 函数参数重载方法
  * overload，对函数参数进行模式匹配。默认的dispatcher支持*和...以及?，"*"表示一个任意类型的参数，"..."表示多个任意类型的参数，"?"一般用在",?..."表示0个或任意多个参数
- *
+ * 
  * @method overload
  * @static
  * @optional {dispatcher} 用来匹配参数负责派发的函数
@@ -531,15 +531,16 @@ var initScope = function (config) {
     var $modal = config.$modal;
     var ngTableParams = config.ngTableParams;
     var toaster = config.toaster;
-    var ngTableParams = config.ngTableParams;
     var SweetAlert = config.SweetAlert;
     var $window = config.$window;
     var $localStorage = config.$localStorage;
     var Admin_Constant = config.Admin_Constant;
     var editModalConfig = config.editModalConfig;
     var searchModalConfig = config.searchModalConfig;
+    var loadDataOnInit=config.loadDataOnInit;
     callbackFunction(initScopeData, $scope);
 
+    $scope.loadDataOnInit=(loadDataOnInit!=undefined)?loadDataOnInit:true;
     $scope.getItemName = getItemName;
     $scope.getBoolString = getBoolString;
     $scope.resultPage = {
@@ -553,23 +554,27 @@ var initScope = function (config) {
     }, {
         total: $scope.resultPage.totalCount,
         getData: function ($defer, params) {
-            commonResetSelection($scope);// 重置查询框
-            $scope.searchInfos.pageIndex = params.page();// params为ngTableParams对象的第一个参数
-            $scope.searchInfos.pageSize = params.count();
-            filterNullValueField($scope.searchInfos); //过滤field值为null和undefined的
-            $scope.queryString = getCustomQueryString != null ? getCustomQueryString($scope) : "?" + $.param($scope.searchInfos, true);
-            var requestUrl = tableQueryUrl.indexOf(REST_PREFIX) > -1 ? tableQueryUrl : REST_PREFIX + tableQueryUrl
-            + $scope.queryString;
-            $http.get(requestUrl).success(function (result) {
-                if (result.body) {
-                    $scope.resultPage = result.body.result;
-                } else {
-                    $scope.resultPage = result;
-                }
-                params.total($scope.resultPage.totalRecords);
-                $scope.data = $scope.resultPage.content;
-                $defer.resolve($scope.data);
-            });
+        	if($scope.loadDataOnInit){
+        		commonResetSelection($scope);// 重置查询框
+                $scope.searchInfos.pageIndex = params.page();// params为ngTableParams对象的第一个参数
+                $scope.searchInfos.pageSize = params.count();
+                filterNullValueField($scope.searchInfos); // 过滤field值为null和undefined的
+                $scope.queryString = getCustomQueryString != null ? getCustomQueryString($scope) : "?" + $.param($scope.searchInfos, true);
+                var requestUrl = tableQueryUrl.indexOf(REST_PREFIX) > -1 ? tableQueryUrl : REST_PREFIX + tableQueryUrl
+                + $scope.queryString;
+                $http.get(requestUrl).success(function (result) {
+                    if (result.body) {
+                        $scope.resultPage = result.body.result;
+                    } else {
+                        $scope.resultPage = result;
+                    }
+                    params.total($scope.resultPage.totalRecords);
+                    $scope.data = $scope.resultPage.content;
+                    $defer.resolve($scope.data);
+                });
+        	}else{
+        		$scope.loadDataOnInit=true;
+        	}
         }
     });
 
@@ -777,7 +782,7 @@ var resultProcess = function ($scope, result, $modalInstance, toaster,modalClose
     }
 }
 
-//系统公用ajax方法
+// 系统公用ajax方法
 var ajax = function (url, callbackFun, jsonparam) {
     var defaultOptions = {
         async: false,
@@ -817,22 +822,14 @@ $.browser.mozilla = /firefox/.test(navigator.userAgent.toLowerCase());
 $.browser.webkit = /webkit/.test(navigator.userAgent.toLowerCase());
 $.browser.opera = /opera/.test(navigator.userAgent.toLowerCase());
 $.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
-/*var getImgWidthAndHeight=function(file, callback,$window) {
- var image;
- if (file) {
- image = new Image();
- image.onload = function () {
- if(typeof callback==="function"){
- callback(this.width, this.height);
- }
- image.width=this.width;
- image.height=this.height;
- };
- image.src = $window.URL.createObjectURL(file);
- }
- return image;
- }*/
-var getImgWidthAndHeight = function (file, callback, $window) {//只能用回调，要不返回image，像上面注释的那样，返回的image也是没宽度和高度的
+/*
+ * var getImgWidthAndHeight=function(file, callback,$window) { var image; if
+ * (file) { image = new Image(); image.onload = function () { if(typeof
+ * callback==="function"){ callback(this.width, this.height); }
+ * image.width=this.width; image.height=this.height; }; image.src =
+ * $window.URL.createObjectURL(file); } return image; }
+ */
+var getImgWidthAndHeight = function (file, callback, $window) {// 只能用回调，要不返回image，像上面注释的那样，返回的image也是没宽度和高度的
     var image;
     if (file) {
         image = new Image();

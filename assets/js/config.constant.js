@@ -137,7 +137,10 @@ app.constant('JS_REQUIRES', {
         'adItemCtrl': 'assets/js/controllers/adItem.js',
         'tagCtrl': 'assets/js/controllers/tag.js',
         'healthWarningCtrl': 'assets/js/controllers/healthWarning.js',
-        'privateDoctorImCtrl': 'assets/js/controllers/healthmanagement/privateDoctorIm.js'
+        'healthServicePackDefCtrl': 'assets/js/controllers/healthmanage/healthServicePackDef.js',
+        'healthServicePackCtrl': 'assets/js/controllers/healthmanage/healthServicePack.js',
+        'memberManageCtrl': 'assets/js/controllers/healthmanage/memberManage.js',
+        'privateDoctorImCtrl': 'assets/js/controllers/healthmanage/privateDoctorIm.js'
     },
     //*** angularJS Modules
     modules: [{
@@ -224,5 +227,8 @@ app.constant('JS_REQUIRES', {
     }, {
         name: 'highcharts-ng',
         files: ['vendor/highcharts-ng/highstock.src.js', 'vendor/highcharts-ng/highcharts-ng.js']
+    },{
+        name: 'WebIMWidget',
+        files: ['assets/js/util/RongIMLib-2.2.5.min.js', 'assets/js/util/RongEmoji-2.2.4.min.js','assets/js/util/RongIMVoice-2.2.4.min.js','assets/js/util/RongIMWidget.js']
     }]
 });

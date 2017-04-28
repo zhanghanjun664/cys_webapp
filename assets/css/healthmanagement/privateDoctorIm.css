@@ -70,13 +70,13 @@
 	padding: 10px;
 	font-size: 20px!important;
 	cursor: pointer;
-	line-height:48px;
+	line-height:40px;
 	left: 10px;
 }
 .pdiBottom_searchBtn:before{
 	font-family: 'Glyphicons Halflings'!important;
 }
-.pdiBottom_searchCont{
+.rongcloud-container .pdiBottom_searchCont{
 	background-color: #f0f0f0;
 	padding: 10px;
 	position: absolute;
@@ -84,6 +84,8 @@
 	z-index: 1;
 	width: 100%;
 	border-bottom: 1px solid;
+	text-align: initial;
+	line-height: 34px;
 }
 .pdiBottom_chatlistTitleName{
 	text-align: center;
@@ -141,7 +143,7 @@
 }
 .pdiBottom_chatcontTopFile{
 	position: absolute;
-	top: 10px;
+	top: 5px;
 	left: 10px;
 	z-index: 1;
 	color: #000;
@@ -272,8 +274,14 @@
 	text-align: right;
 	margin-top: 10px;
 }
-.pdiBottom_searchCont2{
-	margin-left: 1em;
+.pdiBottom_searchContBtnBox button{
+	padding: 0 12px;
+	line-height: 30px;
+	border-radius: 6px;
+	margin-left: 8px;
+}
+.rongcloud-container .pdiBottom_searchCont2{
+	padding-left: 1em;
 }
 
 .expireStatus{
@@ -285,4 +293,17 @@
 	z-index: 999;
 	background-color: #b5acac;
 	opacity: 0.5;
+}
+
+.pdiBigImg{
+	max-height: 100%;
+	max-width: 100%;
+}
+
+.rongcloud-container .pdiConversaionTile{
+	text-align: center;
+	line-height: 40px;
+}
+.pdiConversaionTile span{
+	margin: 0 5px;
 }

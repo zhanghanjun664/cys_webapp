@@ -1,0 +1,52 @@
+
+<div class="modal-header">
+	<h5 class="modal-title">
+		<b>用户选择</b>
+	</h5>
+</div>
+<div class="modal-body">
+	<div class="panel-body">
+		<form role="form" class="form-horizontal">
+			<div class="col-md-12">
+				<div class="col-md-11">
+					<label class="col-sm-2">手机号</label> <input class="col-sm-6"
+						type="text" ng-model="patientInfos.phoneNumber"
+						placeholder="输入手机号搜索"> </input>
+				</div>
+				<div style="clear: both" />
+				<div class="table-responsive" style="margin-top: 25px;">
+					<table ng-table="tableParams" class="table table-hover">
+						<thead>
+							<tr>
+								<th></th>
+								<th>手机号</th>
+								<th>姓名</th>
+							</tr>
+						</thead>
+						<tr ng-repeat="jdPatient in data" ng-class-odd="'odd'"
+							ng-class-even="'even'">
+							<td>
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="checkbox{{jdPatient.uuid}}" type="checkbox"
+										ng-model="jdPatient.selected"
+										ng-click="changeSelection($index)" /> <label
+										for="checkbox{{jdPatient.uuid}}"
+										style="vertical-align: middle;"></label>
+								</div>
+							</td>
+							<td class="center">{{jdPatient.phoneNumber}}</td>
+							<td class="center">{{jdPatient.name}}</td>
+						</tr>
+					</table>
+				</div>
+				<div style="clear: both" />
+			</div>
+		</form>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="clear($event)">清除</button>
+	<button class="btn btn-primary" ng-click="query()">查询</button>
+	<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+	<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+</div>

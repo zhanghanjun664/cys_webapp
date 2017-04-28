@@ -1,0 +1,279 @@
+<style>
+.with-90 {
+	width: 90%;
+}
+
+.with-95 {
+	width: 95%;
+}
+
+.float-left {
+	float: left;
+}
+
+.line-height-35 {
+	line-height: 35px
+}
+
+.padding-left-10 {
+	padding-left: 10px;
+}
+
+.input-none-border {
+	border: none !important;
+}
+</style>
+<script
+	src="../../../assets/js/controllers/healthmanage/healthServiceApis.js"></script>
+<script
+	src="../../../assets/js/controllers/common/selectSinglePatientCtrl.js"></script>
+<script
+	src="../../../assets/js/controllers/common/selectHealthServicePack.js"></script>
+
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<h4>
+			<b></b>
+		</h4>
+		<div ng-controller="memberManageCtrl" class="col-md-12">
+			<button ng-click="add()" type="button"
+				class="btn btn-wide btn-primary" style="min-width: 30px;">
+				新增 <i class="fa fa-plus"></i>
+			</button>
+			<button ng-click="update()" type="button"
+				class="btn btn-wide btn-warning" style="min-width: 30px;">
+				编辑 <i class="fa fa-edit"></i>
+			</button>
+			<button ng-click="search()" type="button"
+				class="btn btn-wide btn-success" style="min-width: 30px;">
+				查询 <i class="fa fa-search"></i>
+			</button>
+			<p style="margin-top: 25px;">
+				<strong>总记录数:</strong> {{tableParams.total()}}
+			</p>
+			<div class="table-responsive">
+				<table ng-table="tableParams" class="table table-hover">
+					<thead>
+						<tr>
+							<th style="text-align: left; width: 6%;">
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="selectAllCheckbox" type="checkbox"
+										ng-click="selectAll()" /> <label for="selectAllCheckbox"
+										style="vertical-align: middle;"></label>
+								</div>
+							</th>
+							<th>服务包名称</th>
+							<th>定价</th>
+							<th>服务内容</th>
+							<th>注册用户手机号</th>
+							<th>注册用户昵称</th>
+							<th>兑换码</th>
+							<th>激活时间</th>
+							<th>结束时间</th>
+							<th>最后修改人</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+
+					<tr ng-repeat="obj in $data" ng-class-odd="'odd'"
+						ng-class-even="'even'" id="tr{{obj.id}}">
+						<td>
+							<div class="checkbox clip-check check-primary checkbox-inline">
+								<input id="checkbox{{obj.id}}" type="checkbox"
+									ng-model="obj.selected" ng-click="changeSelection($index)" />
+								<label for="checkbox{{obj.id}}" style="vertical-align: middle;"></label>
+							</div>
+						</td>
+						<td class="center">{{obj.healthServicePackDefName}}</td>
+						<td class="center">{{obj.price}}</td>
+						<td class="center">{{showServiceContent(obj.healServices)}}</td>
+						<td class="center">{{obj.patientPhone}}</td>
+						<td class="center">{{obj.patientName}}</td>
+						<td class="center">{{obj.code}}</td>
+						<td class="center">{{obj.activeDate}}</td>
+						<td class="center">{{obj.serviceExpiredDate}}</td>
+						<td class="center">{{obj.modifyBy}}</td>
+						<td class="center">
+							<div class="visible-md visible-lg hidden-sm hidden-xs">
+								<a href="#" ng-click="edit(obj)"
+									class="btn btn-transparent btn-xs tooltips"
+									tooltip-placement="top" tooltip="编辑"><i class="fa fa-edit"></i></a>
+								</ul>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<script type="text/ng-template" id="searchMemberManage.html">
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<b>查询条件</b>
+					</h5>
+				</div>
+				<div class="modal-body">
+					<div class="panel-body">
+						<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 服务包名称</label>
+								<div class="col-sm-9">
+										<select id="healthServicePackDefId" class="col-sm-12" ng-model="searchInfos.healthServicePackDefId"
+												ng-options="healthServicePackDef.id as healthServicePackDef.name for healthServicePackDef in healthServicePackDefList">
+											<option value="">全部</option>
+										</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 兑换码</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" ng-model="searchInfos.code" placeholder="建议6位">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 注册用户</label>
+								<div class="col-sm-6">
+								    <input type="text" class="col-sm-12" ng-model="patient.name" id="s_name"
+                                               readonly>
+                                        </input>
+                                </div>
+                                    <div class="col-sm-3">
+                                        <button ng-click="selectPatient()" ng-disabled="flag" type="button"
+                                                class="btn btn-wide btn-primary"
+                                                style="min-width: 30px;">
+                                            选择用户 <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+							</div>
+						    <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_effectiveDateStart">
+                                        激活时间
+                                    </label>
+
+                                    <div class="col-sm-9">
+                                        <input type="text" id="s_effectiveDateStart" style="width: 130px;"
+                                               ng-model="searchInfos.activeDate"
+                                                 onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" onchange="" />
+                                    </div>
+                                </div>
+                            <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="s_effectiveDateStart">
+                                        结束时间
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="s_serviceExpiredDate" style="width: 130px;"
+                                               ng-model="searchInfos.serviceExpiredDate"
+                                               onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" onchange="" />
+                                </div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" ng-click="clear()">清空条件</button>
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+					<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+				</div>
+								</script>
+
+
+				<script type="text/ng-template" id="addMemberManage.html">
+						<div class="modal-header">
+							<h5 class="modal-title">
+								<b>新增会员</b>
+							</h5>
+						</div>
+						<div class="modal-body">
+						 <div class="panel-body">
+							<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 服务包名称</label>
+								<div class="col-sm-6">
+										 <input type="text" class="col-sm-12" ng-model="healthServicePack.healthServicePackDefName" id="shp_name"
+                                               readonly>
+                                        </input>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 兑换码</label>
+								<div class="col-sm-6">
+								    <input type="text" class="col-sm-12" ng-model="healthServicePack.code" id="sh_name"
+                                               readonly>
+                                        </input>
+                                </div>
+                                    <div class="col-sm-3">
+                                        <button ng-click="selectHealthServicePack()" ng-disabled="flag" type="button"
+                                                class="btn btn-wide btn-primary"
+                                                style="min-width: 30px;">
+                                            选择兑换码<i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 注册用户</label>
+								<div class="col-sm-6">
+								    <input type="text" class="col-sm-12" ng-model="patient.name" id="s_name"
+                                               readonly>
+                                        </input>
+                                </div>
+                                    <div class="col-sm-3">
+                                        <button ng-click="selectPatient()" ng-disabled="flag" type="button"
+                                                class="btn btn-wide btn-primary"
+                                                style="min-width: 30px;">
+                                            选择用户 <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+							</div>
+
+							
+								</form>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+							<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+						</div>
+										 		</script>
+
+				<script type="text/ng-template" id="editMemberManage.html">
+						<div class="modal-header">
+							<h5 class="modal-title">
+								<b>编辑</b>
+							</h5>
+						</div>
+						<div class="modal-body">
+						 <div class="panel-body">
+							<form role="form" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 服务包名称</label>
+								<div class="col-sm-9">
+								    <input type="text" class="col-sm-12 input-none-border" value="{{obj.healthServicePackDefName}}" id="sh_name"
+                                               readonly>
+                                        </input>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 注册用户</label>
+								<div class="col-sm-9">
+								    <input type="text" class="col-sm-12 input-none-border" value="{{obj.patientPhone}},{{obj.patientName}}" id="sh_name"
+                                               readonly>
+                                        </input>
+                                </div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label"> 结束时间</label>
+								<div class="col-sm-9">
+									<input type="text" id="serviceExpiredDateStr" style="width:100%" ng-model="obj.serviceExpiredDate"
+										onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" onchange="" />
+ 						        </div>
+							</div>
+							
+								</form>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+							<button class="btn btn-primary" ng-click="ok($event)">确定</button>
+						</div>
+										 		</script>
+
+
+			</div>
+		</div>
+	</div>

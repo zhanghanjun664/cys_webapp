@@ -1,0 +1,126 @@
+<style>
+
+/*
+    解决新建文章对话框因为translate漂移过多导致对话框顶部显示不全(文章信息lable不可见)的问题
+    */
+.modal-dialog {
+	transform: translate(0, -16%) !important;
+}
+
+.modal-dialog {
+	z-index: 11222222220000 !important;
+}
+</style>
+<script
+	src="../../../assets/js/controllers/common/openPatientArchiveModel.js"></script>
+<script
+	src="../../../assets/js/controllers/common/selectPatientArchive.js"></script>
+	
+<div class="modal-header">
+	<h5 class="modal-title">
+		<b>会员查看</b>
+	</h5>
+</div>
+<div class="modal-body">
+	<div class="panel-body">
+		<form role="form" class="form-horizontal">
+			<div class="col-md-12">
+				<div class="form-group col-sm-4">
+					<label class="col-sm-4 control-label">手机号</label>
+					<div class="col-sm-7">
+						<input class="col-sm-12" type="text"
+							ng-model="searchInfos.phoneNumber" placeholder=""> </input>
+					</div>
+				</div>
+				<div class="form-group col-sm-4">
+					<label class="col-sm-5 control-label">用户昵称</label>
+					<div class="col-sm-7">
+						<input class="col-sm-12" type="text"
+							ng-model="searchInfos.paitentName" placeholder=""> </input>
+					</div>
+				</div>
+				<div class="form-group col-sm-4">
+					<label class="col-sm-5 control-label"> 服务包名称</label>
+					<div class="col-sm-7">
+						<input class="col-sm-12" type="text"
+							ng-model="searchInfos.healthServicePackDefName" placeholder="">
+						</input>
+					</div>
+				</div>
+				<div class="form-group col-sm-8">
+					<label class="col-sm-3 control-label" for="s_effectiveDateStart">
+						服务包激活时间 </label>
+					<div class="col-sm-9">
+						<input type="text" id="s_activeDateStart" style="width: 130px;"
+							ng-model="searchInfos.activeDateStart"
+							onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'s_activeDateEnd\')||\'%y-%M-%d\'}',dateFmt:'yyyy-MM-dd',readOnly:true})" />
+						至 <input type="text" id="s_activeDateEnd" style="width: 130px;"
+							ng-model="searchInfos.activeDateEnd"
+							onFocus="WdatePicker({minDate:'#F{$dp.$D(\'s_activeDateStart\')}',maxDate:'%y-%M-%d',dateFmt:'yyyy-MM-dd',readOnly:true})" />
+					</div>
+				</div>
+				<div class="form-group col-sm-4">
+					<button class="btn btn-primary" ng-click="query()">查询</button>
+					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+				</div>
+
+				<div style="clear: both" />
+				<div class="table-responsive" style="margin-top: 25px;">
+					<table ng-table="tableParams" class="table table-hover">
+						<thead>
+							<tr>
+								<th style="text-align: left; width: 6%;">
+									<div class="checkbox clip-check check-primary checkbox-inline">
+										<input id="selectAllCheckbox" type="checkbox"
+											ng-click="selectAll()" /> <label for="selectAllCheckbox"
+											style="vertical-align: middle;"></label>
+									</div>
+								</th>
+								<th>注册用户手机号</th>
+								<th>注册用户昵称</th>
+								<th>服务包名称</th>
+								<th>定价</th>
+								<th>服务内容</th>
+								<th>兑换码</th>
+								<th>激活时间</th>
+								<th>结束时间</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+
+						<tr ng-repeat="obj in $data" ng-class-odd="'odd'"
+							ng-class-even="'even'" id="tr{{obj.id}}">
+							<td>
+								<div class="checkbox clip-check check-primary checkbox-inline">
+									<input id="checkbox{{obj.id}}" type="checkbox"
+										ng-model="obj.selected" ng-click="changeSelection($index)" />
+									<label for="checkbox{{obj.id}}" style="vertical-align: middle;"></label>
+								</div>
+							</td>
+							<td class="center">{{obj.patientPhone}}</td>
+							<td class="center">{{obj.patientName}}</td>
+							<td class="center">{{obj.healthServicePackDefName}}</td>
+							<td class="center">{{obj.price}}</td>
+							<td class="center">{{showServiceContent(obj.healServices)}}</td>
+							<td class="center">{{obj.code}}</td>
+							<td class="center">{{obj.activeDate}}</td>
+							<td class="center">{{obj.serviceExpiredDate}}</td>
+							<td class="center">
+								<div class="visible-md visible-lg hidden-sm hidden-xs">
+									<a href="#" ng-click="selectPatientArchive(obj.masterPatientId)"
+										class="btn btn-transparent btn-xs tooltips"
+										tooltip-placement="top" tooltip="查看患者档案">查看患者档案</a>
+									</ul>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div style="clear: both" />
+			</div>
+		</form>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="ok($event)">置顶聊天窗口</button>
+</div>
