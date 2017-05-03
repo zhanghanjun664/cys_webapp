@@ -53,15 +53,11 @@ app.controller("privateDoctorImCtrl", ["$rootScope", "$scope", "$http", "WebIMWi
 				method: 'POST',
 				url: REST_PREFIX+"healthManage/chatList/info" ,
 				dataType: 'json',
-				data: [targetId]
+				data: targetId
 
 			}).then(function(data) {
 				obj.onSuccess({
-					name: data.data.body.result[targetId].patient.name,
-					userId: data.data.body.result[targetId].patient.uuid,
-					portraitUri:null,
-					tel:data.data.body.result[targetId].patient.phoneNumber,
-					patientArchiveCount:data.data.body.result[targetId].patientArchiveCount
+				  data:data.data.body.result
 				});
 			});
 			
