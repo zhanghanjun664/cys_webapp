@@ -126,7 +126,18 @@ app.controller('searchMemberManageCtrl', function($scope, $modalInstance,$modal,
         if ($scope.patient) {
             $scope.searchInfos.masterPatientId = $scope.patient.jdPatientId;
         }
-
+    	//if($("#s_activeDateEnd").val()!=''&&$("#s_activeDateEnd").val()!=null){
+    		$scope.searchInfos.activeDateEnd = $("#s_activeDateEnd").val();
+    	//}
+    	//if($("#s_activeDateStart").val()!=''&&$("#s_activeDateStart").val()!=null){
+    		$scope.searchInfos.activeDateStart = $("#s_activeDateStart").val();
+    	//}
+    	//if($("#s_serviceExpiredStart").val()!=''&&$("#s_serviceExpiredStart").val()!=null){
+    		$scope.searchInfos.serviceExpiredStart = $("#s_serviceExpiredStart").val();
+    	//}
+    	//if($("#s_serviceExpiredEnd").val()!=''&&$("#s_serviceExpiredEnd").val()!=null){
+    		$scope.searchInfos.serviceExpiredEnd = $("#s_serviceExpiredEnd").val();
+    	//}
 
         $modalInstance.close($scope.searchInfos);
     };

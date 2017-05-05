@@ -48,12 +48,12 @@ app.controller('selectMemberManageCtrl', function ($scope, $http, $modalInstance
 	};
 	
 	$scope.query = function() {
-    	if($("#s_activeDateEnd").val()!=''&&$("#s_activeDateEnd").val()!=null){
+    	//if($("#s_activeDateEnd").val()!=''&&$("#s_activeDateEnd").val()!=null){
     		$scope.searchInfos.activeDateEnd = $("#s_activeDateEnd").val();
-    	}
-    	if($("#s_activeDateStart").val()!=''&&$("#s_activeDateStart").val()!=null){
+    	//}
+    	//if($("#s_activeDateStart").val()!=''&&$("#s_activeDateStart").val()!=null){
     		$scope.searchInfos.activeDateStart = $("#s_activeDateStart").val();
-    	}
+    	//}
 		$scope.tableParams.reload();
 	};
 
@@ -75,10 +75,8 @@ app.controller('selectMemberManageCtrl', function ($scope, $http, $modalInstance
 	}
 
 	$scope.clear = function(e) {
-		var rowObject = new Object();
-		rowObject.name = "";
-		rowObject.jdDoctorId = "";
-		$modalInstance.close(rowObject);
+	       $scope.searchInfos = {phoneNumber:null,paitentName:null,
+	    		   activeDateStart:null,activeDateEnd:null};
 	}
 
 	  //改变当前选中的行

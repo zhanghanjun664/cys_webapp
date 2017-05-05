@@ -9,19 +9,19 @@ gulp.task('connect', function() {
         middleware: function(connect, opt) {
             return [
                 proxy('/rest', {
-                    target: 'https://staging.chengyisheng.com.cn/',
+                    target: 'https://wxtest.chengyisheng.com.cn/',
                     changeOrigin:true
                 }),
                 proxy('/j_spring_security_check',{
-                    target: 'https://staging.chengyisheng.com.cn/',
+                    target: 'https://wxtest.chengyisheng.com.cn/',
                     changeOrigin:true
                 }),
                 proxy('/j_spring_security_logout',{
-                    target: 'https://staging.chengyisheng.com.cn/',
+                    target: 'https://wxtest.chengyisheng.com.cn/',
                     changeOrigin:true
                 }),
                 proxy('/jdHealthExamination',{
-                    target: 'https://staging.chengyisheng.com.cn/',
+                    target: 'https://wxtest.chengyisheng.com.cn/',
                     changeOrigin:true
                 })
             ]

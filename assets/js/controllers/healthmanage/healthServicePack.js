@@ -144,6 +144,7 @@ app.controller('editHealthServicePackCtrl', function($scope, $http, $modalInstan
 			filterField($scope.obj,"properties");
 			filterField($scope.obj,"services");
 			filterField($scope.obj,"serviceExpiredDate");
+			filterField($scope.obj,"activeDate");
 			$scope.dateBeginShowStr=$('#dateBeginShowStr').val();
 			$scope.obj.exchangeExpiredDate = new Date($scope.dateBeginShowStr);
 			

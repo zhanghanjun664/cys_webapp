@@ -704,7 +704,6 @@ var RongWebIMWidget;
 						_this.$rootScope.active.userId = data.data.body.result[obj.targetId].patient.uuid;
 						_this.$rootScope.active.targetId = obj.targetId;
 						_this.$rootScope.active.patientArchiveCount = data.data.body.result[obj.targetId].patientArchiveCount;
-						
 						_this.$http({
 							url: REST_PREFIX + "healthManage/is_service_expired",
 							dataType: 'json',
@@ -728,7 +727,6 @@ var RongWebIMWidget;
 						_this.$rootScope.active.isExpired = data.data.body.result.isExpired
 					});
 				}
-				
 				
 
 				//判断当前用户是否过期
@@ -1344,18 +1342,6 @@ var RongWebIMWidget;
 					item: "="
 				};
 				this.$rootScope = $rootScope
-				//              this.template = '<div class="rongcloud-chatList">' +
-				//                  '<div class="rongcloud-chat_item " ng-class="{\'rongcloud-online\':item.onLine}">' +
-				//                  
-				//                  
-				//                  '<div class="rongcloud-info">' +
-				//                  
-				//                  '<h3 class="rongcloud-nickname">' +
-				//                  '<span class="rongcloud-nickname_text" title="{{item.title}}">{{item.title}}</span>' +
-				//                  '</h3>' +
-				//                  '</div>' +
-				//                  '</div>' +
-				//                  '</div>';
 				this.template = '<div class={{$root.active.targetId==item.targetId?"activeType1":""}} ng-class="{\'pdiBottom_chatlistContBox\':1}">' +
 					'<div>' +
 					'<span ng-class=\'{"pdi_circle":item.unreadMessageCount>0}\'></span>' +
@@ -1422,9 +1408,10 @@ var RongWebIMWidget;
 	var conversationlist;
 	(function(conversationlist) {
 		var ConversationListServer = (function() {
-			function ConversationListServer($q, $rootScope, providerdata, widgetConfig, RongIMSDKServer, conversationServer) {
+			function ConversationListServer($q, $rootScope, $http, providerdata, widgetConfig, RongIMSDKServer, conversationServer) {
 				this.$q = $q;
 				this.$rootScope = $rootScope;
+				this.$http = $http;
 				this.providerdata = providerdata;
 				this.widgetConfig = widgetConfig;
 				this.RongIMSDKServer = RongIMSDKServer;
@@ -1465,6 +1452,7 @@ var RongWebIMWidget;
 									onSuccess: function(data) {
 										_this.theFirst = false;
 										_this.data = data;
+										console.log(data);
 										for(var i in a) {
 											for(var k in data.data) {
 												if(k == a[i].targetId) {
@@ -1483,47 +1471,23 @@ var RongWebIMWidget;
 												i--;
 											}
 										}
-										//                                          a.title = data.name;
-										//                                          a.portraitUri = data.portraitUri;
-										//                                          a.tel = data.tel;
-										//                                          a.userId = data.userId;
-										//                                          a.patientArchiveCount = data.patientArchiveCount;
-										//                                          
-										//                                          b.conversationTitle = data.name;
-										//                                          b.portraitUri = data.portraitUri;
-										//                                          b.tel = data.tel;
-										//                                          b.userId = data.userId;
+										_this._conversationList = con;
 									}
 								});
 							}(con, data[i]));
 						} else {
+							console.log(_this._conversationList.length);
 							console.log("不用拉用户信息了");
 							console.log(_this.$rootScope.active, _this.data)
 							var sum = 0;
 							for(var j in _this.data.data) {
 								if(j == _this.$rootScope.active.targetId) {
 									console.log("有这个用户拉");
+									break;
 								} else {
 									sum++
 								}
 							}
-							if(sum == Object.keys(_this.data.data).length) {
-								//          	  var obj = con.map(function(item){
-								//          	    if(item.)
-								//          	  })
-
-								_this.data.data[_this.$rootScope.active.targetId] = {
-									patient: {
-										name: _this.$rootScope.active.title,
-										portraitUri: null,
-										phoneNumber: _this.$rootScope.active.tel,
-										uuid: _this.$rootScope.active.userId,
-									},
-									patientArchiveCount: _this.$rootScope.active.patientArchiveCount
-								};
-								console.log("新增了用户");
-							}
-							console.log(_this.data);
 							for(var i in con) {
 								for(var k in _this.data.data) {
 									if(k == con[i].targetId) {
@@ -1538,14 +1502,99 @@ var RongWebIMWidget;
 							}
 							for(var i = 0; i < con.length; i++) {
 								if(!con[i].userId) {
+									console.log(con[i])
 									con.splice(i, 1);
 									i--;
 								}
 							}
+							_this._conversationList = con;
+							if(sum == Object.keys(_this.data.data).length) {
+								console.log(_this._conversationList.length);
+								console.log("发起了一个新的回话啊")
+								_this.$http({
+									method: 'POST',
+									url: REST_PREFIX + "healthManage/chatList/info",
+									dataType: 'json',
+									data: [_this.$rootScope.active.targetId]
+			
+								}).then(function(data) {
+									console.log(data)
+									_this.data.data[_this.$rootScope.active.targetId] = {
+										patient: {
+											name: data.data.body.result[_this.$rootScope.active.targetId].patient.name,
+											portraitUri: null,
+											phoneNumber: data.data.body.result[_this.$rootScope.active.targetId].patient.phoneNumber,
+											uuid: data.data.body.result[_this.$rootScope.active.targetId].patient.uuid,
+										},
+										patientArchiveCount: data.data.body.result[_this.$rootScope.active.targetId].patientArchiveCount
+									};
+									
+									
+									
+									_this.$http({
+										url: REST_PREFIX + "healthManage/is_service_expired",
+										dataType: 'json',
+										params:{
+											masterPatientId:data.data.body.result[_this.$rootScope.active.targetId].patient.uuid
+										}
+									}).then(function(data) {
+										console.log(data)
+										_this.$rootScope.active.isExpired = data.data.body.result.isExpired
+										
+										for(var i in con) {
+											for(var k in _this.data.data) {
+												if(k == con[i].targetId) {
+													con[i].title = _this.data.data[k].patient.name;
+													con[i].portraitUri = null;
+													con[i].tel = _this.data.data[k].patient.phoneNumber;
+													con[i].userId = _this.data.data[k].patient.uuid;
+													con[i].patientArchiveCount = _this.data.data[k].patientArchiveCount;
+													break
+												}
+											}
+										}
+										for(var i = 0; i < con.length; i++) {
+											if(!con[i].userId) {
+												console.log(con[i])
+												con.splice(i, 1);
+												i--;
+											}
+										}
+										_this._conversationList = con;
+									});
+									
+								});
+								
+								console.log("新增了用户");
+							}else{
+								for(var i in con) {
+									for(var k in _this.data.data) {
+										if(k == con[i].targetId) {
+											con[i].title = _this.data.data[k].patient.name;
+											con[i].portraitUri = null;
+											con[i].tel = _this.data.data[k].patient.phoneNumber;
+											con[i].userId = _this.data.data[k].patient.uuid;
+											con[i].patientArchiveCount = _this.data.data[k].patientArchiveCount;
+											break
+										}
+									}
+								}
+								for(var i = 0; i < con.length; i++) {
+									if(!con[i].userId) {
+										console.log(con[i])
+										con.splice(i, 1);
+										i--;
+									}
+								}
+								_this._conversationList = con;
+								console.log(_this._conversationList.length);
+							}
+							console.log(_this.data);
+							
 						}
 						console.log(con);
 
-						_this._conversationList = con;
+						
 						//                          switch (con.targetType) {
 						//                              case RongIMLib.ConversationType.PRIVATE:
 						//                                  if (RongWebIMWidget.Helper.checkType(_this.providerdata.getUserInfo) == "function") {
@@ -1705,6 +1754,7 @@ var RongWebIMWidget;
 			};
 			ConversationListServer.$inject = ["$q",
 				"$rootScope",
+				"$http",
 				"ProviderData",
 				"WidgetConfig",
 				"RongIMSDKServer",
@@ -1727,9 +1777,10 @@ var RongWebIMWidget;
 		eleminbtnWidth = 195,
 		spacing = 3;
 	var WebIMWidget = (function() {
-		function WebIMWidget($q, $rootScope, conversationServer, conversationListServer, providerdata, widgetConfig, RongIMSDKServer, $log) {
+		function WebIMWidget($q, $rootScope, $http, conversationServer, conversationListServer, providerdata, widgetConfig, RongIMSDKServer, $log) {
 			this.$q = $q;
 			this.$rootScope = $rootScope;
+			this.$http = $http;
 			this.conversationServer = conversationServer;
 			this.conversationListServer = conversationListServer;
 			this.providerdata = providerdata;
@@ -1952,8 +2003,48 @@ var RongWebIMWidget;
 					console.log("你有新的消息");
 					console.log(data);
 					var msg = RongWebIMWidget.Message.convert(data);
-					console.log(msg,_this.conversationServer.current);
+					console.log(msg);
 					_this.$rootScope.active.targetId = msg.senderUserId;
+					
+//					var sum= 0;
+//					console.log(_this.conversationListServer.data);
+//					for (var i in _this.conversationListServer.data.data) {
+//						console.log(i);
+//						if(i != _this.$rootScope.active.targetId){
+//							sum++
+//						}
+//					}
+//					if(sum == Object.keys(_this.conversationListServer.data.data).length){
+//						console.log("需要~拉用户信息了");
+//						
+//						_this.$http({
+//							method: 'POST',
+//							url: REST_PREFIX + "healthManage/chatList/info",
+//							dataType: 'json',
+//							data: [msg.senderUserId]
+//	
+//						}).then(function(data) {
+//							console.log(data)
+//							_this.$rootScope.active.title = data.data.body.result[msg.senderUserId].patient.name;
+//							_this.$rootScope.active.tel = data.data.body.result[msg.senderUserId].patient.phoneNumber;
+//							_this.$rootScope.active.userId = data.data.body.result[msg.senderUserId].patient.uuid;
+//							_this.$rootScope.active.targetId = msg.senderUserId;
+//							_this.$rootScope.active.patientArchiveCount = data.data.body.result[msg.senderUserId].patientArchiveCount;
+//							_this.$http({
+//								url: REST_PREFIX + "healthManage/is_service_expired",
+//								dataType: 'json',
+//								params:{
+//									masterPatientId:_this.$rootScope.active.userId
+//								}
+//							}).then(function(data) {
+//								console.log(data)
+//								_this.$rootScope.active.isExpired = data.data.body.result.isExpired
+//							});
+//						});
+//						
+//					}
+					
+					
 					
 //					if(RongWebIMWidget.Helper.checkType(_this.providerdata.getUserInfo) == "function" && msg.content) {
 //						_this.providerdata.getUserInfo(msg.senderUserId, {
@@ -2089,6 +2180,7 @@ var RongWebIMWidget;
 		};
 		WebIMWidget.$inject = ["$q",
 			"$rootScope",
+			"$http",
 			"ConversationServer",
 			"ConversationListServer",
 			"ProviderData",

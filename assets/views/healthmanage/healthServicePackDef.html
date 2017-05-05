@@ -5,6 +5,10 @@
 .with-95 {
  width:95%;
 }
+.with-45 {
+ width: 45%;
+}
+
 .float-left {
 float:left;
 }
@@ -15,9 +19,10 @@ line-height: 35px
  padding-left: 10px;
 }
 .modal-dialog {
-    width: 58%; 
+    width: 45% !important; 
 }
 </style>
+<script src="../../../assets/js/controllers/healthmanage/healthServiceApis.js"></script>
 
 <div class="container-fluid container-fullw bg-white">
 	<div class="row">
@@ -30,9 +35,6 @@ line-height: 35px
 			</button>
 			<button ng-click="update()" type="button" class="btn btn-wide btn-warning" style="min-width: 30px;">
 				编辑 <i class="fa fa-edit"></i>
-			</button>
-			<button ng-click="deleteAll()" type="button" class="btn btn-wide btn-danger" style="min-width: 30px;">
-				删除 <i class="fa fa-trash"></i>
 			</button>
 			<button ng-click="search()" type="button" class="btn btn-wide btn-success" style="min-width: 30px;">
 				查询 <i class="fa fa-search"></i>
@@ -121,13 +123,13 @@ line-height: 35px
 									<div class="form-group">
 										<label class="col-sm-2 control-label"> 服务包名称</label>
 										<div class="col-sm-6">
-											<input type="text" placeholder="" class="form-control with-95 float-left" ng-model="obj.name"><span style="color:red;" class="padding-left-10 line-height-35 ">*<span>
+											<input type="text" placeholder="" class="form-control with-95 float-left" ng-model="obj.name">
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-2 control-label"> 服务包定价 </label>
 										<div class="col-sm-6 ">
-											<input type="text" placeholder="数字" class="form-control with-90 float-left" ng-model="obj.price"><label class="line-height-35 padding-left-10">元<span style="color:red;" class="padding-left-10"><span></label>
+											<input type="text" placeholder="数字" class="form-control with-90 float-left" ng-model="obj.price"><label class="line-height-35 padding-left-10">元</label>
 										</div>
 									</div>
 									<div class="form-group">

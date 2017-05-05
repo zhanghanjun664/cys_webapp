@@ -1,5 +1,5 @@
 'use strict';
-
+/*
 var healthServicePackDef = {
 	// 初始化页面数据与方法
 	healthServiceList:null,
@@ -27,7 +27,7 @@ var healthServicePackDef = {
 		return list;
 	}
 	
-}
+}*/
 
 app.controller('healthServicePackDefCtrl', function($scope, $http, $modal, ngTableParams, toaster, SweetAlert, $window,
 		$localStorage, Admin_Constant, $sce) {
@@ -105,7 +105,7 @@ app.controller('editHealthServicePackDefCtrl', function($scope, $http, $modalIns
 	$scope.selected = [] ;
 	var services;
 	initEdit({
-		initScopeData : healthServicePackDef.initScopeData,
+		initScopeData : healthServicePack.initScopeData,
 		$scope : $scope,
 		$modalInstance : $modalInstance,
 		toaster : toaster
@@ -196,10 +196,10 @@ app.controller('editHealthServicePackDefCtrl', function($scope, $http, $modalIns
 		// 校验相关
 		if (!validateMulNull(toaster, [ $scope.obj.name, $scope.obj.price,$scope.obj.periodOfValidity,$scope.obj.services], [ "服务包名称", "服务包定价","服务时长","服务内容"]))
 			return;
-		if(!validateFiledIntegerNorP(toaster, $scope.obj.price, "服务包定价", false)){
+		if(!validateFiledInteger(toaster, $scope.obj.price, "服务包定价", false,true)){
 			return;
 		}
-		if(!validateFiledIntegerNorP(toaster, $scope.obj.periodOfValidity,"服务时长", false)){
+		if(!validateFiledInteger(toaster, $scope.obj.periodOfValidity,"服务时长", false,false)){
 			return;
 		}
 

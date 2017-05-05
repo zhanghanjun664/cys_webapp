@@ -124,7 +124,7 @@
 							<div class="form-group">
 								<label class="col-sm-3 control-label"> 兑换码</label>
 								<div class="col-sm-9">
-									<input type="text" class="form-control" ng-model="searchInfos.code" placeholder="建议6位">
+									<input type="text" class="form-control" ng-model="searchInfos.code" placeholder="">
 								</div>
 							</div>
 							<div class="form-group">
@@ -147,21 +147,27 @@
                                         激活时间
                                     </label>
 
-                                    <div class="col-sm-9">
-                                        <input type="text" id="s_effectiveDateStart" style="width: 130px;"
-                                               ng-model="searchInfos.activeDate"
-                                                 onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" onchange="" />
-                                    </div>
+					<div class="col-sm-9">
+						<input type="text" id="s_activeDateStart" style="width: 130px;"
+							ng-model="searchInfos.activeDateStart"
+							onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'s_activeDateEnd\')||\'%y-%M-%d\'}',dateFmt:'yyyy-MM-dd',readOnly:true})" />
+						至 <input type="text" id="s_activeDateEnd" style="width: 130px;"
+							ng-model="searchInfos.activeDateEnd"
+							onFocus="WdatePicker({minDate:'#F{$dp.$D(\'s_activeDateStart\')}',maxDate:'%y-%M-%d',dateFmt:'yyyy-MM-dd',readOnly:true})" />
+					</div>
                                 </div>
                             <div class="form-group">
                                     <label class="col-sm-3 control-label" for="s_effectiveDateStart">
                                         结束时间
                                     </label>
-                                    <div class="col-sm-9">
-                                        <input type="text" id="s_serviceExpiredDate" style="width: 130px;"
-                                               ng-model="searchInfos.serviceExpiredDate"
-                                               onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" onchange="" />
-                                </div>
+					<div class="col-sm-9">
+						<input type="text" id="s_serviceExpiredStart" style="width: 130px;"
+							ng-model="searchInfos.serviceExpiredStart"
+							onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'s_serviceExpiredEnd\')||\'%y-%M-%d\'}',dateFmt:'yyyy-MM-dd',readOnly:true})" />
+						至 <input type="text" id="s_serviceExpiredEnd" style="width: 130px;"
+							ng-model="searchInfos.serviceExpiredEnd"
+							onFocus="WdatePicker({minDate:'#F{$dp.$D(\'s_serviceExpiredStart\')}',maxDate:'%y-%M-%d',dateFmt:'yyyy-MM-dd',readOnly:true})" />
+					</div>
 						</form>
 					</div>
 				</div>

@@ -30,6 +30,7 @@ var healthServicePackDef = {
 		// 初始化页面数据与方法
 		healthServicePackDefList:null,
 		initScopeData : function($scope) {
+			//debugger;
 			healthServicePackDef.healthServicePackDefList = ($scope.healthServicePackDefList = healthServicePackDef.healthServicePackDefList ? healthServicePackDef.healthServicePackDefList
 					: healthServicePackDef.initHealthServicePackDefList());
 		},

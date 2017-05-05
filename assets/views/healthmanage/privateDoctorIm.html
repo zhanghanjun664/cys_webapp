@@ -1,17 +1,17 @@
-<script
-	src="../../../assets/js/controllers/healthmanage/healthServiceApis.js"></script>
-<script
-	src="../../../assets/js/controllers/common/selectMemberManage.js"></script>
-<script src="../../../vendor/flow/ng-flow-standalone.min.js"
-	type="text/javascript" charset="utf-8"></script>
- <script
-	src="../../../assets/js/controllers/common/openPatientArchiveModel.js"></script>
-<script
-	src="../../../assets/js/controllers/common/selectPatientArchive.js"></script>
+<script src="../../../assets/js/controllers/healthmanage/healthServiceApis.js"></script>
+<script src="../../../assets/js/controllers/common/selectMemberManage.js"></script>
+<script src="../../../vendor/flow/ng-flow-standalone.min.js" type="text/javascript" charset="utf-8"></script>
+ <script src="../../../assets/js/controllers/common/openPatientArchiveModel.js"></script>
+<script src="../../../assets/js/controllers/common/selectPatientArchive.js"></script>
+	
 	
 
 <div ng-controller="privateDoctorImCtrl" class="pdiBox z-index-1000">
-	<img src="assets/images/logo.jpg" class="pdiTop_img margin-top-5" />
+	<!--<img src="assets/images/logo.jpg" class="pdiTop_img margin-top-5" />-->
+	<div class="pdiNoEdit" ng-show="showNoEdit">
+		<div ng-if="!showReconnecting">登陆异常，请<span ng-click="reconnect()" style="cursor: pointer;color: #006EE6;">点击</span>重连</div>
+		<div ng-if="showReconnecting">正在尝试重新连接...</div>
+	</div>
 	<div style="position: relative;">
 		<span class="glyphicon glyphicon-search pdiBottom_searchBtn" ng-click="selectMemberManage()"></span>
 		<rong-widget></rong-widget>

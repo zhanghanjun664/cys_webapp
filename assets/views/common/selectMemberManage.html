@@ -15,10 +15,12 @@
 	src="../../../assets/js/controllers/common/openPatientArchiveModel.js"></script>
 <script
 	src="../../../assets/js/controllers/common/selectPatientArchive.js"></script>
-	
+<script
+	src="../../../assets/js/controllers/healthmanage/healthServiceApis.js"></script>
+
 <div class="modal-header">
 	<h5 class="modal-title">
-		<b>会员查看</b>
+		<b>查询会员</b>
 	</h5>
 </div>
 <div class="modal-body">
@@ -42,9 +44,11 @@
 				<div class="form-group col-sm-4">
 					<label class="col-sm-5 control-label"> 服务包名称</label>
 					<div class="col-sm-7">
-						<input class="col-sm-12" type="text"
-							ng-model="searchInfos.healthServicePackDefName" placeholder="">
-						</input>
+						<select id="healthServicePackDefId" class="col-sm-12"
+							ng-model="searchInfos.healthServicePackDefId"
+							ng-options="healthServicePackDef.id as healthServicePackDef.name for healthServicePackDef in healthServicePackDefList">
+							<option value="">全部</option>
+						</select>
 					</div>
 				</div>
 				<div class="form-group col-sm-8">
@@ -60,8 +64,8 @@
 					</div>
 				</div>
 				<div class="form-group col-sm-4">
+					<button class="btn btn-primary" ng-click="clear($event)">清除</button>
 					<button class="btn btn-primary" ng-click="query()">查询</button>
-					<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
 				</div>
 
 				<div style="clear: both" />
@@ -107,7 +111,8 @@
 							<td class="center">{{obj.serviceExpiredDate}}</td>
 							<td class="center">
 								<div class="visible-md visible-lg hidden-sm hidden-xs">
-									<a href="#" ng-click="selectPatientArchive(obj.masterPatientId)"
+									<a href="#"
+										ng-click="selectPatientArchive(obj.masterPatientId)"
 										class="btn btn-transparent btn-xs tooltips"
 										tooltip-placement="top" tooltip="查看患者档案">查看患者档案</a>
 									</ul>
@@ -122,5 +127,6 @@
 	</div>
 </div>
 <div class="modal-footer">
-	<button class="btn btn-primary" ng-click="ok($event)">置顶聊天窗口</button>
+	<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
+	<button class="btn btn-primary" ng-click="ok($event)">加入聊天</button>
 </div>

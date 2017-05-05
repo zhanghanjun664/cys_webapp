@@ -939,7 +939,6 @@ app.controller('editOrderCtrl', function ($scope, $modal,$http, $modalInstance, 
 			});
 		}
 		sickIds=sickArray.join(",");
-		console.log("sickIds =",sickIds);
 		
 		$scope.jdOrderInfo.sickIds=sickIds;
 		// 提交

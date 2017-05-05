@@ -1,51 +1,123 @@
 
 <div class="modal-header">
 	<h5 class="modal-title">
-		<b>用户选择</b>
+		<b>选择用户</b>
 	</h5>
 </div>
 <div class="modal-body">
 	<div class="panel-body">
 		<form role="form" class="form-horizontal">
-			<div class="col-md-12">
-				<div class="col-md-11">
-					<label class="col-sm-2">手机号</label> <input class="col-sm-6"
-						type="text" ng-model="patientInfos.phoneNumber"
-						placeholder="输入手机号搜索"> </input>
+			<div class="row">
+				<div class="col-md-3" style="padding-right: 0px; padding-left: 0px;">
+					<label class="col-sm-3 control-label" for="districtId"> 省份
+					</label>
+					<div class="col-sm-9">
+						<select id="districtId" class="col-sm-12"
+							ng-model="searchInfos.districtId"
+							ng-change="changeDistrictAreas(searchInfos.districtId)"
+							ng-options="jdDistrict.uuid as jdDistrict.name for jdDistrict in jdDistricts ">
+							<option value="">全部</option>
+						</select>
+					</div>
 				</div>
-				<div style="clear: both" />
-				<div class="table-responsive" style="margin-top: 25px;">
-					<table ng-table="tableParams" class="table table-hover">
-						<thead>
-							<tr>
-								<th></th>
-								<th>手机号</th>
-								<th>姓名</th>
-							</tr>
-						</thead>
-						<tr ng-repeat="jdPatient in data" ng-class-odd="'odd'"
-							ng-class-even="'even'">
-							<td>
-								<div class="checkbox clip-check check-primary checkbox-inline">
-									<input id="checkbox{{jdPatient.uuid}}" type="checkbox"
-										ng-model="jdPatient.selected"
-										ng-click="changeSelection($index)" /> <label
-										for="checkbox{{jdPatient.uuid}}"
-										style="vertical-align: middle;"></label>
-								</div>
-							</td>
-							<td class="center">{{jdPatient.phoneNumber}}</td>
-							<td class="center">{{jdPatient.name}}</td>
-						</tr>
-					</table>
+				<div class="col-md-3" style="padding-right: 0px; padding-left: 0px;">
+					<label class="col-sm-3 control-label" for="districtAreaId">
+						城市 </label>
+					<div class="col-sm-9">
+						<select id="districtAreaId" class="col-sm-12"
+							ng-model="searchInfos.districtAreaId"
+							ng-options="jdDistrictArea.uuid as jdDistrictArea.name for jdDistrictArea in jdDistrictAreas">
+							<option value="">全部</option>
+						</select>
+					</div>
 				</div>
-				<div style="clear: both" />
+				<div class="col-md-6" style="padding-right: 0px; padding-left: 0px;">
+					<label class="col-sm-3 control-label" for="createTimeStart">
+						注册时间 </label>
+
+					<div class="col-sm-9">
+						<input type="text" id="createTimeStart" style="width: 130px;"
+							ng-model="patientInfos.createTimeStart"
+							onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'%y-%M-%d %H:%m\'}',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+						至 <input type="text" id="createTimeEnd" style="width: 130px;"
+							ng-model="patientInfos.createTimeEnd"
+							onFocus="WdatePicker({minDate:'#F{$dp.$D(\'createTimeStart\')}',maxDate:'%y-%M-%d %H:%m',dateFmt:'yyyy-MM-dd HH:mm',readOnly:true})" />
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-md-4">
+					<label class="col-sm-4 control-label" for="sceneName"> 渠道名称
+					</label>
+
+					<div class="col-sm-8">
+						<select id="sceneName" class="form-control"
+							ng-model="patientInfos.qrcodeId"
+							ng-options="qrcode.uuid as qrcode.name for qrcode in jdQrcodeList">
+							<option value="">全部</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<label class="col-sm-4 control-label" for="p_name"> 姓名 </label>
+
+					<div class="col-sm-8">
+						<input type="text" id="p_name" class="form-control"
+							ng-model="patientInfos.name" maxlength="21">
+					</div>
+				</div>
+				<div class="col-md-4">
+					<label class="col-sm-4 control-label" for="s_phoneNumber">
+						手机号码 </label>
+
+					<div class="col-sm-8">
+						<input type="text" id="s_phoneNumber" class="form-control"
+							ng-model="patientInfos.phoneNumber" maxlength="11">
+					</div>
+				</div>
 			</div>
 		</form>
+		<table ng-table="tableParams" class="table table-hover">
+			<thead>
+				<tr>
+					<th style="text-align: left; width: 6%;">
+						<div class="checkbox clip-check check-primary checkbox-inline">
+							<input id="selectAllCheckbox" type="checkbox"
+								ng-click="selectAll()" /> <label for="selectAllCheckbox"
+								style="vertical-align: middle;"></label>
+						</div>
+					</th>
+					<th>地区</th>
+					<th>姓名</th>
+					<th>手机号码</th>
+					<th>注册时间</th>
+					<th>来源渠道</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="jdPatient in $data" ng-class-odd="'odd'"
+				ng-class-even="'even'" class="tr_patient" id="tr{{jdPatient.uuid}}"
+				ng-click="loadOrderHistory(jdPatient.uuid)">
+				<td>
+					<div class="checkbox clip-check check-primary checkbox-inline">
+						<input id="checkbox{{jdPatient.uuid}}" type="checkbox"
+							ng-model="jdPatient.selected" ng-click="changeSelection($index)" />
+						<label for="checkbox{{jdPatient.uuid}}"
+							style="vertical-align: middle;"></label>
+					</div>
+				</td>
+				<td class="center">{{jdPatient.location}}</td>
+				<td class="center">{{jdPatient.name}}</td>
+				<td class="center">{{jdPatient.phoneNumber}}</td>
+				<td class="center">{{jdPatient.createDate}}</td>
+				<td class="center">{{jdPatient.sceneName ? jdPatient.sceneName
+					: '无'}}</td>
+			</tr>
+		</table>
 	</div>
 </div>
 <div class="modal-footer">
-	<button class="btn btn-primary" ng-click="clear($event)">清除</button>
+	<button class="btn btn-primary" ng-click="clear()">清空条件</button>
 	<button class="btn btn-primary" ng-click="query()">查询</button>
 	<button class="btn btn-primary" ng-click="cancel($event)">取消</button>
 	<button class="btn btn-primary" ng-click="ok($event)">确定</button>

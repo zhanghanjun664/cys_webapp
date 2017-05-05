@@ -379,12 +379,8 @@ app.controller('editOrderCtrl', function ($scope, $http,$modal, $modalInstance, 
 			});
 		}
 		sickIds=sickArray.join(",");
-		console.log("sickIds =",sickIds);
 		
 		$scope.jdOrderInfo.sickIds=sickIds;
-		console.log("$scope.jdOrderInfo.sickIds =",$scope.jdOrderInfo.sickIds);
-		console.log("$scope.jdOrderInfo.diagnosis =",$scope.jdOrderInfo.diagnosis);
-		console.log("$scope.jdOrderInfo.status =",$scope.jdOrderInfo.status);
 		
 		if($scope.jdOrderInfo.status=='WAITTO_COMMENT'){
 			if(!validateFiledNullMax(toaster, $scope.jdOrderInfo.diagnosis, "诊断结果", true, 0))

@@ -16,11 +16,11 @@ app.controller('selectPatientCtrl', function ($scope, $http, $modalInstance, ngT
                 $localStorage[Admin_Constant.LocalStorage.Districts] = jdDistricts;
             });
         }
-/*        $scope.jdDistricts = jdDistricts.filter(function(districts){
+        $scope.jdDistricts = jdDistricts.filter(function(districts){
             if(districts.isProvince){
                 return districts;
             }
-        });*/
+        });
         //获得市辖区信息
         jdDistrictAreas = $localStorage[Admin_Constant.LocalStorage.DistrictAreas];
         if(!jdDistrictAreas) {
