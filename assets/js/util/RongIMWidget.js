@@ -688,6 +688,7 @@ var RongWebIMWidget;
 				var _this = this;
 
 				_this.$rootScope.active = obj;
+				_this.$rootScope.active.utargetId = obj.targetId;
 				            console.log(obj)
 				if(!obj.title && !obj.userId) {
 					console.log("发起了一个新的回话")
@@ -702,7 +703,7 @@ var RongWebIMWidget;
 						_this.$rootScope.active.title = data.data.body.result[obj.targetId].patient.name;
 						_this.$rootScope.active.tel = data.data.body.result[obj.targetId].patient.phoneNumber;
 						_this.$rootScope.active.userId = data.data.body.result[obj.targetId].patient.uuid;
-						_this.$rootScope.active.targetId = obj.targetId;
+						_this.$rootScope.active.utargetId = obj.targetId;
 						_this.$rootScope.active.patientArchiveCount = data.data.body.result[obj.targetId].patientArchiveCount;
 						
 						_this.$http({
@@ -1422,9 +1423,10 @@ var RongWebIMWidget;
 	var conversationlist;
 	(function(conversationlist) {
 		var ConversationListServer = (function() {
-			function ConversationListServer($q, $rootScope, providerdata, widgetConfig, RongIMSDKServer, conversationServer) {
+			function ConversationListServer($q, $rootScope,$http, providerdata, widgetConfig, RongIMSDKServer, conversationServer) {
 				this.$q = $q;
 				this.$rootScope = $rootScope;
+				this.$http = $http;
 				this.providerdata = providerdata;
 				this.widgetConfig = widgetConfig;
 				this.RongIMSDKServer = RongIMSDKServer;
@@ -1451,7 +1453,7 @@ var RongWebIMWidget;
 					onSuccess: function(data) {
 						console.log(data);
 						var totalUnreadCount = 0;
-						_this._conversationList.splice(0, _this._conversationList.length);
+//						_this._conversationList.splice(0, _this._conversationList.length);
 						var con = [];
 						for(var i = 0; i < data.length; i++) {
 							con[i] = RongWebIMWidget.Conversation.onvert(data[i]);
@@ -1501,47 +1503,113 @@ var RongWebIMWidget;
 							console.log(_this.$rootScope.active, _this.data)
 							var sum = 0;
 							for(var j in _this.data.data) {
-								if(j == _this.$rootScope.active.targetId) {
+								if(j == _this.$rootScope.active.utargetId) {
 									console.log("有这个用户拉");
 								} else {
 									sum++
 								}
 							}
 							if(sum == Object.keys(_this.data.data).length) {
-								//          	  var obj = con.map(function(item){
-								//          	    if(item.)
-								//          	  })
-
-								_this.data.data[_this.$rootScope.active.targetId] = {
-									patient: {
-										name: _this.$rootScope.active.title,
-										portraitUri: null,
-										phoneNumber: _this.$rootScope.active.tel,
-										uuid: _this.$rootScope.active.userId,
-									},
-									patientArchiveCount: _this.$rootScope.active.patientArchiveCount
-								};
+							  
+							  if(_this.$rootScope.active.utargetId != _this.$rootScope.active.targetId){
+							    //收到新用户信息
+							    _this.$http({
+                    method: 'POST',
+                    url: REST_PREFIX + "healthManage/chatList/info",
+                    dataType: 'json',
+                    data: [_this.$rootScope.active.utargetId]
+        
+                  }).then(function(data) {
+                    console.log(data)
+                    
+                    _this.data.data[_this.$rootScope.active.utargetId] = {
+                      patient: {
+                        name: data.data.body.result[_this.$rootScope.active.utargetId].patient.name,
+                        portraitUri: null,
+                        phoneNumber: data.data.body.result[_this.$rootScope.active.utargetId].patient.phoneNumber,
+                        uuid: data.data.body.result[_this.$rootScope.active.utargetId].patient.uuid,
+                      },
+                      patientArchiveCount: data.data.body.result[_this.$rootScope.active.utargetId].patientArchiveCount
+                    };
+                    
+                    for(var i in con) {
+                      for(var k in _this.data.data) {
+                        if(k == con[i].targetId) {
+                          con[i].title = _this.data.data[k].patient.name;
+                          con[i].portraitUri = null;
+                          con[i].tel = _this.data.data[k].patient.phoneNumber;
+                          con[i].userId = _this.data.data[k].patient.uuid;
+                          con[i].patientArchiveCount = _this.data.data[k].patientArchiveCount;
+                          break
+                        }
+                      }
+                    }
+                    for(var i = 0; i < con.length; i++) {
+                      if(!con[i].userId) {
+                        con.splice(i, 1);
+                        i--;
+                      }
+                    }
+                    _this._conversationList = con;
+                    
+                  });
+							  }else{
+							    //加入聊天
+  								_this.data.data[_this.$rootScope.active.utargetId] = {
+  									patient: {
+  										name: _this.$rootScope.active.title,
+  										portraitUri: null,
+  										phoneNumber: _this.$rootScope.active.tel,
+  										uuid: _this.$rootScope.active.userId,
+  									},
+  									patientArchiveCount: _this.$rootScope.active.patientArchiveCount
+  								};
+  								
+  								for(var i in con) {
+                    for(var k in _this.data.data) {
+                      if(k == con[i].targetId) {
+                        con[i].title = _this.data.data[k].patient.name;
+                        con[i].portraitUri = null;
+                        con[i].tel = _this.data.data[k].patient.phoneNumber;
+                        con[i].userId = _this.data.data[k].patient.uuid;
+                        con[i].patientArchiveCount = _this.data.data[k].patientArchiveCount;
+                        break
+                      }
+                    }
+                  }
+                  for(var i = 0; i < con.length; i++) {
+                    if(!con[i].userId) {
+                      con.splice(i, 1);
+                      i--;
+                    }
+                  }
+							  }
+							  
 								console.log("新增了用户");
+							}else{
+							  
+							  console.log(_this.data);
+                for(var i in con) {
+                  for(var k in _this.data.data) {
+                    if(k == con[i].targetId) {
+                      con[i].title = _this.data.data[k].patient.name;
+                      con[i].portraitUri = null;
+                      con[i].tel = _this.data.data[k].patient.phoneNumber;
+                      con[i].userId = _this.data.data[k].patient.uuid;
+                      con[i].patientArchiveCount = _this.data.data[k].patientArchiveCount;
+                      break
+                    }
+                  }
+                }
+                for(var i = 0; i < con.length; i++) {
+                  if(!con[i].userId) {
+                    con.splice(i, 1);
+                    i--;
+                  }
+                }
+							  
 							}
-							console.log(_this.data);
-							for(var i in con) {
-								for(var k in _this.data.data) {
-									if(k == con[i].targetId) {
-										con[i].title = _this.data.data[k].patient.name;
-										con[i].portraitUri = null;
-										con[i].tel = _this.data.data[k].patient.phoneNumber;
-										con[i].userId = _this.data.data[k].patient.uuid;
-										con[i].patientArchiveCount = _this.data.data[k].patientArchiveCount;
-										break
-									}
-								}
-							}
-							for(var i = 0; i < con.length; i++) {
-								if(!con[i].userId) {
-									con.splice(i, 1);
-									i--;
-								}
-							}
+							
 						}
 						console.log(con);
 
@@ -1705,6 +1773,7 @@ var RongWebIMWidget;
 			};
 			ConversationListServer.$inject = ["$q",
 				"$rootScope",
+				"$http",
 				"ProviderData",
 				"WidgetConfig",
 				"RongIMSDKServer",
@@ -1727,9 +1796,10 @@ var RongWebIMWidget;
 		eleminbtnWidth = 195,
 		spacing = 3;
 	var WebIMWidget = (function() {
-		function WebIMWidget($q, $rootScope, conversationServer, conversationListServer, providerdata, widgetConfig, RongIMSDKServer, $log) {
+		function WebIMWidget($q, $rootScope,$http, conversationServer, conversationListServer, providerdata, widgetConfig, RongIMSDKServer, $log) {
 			this.$q = $q;
 			this.$rootScope = $rootScope;
+			this.$http = $http;
 			this.conversationServer = conversationServer;
 			this.conversationListServer = conversationListServer;
 			this.providerdata = providerdata;
@@ -1953,7 +2023,10 @@ var RongWebIMWidget;
 					console.log(data);
 					var msg = RongWebIMWidget.Message.convert(data);
 					console.log(msg,_this.conversationServer.current);
-					_this.$rootScope.active.targetId = msg.senderUserId;
+					_this.$rootScope.active.utargetId = msg.senderUserId;
+					
+					console.log(_this.conversationListServer.data);
+					
 					
 //					if(RongWebIMWidget.Helper.checkType(_this.providerdata.getUserInfo) == "function" && msg.content) {
 //						_this.providerdata.getUserInfo(msg.senderUserId, {
@@ -2089,6 +2162,7 @@ var RongWebIMWidget;
 		};
 		WebIMWidget.$inject = ["$q",
 			"$rootScope",
+			"$http",
 			"ConversationServer",
 			"ConversationListServer",
 			"ProviderData",
